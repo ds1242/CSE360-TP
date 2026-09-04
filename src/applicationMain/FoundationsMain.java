@@ -7,6 +7,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
+
 /*******
  * <p> Title: FoundationsMain Class </p>
  *
@@ -124,3 +125,5 @@ public class FoundationsMain extends Application {
 						// is done, it calls the start method shown above.
 	}
 }
+
+
