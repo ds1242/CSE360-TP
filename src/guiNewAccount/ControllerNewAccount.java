@@ -2,6 +2,8 @@ package guiNewAccount;
 
 import java.sql.SQLException;
 
+import cse360.GRP.ADES.evaluator.PasswordEvaluator;
+import cse360.GRP.ADES.evaluator.UsernameEvaluator;
 import database.Database;
 import entityClasses.User;
 
@@ -62,10 +64,22 @@ public class ControllerNewAccount {
 	 */	
 	protected static void doCreateUser() {
 		
-		// Fetch the username and password. (We use the first of the two here, but we will validate
+		// Fetch the user-name and password. (We use the first of the two here, but we will validate
 		// that the two password fields are the same before we do anything with it.)
 		String username = ViewNewAccount.text_Username.getText();
 		String password = ViewNewAccount.text_Password1.getText();
+		
+		//Check user-name for validity with UserName Evaluator
+		if (UsernameEvaluator.checkForValidUserName(username) != "") {
+			//issue with user-name. Display string error in GUI format...
+			return;
+		}
+		
+		//Check password for validity with Password Evaluator
+		if (PasswordEvaluator.evaluatePassword(password) != "") {
+			//issue with password. Display string error with GUI format...
+			return;
+		}
 		
 		// Display key information to the log
 		System.out.println("** Account for Username: " + username + "; theInvitationCode: "+
