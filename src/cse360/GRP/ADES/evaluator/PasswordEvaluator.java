@@ -1,25 +1,24 @@
-package com.ADES.validators;
+package cse360.GRP.ADES.evaluator;
 
 /*******
-* <p> Title: Model Class - establishes the required GUI data and the computations.
+* <p> Title: PasswordEvaluator Class - establishes the required data computations.
 * </p>
 *
-* <p> Description: This Model class is a major component of a Model View Controller (MVC)
-* application design that provides the user with a Graphical User Interface using JavaFX
-* widgets as opposed to a command line interface.
+* <p> Description: This PasswordEvaluator class is strictly a computational class and 
+* does not provide the user with a graphical user interface.
 * 
-* In this case the Model deals with an input from the user and checks to see if it conforms to
+* In this case the PasswordEvaluator deals with an input from the user and checks to see if it conforms to
 * the requirements specified by a graphical representation of a finite state machine.
-* 
-* This is a purely static component of the MVC implementation.  There is no need to instantiate
-* the class.
 *
 * <p> Copyright: Lynn Robert Carter © 2025 </p>
 *
-* @author Lynn Robert Carter
+* @author 	Lynn Robert Carter
+* 			Shane McPhillips
 *
-* @version 2.00	2025-07-30 Rewrite of this application for the Fall 2025 offering of CSE 360
-* and other ASU courses.
+* @version 2.00	LRC	2025-07-30 	Rewrite of this application for the Fall 2025 offering of CSE 360
+* 								and other ASU courses.
+* @version 2.01	SM	2026-09-14	Processed for production for CSE360 team project. 
+* 								Clipped useful code from original code class Model
 */
 
 public class PasswordEvaluator {
@@ -77,6 +76,7 @@ public class PasswordEvaluator {
 
 		// The Directed Graph simulation continues until the end of the input is reached or at some
 		// state the current character does not match any valid transition
+		System.out.println("--- Evaluating Password ---");
 		while (running) {
 			// The cascading if statement sequentially tries the current character against all of
 			// the valid transitions, each associated with one of the requirements
@@ -126,7 +126,7 @@ public class PasswordEvaluator {
 			errMessage += "Special character; ";
 			
 		if (!foundLongEnough)
-			errMessage += "Long Enough; ";
+			errMessage += "At least 8 characters; ";
 		
 		if (errMessage == "")
 			return "";

@@ -1,6 +1,9 @@
 package guiFirstAdmin;
 
 import java.sql.SQLException;
+
+import cse360.GRP.ADES.evaluator.PasswordEvaluator;
+import cse360.GRP.ADES.evaluator.UsernameEvaluator;
 import database.Database;
 import entityClasses.User;
 import javafx.stage.Stage;
@@ -104,8 +107,22 @@ public class ControllerFirstAdmin {
 	 */
 	protected static void doSetupAdmin(Stage ps, int r) {
 		
+		//Check user-name for validity with UserName Evaluator
+		if (UsernameEvaluator.checkForValidUserName(adminUsername) != "") {
+			//issue with user-name. Display string error in GUI format...
+			return;
+		}
+		
 		// Make sure the two passwords are the same
 		if (adminPassword1.compareTo(adminPassword2) == 0) {
+			
+			//Check password for validity with Password Evaluator
+			if (PasswordEvaluator.evaluatePassword(adminPassword1) != "") {
+				//issue with password. Display string error with GUI format...
+				return;
+			}
+			
+			
         	// Create the passwords and proceed to the user home page
         	User user = new User(adminUsername, adminPassword1, "", "", "", "", "", true, false, 
         			false);

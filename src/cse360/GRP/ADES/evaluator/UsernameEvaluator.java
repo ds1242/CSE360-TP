@@ -1,4 +1,4 @@
-package com.ADES.validators;
+package cse360.GRP.ADES.evaluator;
 
 
 public class UsernameEvaluator {
@@ -11,13 +11,15 @@ public class UsernameEvaluator {
 	 * 
 	 * <p> Copyright: Lynn Robert Carter © 2024 </p>
 	 * 
-	 * @author Lynn Robert Carter, Shane McPhillips
+	 * @author 	Lynn Robert Carter
+	 * 			Shane McPhillips
 	 * 
 	 * @version 1.00  LRC	2024-09-13	Initial baseline derived from the Even Recognizer
 	 * @version 1.01  LRC	2024-09-17	Correction to address UNChar coding error, improper error
 	 * 									message, and improve internal documentation
 	 * @version 1.02  SM	2026-08-31	Addition of ampersand character within username. Added new state
-	 * 									and error message handling.
+	 * 									and error message handling. Removed debug functionality for
+	 * 									production level build.
 	 */
 
 	/**********************************************************************************************
@@ -41,25 +43,9 @@ public class UsernameEvaluator {
 														// running
 	private static int userNameSize = 0;				// A numeric value may not exceed 16 characters
 	private static final int MAX_USERNAME_SIZE = 16; 	//Constant value placeholder for character length 
-														//in username.
-
+														//in user-name.
 	
-	//Not used within production build. 		
-	// Private method to display debugging data
 	
-	/**
-	private static void displayDebuggingInfo() {
-		// Display the current state of the FSM as part of an execution trace
-		if (currentCharNdx >= inputLine.length())
-			// display the line with the current state numbers aligned
-			System.out.println(((state > 99) ? " " : (state > 9) ? "  " : "   ") + state + 
-					((finalState) ? "       F   " : "           ") + "None");
-		else
-			System.out.println(((state > 99) ? " " : (state > 9) ? "  " : "   ") + state + 
-				((finalState) ? "       F   " : "           ") + "  " + currentChar + " " + 
-				((nextState > 99) ? "" : (nextState > 9) || (nextState == -1) ? "   " : "    ") + 
-				nextState + "     " + userNameSize);
-	} */
 	
 	// Private method to move to the next character within the limits of the input line
 	private static void moveToNextCharacter() {
@@ -154,7 +140,7 @@ public class UsernameEvaluator {
 					userNameSize++;
 				}
 				// . -> State 2
-				else if (currentChar == '.') {							// Check for /
+				else if (currentChar == '.' || currentChar == '-' || currentChar == '_') {							// Check for /
 					nextState = 2;
 					
 					// Count the .
@@ -173,7 +159,7 @@ public class UsernameEvaluator {
 				break;			
 				
 			case 2: 
-				// State 2 deals with a character after a period in the name.
+				// State 2 deals with a character after a period,underscore, or hyphen in the name.
 				
 				// A-Z, a-z, 0-9 -> State 1
 				if ((currentChar >= 'A' && currentChar <= 'Z' ) ||		// Check for A-Z
@@ -217,8 +203,6 @@ public class UsernameEvaluator {
 				running = false;
 			
 			if (running) {
-				/*displayDebuggingInfo();**/ //Commented out for production build.
-				
 				// When the processing of a state has finished, the FSM proceeds to the next
 				// character in the input and if there is one, it fetches that character and
 				// updates the currentChar.  If there is no next character the currentChar is
@@ -228,20 +212,14 @@ public class UsernameEvaluator {
 				// Move to the next state
 				state = nextState;
 				
-				/**		Used for debugging. Removed for production build.
-				// Is the new state a final state?  If so, signal this fact.
-				if (state == 1) 
-					finalState = true;
-				**/
+				
 				// Ensure that one of the cases sets this to a valid value
 				nextState = -1;
 			}
 			// Should the FSM get here, the loop starts again
 	
 		}
-		/*displayDebuggingInfo(); //Commented out for production build.
 		
-		System.out.println("The loop has ended."); **/
 		
 		
 		// When the FSM halts, we must determine if the situation is an error or not.  That depends
@@ -277,7 +255,8 @@ public class UsernameEvaluator {
 			else if (currentCharNdx < input.length()) {
 				// There are characters remaining in the input, so the input is not valid
 				userNameRecognizerErrorMessage += 
-					"A UserName character may only contain the characters\nA-Z, a-z, 0-9, \'.\', \'&\'\n";
+					"A UserName character may only contain the characters\nA-Z, a-z, 0-9, "
+					+ "\'.\', \'-\', \'_\', \'&\'\n";
 				return userNameRecognizerErrorMessage;
 			}
 			else {
