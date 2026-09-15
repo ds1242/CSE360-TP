@@ -1,6 +1,7 @@
 package guiAdminHome;
 
 import database.Database;
+import cse360.GRP.ADES.evaluator.EmailAddressRecognizer;
 
 /*******
  * <p> Title: GUIAdminHomePage Class. </p>
@@ -23,6 +24,7 @@ import database.Database;
  * 
  * @version 1.00		2025-08-17 Initial version
  * @version 1.01		2025-09-16 Update Javadoc documentation *  
+ * @version 1.02		2026-09-16 Invite email validation
  */
 
 public class ControllerAdminHome {
@@ -178,9 +180,10 @@ public class ControllerAdminHome {
 	 * @param emailAddress	This String holds what is expected to be an email address
 	 */
 	protected static boolean invalidEmailAddress(String emailAddress) {
-		if (emailAddress.length() == 0) {
-			ViewAdminHome.alertEmailError.setContentText(
-					"Correct the email address and try again.");
+		// TODO: update here
+		String validEmail = EmailAddressRecognizer.checkEmailAddress(emailAddress);
+		if (validEmail != "") {
+			ViewAdminHome.alertEmailError.setContentText(validEmail);
 			ViewAdminHome.alertEmailError.showAndWait();
 			return true;
 		}
