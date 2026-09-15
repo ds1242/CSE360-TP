@@ -1,13 +1,14 @@
 package guiUserLogin;
 
+import cse360.GRP.ADES.evaluator.textLengthEvaluation.TextLengthChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -135,10 +136,12 @@ public class ViewUserLogin {
 		// Establish the text input operand field for the username
 		setupTextUI(text_Username, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 160, true);
 		text_Username.setPromptText("Enter Username");
+		text_Username.textProperty().addListener(new TextLengthChangeListener(text_Username));
 
 		// Establish the text input operand field for the password
 		setupTextUI(text_Password, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 210, true);
 		text_Password.setPromptText("Enter Password");
+		text_Password.textProperty().addListener(new TextLengthChangeListener(text_Password));
 
 		// Set up the Log In button
 		setupButtonUI(button_Login, "Dialog", 18, 200, Pos.CENTER, 475, 180);
@@ -155,6 +158,7 @@ public class ViewUserLogin {
 		// Establish the text input operand field for the password
 		setupTextUI(text_Invitation, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 340, true);
 		text_Invitation.setPromptText("Enter Invitation Code");
+		text_Invitation.textProperty().addListener(new TextLengthChangeListener(text_Invitation));
 
 		// Set up the setup button
 		setupButtonUI(button_SetupAccount, "Dialog", 18, 200, Pos.CENTER, 475, 340);

@@ -1,16 +1,17 @@
 package guiFirstAdmin;
 
+import cse360.GRP.ADES.evaluator.textLengthEvaluation.TextLengthChangeListener;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.scene.Scene;
 
 
 /*******
@@ -157,6 +158,7 @@ public class ViewFirstAdmin {
 		setupTextUI(text_AdminUsername, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 160, 
 				true);
 		text_AdminUsername.setPromptText("Enter Admin Username");
+		text_AdminUsername.textProperty().addListener(new TextLengthChangeListener(text_AdminUsername));
 		text_AdminUsername.textProperty().addListener((_, _, _) 
 				-> {ControllerFirstAdmin.setAdminUsername(); });
 
@@ -164,6 +166,7 @@ public class ViewFirstAdmin {
 		setupTextUI(text_AdminPassword1, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 210, 
 				true);
 		text_AdminPassword1.setPromptText("Enter Admin Password");
+		text_AdminPassword1.textProperty().addListener(new TextLengthChangeListener(text_AdminPassword1));
 		text_AdminPassword1.textProperty().addListener((_, _, _)
 				-> {ControllerFirstAdmin.setAdminPassword1(); });
 
@@ -171,7 +174,8 @@ public class ViewFirstAdmin {
 		setupTextUI(text_AdminPassword2, "Arial", 18, 300, Pos.BASELINE_LEFT, 50, 260, 
 				true);
 		text_AdminPassword2.setPromptText("Enter Admin Password Again");
-		text_AdminPassword2.textProperty().addListener((_, _, _) 
+		text_AdminPassword2.textProperty().addListener(new TextLengthChangeListener(text_AdminPassword2, true));
+		text_AdminPassword2.textProperty().addListener((_, _, _)
 				-> {ControllerFirstAdmin.setAdminPassword2(); });
 
 		// Set up the Log In button
