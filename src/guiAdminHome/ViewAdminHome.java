@@ -3,22 +3,23 @@ package guiAdminHome;
 import java.util.ArrayList;
 import java.util.List;
 
+import cse360.GRP.ADES.evaluator.textLengthEvaluation.TextLengthChangeListener;
+import database.Database;
+import entityClasses.User;
+import guiUserUpdate.ViewUserUpdate;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import database.Database;
-import entityClasses.User;
-import guiUserUpdate.ViewUserUpdate;
 
 /*******
  * <p> Title: ViewAdminHome Class. </p>
@@ -228,6 +229,8 @@ public class ViewAdminHome {
 	
 		setupTextUI(text_InvitationEmailAddress, "Arial", 16, 360, Pos.BASELINE_LEFT,
 		130, 205, true);
+		
+		text_InvitationEmailAddress.textProperty().addListener(new TextLengthChangeListener(text_InvitationEmailAddress));
 	
 		setupComboBoxUI(combobox_SelectRole, "Dialog", 16, 90, 500, 205);
 	
