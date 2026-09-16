@@ -20,6 +20,7 @@ public class EmailAddressRecognizer {
 	 * @version 3.00		2022-03-22	Adjusted to clean up the code and resolving alignment
 	 * 										issues with the design and to correct the issue
 	 * 										with an empty email address
+	 * @version 3.01		2026-09-15	Added states to validate emails.
 	 * 
 	 */
 

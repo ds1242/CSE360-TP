@@ -12,6 +12,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import entityClasses.User;
+import cse360.GRP.ADES.evaluator.PasswordEvaluator;
+import cse360.GRP.ADES.evaluator.textLengthEvaluation.TextLengthEvaluator;
 
 /*******
  * <p> Title: ViewUserUpdate Class. </p>
@@ -260,8 +262,16 @@ public class ViewUserUpdate {
         setupLabelUI(label_FirstName, "Arial", 18, 190, Pos.BASELINE_RIGHT, 5, 200);
         setupLabelUI(label_CurrentFirstName, "Arial", 18, 260, Pos.BASELINE_LEFT, 200, 200);
         setupButtonUI(button_UpdateFirstName, "Dialog", 18, 275, Pos.CENTER, 500, 193);
-        button_UpdateFirstName.setOnAction((_) -> {result = dialogUpdateFirstName.showAndWait();
-        	result.ifPresent(_ -> theDatabase.updateFirstName(theUser.getUserName(), result.get()));
+        button_UpdateFirstName.setOnAction((_) -> {
+        	result = dialogUpdateFirstName.showAndWait();
+        	if(result.get().length() > 32) {
+        		TextLengthEvaluator evaluator = TextLengthEvaluator.instance();
+        		evaluator.showAlertDialogue();
+        		return;
+        	};
+        	result.ifPresent(_ -> 
+        		theDatabase.updateFirstName(theUser.getUserName(), result.get())
+        	);
         	theDatabase.getUserAccountDetails(theUser.getUserName());
          	String newName = theDatabase.getCurrentFirstName();
            	theUser.setFirstName(newName);
