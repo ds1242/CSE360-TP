@@ -264,26 +264,31 @@ public class ViewUserUpdate {
         setupButtonUI(button_UpdateFirstName, "Dialog", 18, 275, Pos.CENTER, 500, 193);
         button_UpdateFirstName.setOnAction((_) -> {
         	result = dialogUpdateFirstName.showAndWait();
+        	// Check if first name entered is longer than 32 characters
         	if(result.get().length() > 32) {
         		TextLengthEvaluator evaluator = TextLengthEvaluator.instance();
         		evaluator.showAlertDialogue();
         		return;
-        	};
-        	result.ifPresent(_ -> 
-        		theDatabase.updateFirstName(theUser.getUserName(), result.get())
-        	);
-        	theDatabase.getUserAccountDetails(theUser.getUserName());
-         	String newName = theDatabase.getCurrentFirstName();
-           	theUser.setFirstName(newName);
-        	if (newName == null || newName.length() < 1)label_CurrentFirstName.setText("<none>");
-        	else label_CurrentFirstName.setText(newName);
-         	});
+        	} else {
+        		result.ifPresent(_ -> theDatabase.updateFirstName(theUser.getUserName(), result.get()));
+        		theDatabase.getUserAccountDetails(theUser.getUserName());
+        		String newName = theDatabase.getCurrentFirstName();
+        		theUser.setFirstName(newName);
+        		if (newName == null || newName.length() < 1)label_CurrentFirstName.setText("<none>");
+        		else label_CurrentFirstName.setText(newName);
+        	}});
                
         // Middle Name
         setupLabelUI(label_MiddleName, "Arial", 18, 190, Pos.BASELINE_RIGHT, 5, 250);
         setupLabelUI(label_CurrentMiddleName, "Arial", 18, 260, Pos.BASELINE_LEFT, 200, 250);
         setupButtonUI(button_UpdateMiddleName, "Dialog", 18, 275, Pos.CENTER, 500, 243);
-        button_UpdateMiddleName.setOnAction((_) -> {result = dialogUpdateMiddleName.showAndWait();
+        button_UpdateMiddleName.setOnAction((_) -> {
+        	result = dialogUpdateMiddleName.showAndWait();
+        	if(result.get().length() > 32) {
+        		TextLengthEvaluator evaluator = TextLengthEvaluator.instance();
+        		evaluator.showAlertDialogue();
+        		return;
+        	};
     		result.ifPresent(_ -> theDatabase.updateMiddleName(theUser.getUserName(), result.get()));
     		theDatabase.getUserAccountDetails(theUser.getUserName());
     		String newName = theDatabase.getCurrentMiddleName();
