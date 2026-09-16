@@ -60,6 +60,7 @@ public class Database {
 	private boolean currentAdminRole;
 	private boolean currentNewRole1;
 	private boolean currentNewRole2;
+	private boolean currentOneTimePassword;
 
 	/*******
 	 * <p> Method: Database </p>
@@ -116,7 +117,8 @@ public class Database {
 				+ "emailAddress VARCHAR(255), "
 				+ "adminRole BOOL DEFAULT FALSE, "
 				+ "newRole1 BOOL DEFAULT FALSE, "
-				+ "newRole2 BOOL DEFAULT FALSE)";
+				+ "newRole2 BOOL DEFAULT FALSE, "
+                + "oneTimePassword BOOL DEFAULT FALSE)";
 		statement.execute(userTable);
 
 		// Create the invitation codes table
@@ -126,7 +128,6 @@ public class Database {
 	            + "role VARCHAR(10))";
 	    statement.execute(invitationCodesTable);
 	}
-
 
 /*******
  * <p> Method: isDatabaseEmpty </p>
@@ -148,7 +149,6 @@ public class Database {
 	    }
 		return true;
 	}
-
 
 /*******
  * <p> Method: getNumberOfUsers </p>
@@ -183,8 +183,8 @@ public class Database {
  */
 	public void register(User user) throws SQLException {
 		String insertUser = "INSERT INTO userDB (userName, password, firstName, middleName, "
-				+ "lastName, preferredFirstName, emailAddress, adminRole, newRole1, newRole2) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "lastName, preferredFirstName, emailAddress, adminRole, newRole1, newRole2, oneTimePassword) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
 			currentUsername = user.getUserName();
 			pstmt.setString(1, currentUsername);
@@ -215,6 +215,9 @@ public class Database {
 
 			currentNewRole2 = user.getNewRole2();
 			pstmt.setBoolean(10, currentNewRole2);
+
+			currentOneTimePassword = user.getOneTimePassword();
+			pstmt.setBoolean(11, currentOneTimePassword);
 
 			pstmt.executeUpdate();
 		}
@@ -324,7 +327,6 @@ public class Database {
 		return false;
 	}
 
-
 	/*******
 	 * <p> Method: boolean doesUserExist(User user) </p>
 	 *
@@ -353,7 +355,6 @@ public class Database {
 	    return false; // If an error occurs, assume user doesn't exist
 	}
 
-
 	/*******
 	 * <p> Method: int getNumberOfRoles(User user) </p>
 	 *
@@ -372,7 +373,6 @@ public class Database {
 		if (user.getNewRole2()) numberOfRoles++;
 		return numberOfRoles;
 	}
-
 
 	/*******
 	 * <p> Method: String generateInvitationCode(String emailAddress, String role) </p>
@@ -430,7 +430,6 @@ public class Database {
 	    }
 		return 0;
 	}
-
 
 	/*******
 	 * <p> Method: boolean emailaddressHasBeenUsed(String emailAddress) </p>
@@ -558,16 +557,23 @@ public class Database {
 	 * @param password is the new password for the user
 	 *
 	 */
-	public void updatePassword(String username, String password) {
-	    String query = "UPDATE userDB SET password = ? WHERE username = ?";
+	public void updatePassword(String username, String password, boolean oneTimePassword) {
+	    String query = "UPDATE userDB SET password = ?, oneTimePassword = ? WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	        pstmt.setString(1, password);
-	        pstmt.setString(2, username);
+            pstmt.setBoolean(2, oneTimePassword);
+	        pstmt.setString(3, username);
 	        pstmt.executeUpdate();
 	        currentPassword = password;
+            currentOneTimePassword = oneTimePassword;
+            System.out.println("*** database.updatePassword: " + pstmt.toString());
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
+	}
+
+	public void updatePassword(String username, String password) {
+        updatePassword(username, password, false);
 	}
 
 	/*******
@@ -700,7 +706,6 @@ public class Database {
 		return null;
 	}
 
-
 	/*******
 	 * <p> Method: void updateLastName(String username, String lastName) </p>
 	 *
@@ -724,7 +729,6 @@ public class Database {
 	        e.printStackTrace();
 	    }
 	}
-
 
 	/*******
 	 * <p> Method: String getPreferredFirstName(String username) </p>
@@ -753,7 +757,6 @@ public class Database {
 		return null;
 	}
 
-
 	/*******
 	 * <p> Method: void updatePreferredFirstName(String username, String preferredFirstName) </p>
 	 *
@@ -777,7 +780,6 @@ public class Database {
 	        e.printStackTrace();
 	    }
 	}
-
 
 	/*******
 	 * <p> Method: String getEmailAddress(String username) </p>
@@ -806,7 +808,6 @@ public class Database {
 		return null;
 	}
 
-
 	/*******
 	 * <p> Method: void updateEmailAddress(String username, String emailAddress) </p>
 	 *
@@ -830,7 +831,6 @@ public class Database {
 	        e.printStackTrace();
 	    }
 	}
-
 
 	/*******
 	 * <p> Method: boolean getUserAccountDetails(String username) </p>
@@ -859,12 +859,12 @@ public class Database {
 	    	currentAdminRole = rs.getBoolean(9);
 	    	currentNewRole1 = rs.getBoolean(10);
 	    	currentNewRole2 = rs.getBoolean(11);
+            currentOneTimePassword = rs.getBoolean(12);
 			return true;
 	    } catch (SQLException e) {
 			return false;
 	    }
 	}
-
 
 	/*******
 	 * <p> Method: boolean updateUserRole(String username, String role, String value) </p>
@@ -931,7 +931,6 @@ public class Database {
 		return false;
 	}
 
-
 	// Attribute getters for the current user
 	/*******
 	 * <p> Method: String getCurrentUsername() </p>
@@ -941,8 +940,7 @@ public class Database {
 	 * @return the username value is returned
 	 *
 	 */
-	public String getCurrentUsername() { return currentUsername;};
-
+	public String getCurrentUsername() { return currentUsername; };
 
 	/*******
 	 * <p> Method: String getCurrentPassword() </p>
@@ -952,8 +950,7 @@ public class Database {
 	 * @return the password value is returned
 	 *
 	 */
-	public String getCurrentPassword() { return currentPassword;};
-
+	public String getCurrentPassword() { return currentPassword; };
 
 	/*******
 	 * <p> Method: String getCurrentFirstName() </p>
@@ -963,8 +960,7 @@ public class Database {
 	 * @return the first name value is returned
 	 *
 	 */
-	public String getCurrentFirstName() { return currentFirstName;};
-
+	public String getCurrentFirstName() { return currentFirstName; };
 
 	/*******
 	 * <p> Method: String getCurrentMiddleName() </p>
@@ -974,8 +970,7 @@ public class Database {
 	 * @return the middle name value is returned
 	 *
 	 */
-	public String getCurrentMiddleName() { return currentMiddleName;};
-
+	public String getCurrentMiddleName() { return currentMiddleName; };
 
 	/*******
 	 * <p> Method: String getCurrentLastName() </p>
@@ -985,8 +980,7 @@ public class Database {
 	 * @return the last name value is returned
 	 *
 	 */
-	public String getCurrentLastName() { return currentLastName;};
-
+	public String getCurrentLastName() { return currentLastName; };
 
 	/*******
 	 * <p> Method: String getCurrentPreferredFirstName( </p>
@@ -996,8 +990,7 @@ public class Database {
 	 * @return the preferred first name value is returned
 	 *
 	 */
-	public String getCurrentPreferredFirstName() { return currentPreferredFirstName;};
-
+	public String getCurrentPreferredFirstName() { return currentPreferredFirstName; };
 
 	/*******
 	 * <p> Method: String getCurrentEmailAddress() </p>
@@ -1007,8 +1000,7 @@ public class Database {
 	 * @return the email address value is returned
 	 *
 	 */
-	public String getCurrentEmailAddress() { return currentEmailAddress;};
-
+	public String getCurrentEmailAddress() { return currentEmailAddress; };
 
 	/*******
 	 * <p> Method: boolean getCurrentAdminRole() </p>
@@ -1018,8 +1010,7 @@ public class Database {
 	 * @return true if this user plays an Admin role, else false
 	 *
 	 */
-	public boolean getCurrentAdminRole() { return currentAdminRole;};
-
+	public boolean getCurrentAdminRole() { return currentAdminRole; };
 
 	/*******
 	 * <p> Method: boolean getCurrentNewRole1() </p>
@@ -1029,8 +1020,7 @@ public class Database {
 	 * @return true if this user plays a Student role, else false
 	 *
 	 */
-	public boolean getCurrentNewRole1() { return currentNewRole1;};
-
+	public boolean getCurrentNewRole1() { return currentNewRole1; };
 
 	/*******
 	 * <p> Method: boolean getCurrentNewRole2() </p>
@@ -1040,8 +1030,17 @@ public class Database {
 	 * @return true if this user plays a Reviewer role, else false
 	 *
 	 */
-	public boolean getCurrentNewRole2() { return currentNewRole2;};
+	public boolean getCurrentNewRole2() { return currentNewRole2; };
 
+	/*******
+	 * <p> Method: boolean getCurrentOneTimePassword() </p>
+	 *
+	 * <p> Description: Get the current user's oneTimePassword attribute.</p>
+	 *
+	 * @return true if this user's is a one-time password, else false
+	 *
+	 */
+	public boolean getOneTimePassword() { return currentOneTimePassword; };
 
 	/*******
 	 * <p> Debugging method</p>
@@ -1066,7 +1065,6 @@ public class Database {
 		}
 		resultSet.close();
 	}
-
 
 	/*******
 	 * <p> Method: void closeConnection()</p>

@@ -3,10 +3,7 @@ package guiSetOTP;
 import java.util.Optional;
 
 import database.Database;
-import javafx.collections.FXCollections;
-import javafx.geometry.Pos;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
 
 /*******
  * <p> Title: ControllerSetOTP Class. </p>
@@ -51,7 +48,6 @@ public class ControllerSetOTP {
             return;
         }
         ViewSetOTP.text_SetPassword.setText("");
-        ViewSetOTP.label_UserDetails.setText("Setting One-Time Password for: " + ViewSetOTP.theSelectedUser);
     }
 
 
@@ -110,11 +106,16 @@ public class ControllerSetOTP {
     protected static void performChange() {
         // NOTE: Optional<ButtonType> is needed to handle cases where dialog is closed abruptly
         Optional<ButtonType> result = ViewSetOTP.alert_ChangePassword.showAndWait();
-        if (result.isPresent()) System.out.println(result.get());
+
+        String stdoutMessage = result.isPresent() ? result.get().getText() : "No result presnet";
+        System.out.println("*** ControllerSetOTP.performChange(): " + stdoutMessage);
+
         if (result.isPresent() && result.get() == ButtonType.YES) {
             String selectedUser = ViewSetOTP.theSelectedUser;
             String newPassword = ViewSetOTP.text_SetPassword.getText();
-            theDatabase.updatePassword(selectedUser, newPassword);
+            theDatabase.updatePassword(selectedUser, newPassword, true);
+
+            guiAdminHome.ViewAdminHome.displayAdminHome(ViewSetOTP.theStage, ViewSetOTP.theUser);
         }
     }
 
