@@ -1,8 +1,11 @@
 package guiSetOTP;
 
+import java.util.Optional;
+
 import database.Database;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 
 /*******
@@ -83,6 +86,7 @@ public class ControllerSetOTP {
                 ViewSetOTP.label_SetPassword,
                 ViewSetOTP.text_SetPassword,
                 ViewSetOTP.button_RandomPassword,
+                ViewSetOTP.button_ChangePassword,
                 ViewSetOTP.button_Return,
                 ViewSetOTP.button_Logout,
                 ViewSetOTP.button_Quit
@@ -94,6 +98,25 @@ public class ControllerSetOTP {
 		ViewSetOTP.theStage.show();
 	}
 
+	/**********
+	 * <p> Method: performChange() </p>
+	 *
+	 * <p> Description: This method opens a confirmation dialog box. If yes
+     * is selected, the selected user's password will be set to the one-time
+     * password given in the guiSetOTP Page "set password:" field. If no is
+     * selected, nothing happens. </p>
+	 *
+	 */
+    protected static void performChange() {
+        // NOTE: Optional<ButtonType> is needed to handle cases where dialog is closed abruptly
+        Optional<ButtonType> result = ViewSetOTP.alert_ChangePassword.showAndWait();
+        if (result.isPresent()) System.out.println(result.get());
+        if (result.isPresent() && result.get() == ButtonType.YES) {
+            String selectedUser = ViewSetOTP.theSelectedUser;
+            String newPassword = ViewSetOTP.text_SetPassword.getText();
+            theDatabase.updatePassword(selectedUser, newPassword);
+        }
+    }
 
 	/**********
 	 * <p> Method: performReturn() </p>

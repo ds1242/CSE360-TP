@@ -2,13 +2,15 @@ package guiSetOTP;
 
 import database.Database;
 import entityClasses.User;
-import java.util.ArrayList;
 import java.util.List;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -25,7 +27,6 @@ public class ViewSetOTP {
 	protected static Label label_PageTitle = new Label();
 	protected static Label label_UserDetails = new Label();
 	protected static Button button_UpdateThisUser = new Button("Account Update");
-
 	protected static Line line_Separator1 = new Line(20, 95, width-20, 95);
 
 	protected static Label label_SelectUser = new Label("Select a user to be updated: ");
@@ -33,22 +34,23 @@ public class ViewSetOTP {
 
     protected static Label label_SetPassword = new Label("Set password: ");
     protected static TextField text_SetPassword = new TextField();
-    protected static Button button_RandomPassword = new Button("Random Password");
+    protected static Button button_RandomPassword = new Button("Randomize");
+
+	protected static Button button_ChangePassword = new Button("Change Password");
+    protected static Alert alert_ChangePassword = new Alert(AlertType.CONFIRMATION);
 
     protected static Line line_Separator4 = new Line(20, 525, width-20,525);
-
 	protected static Button button_Return = new Button("Return");
 	protected static Button button_Logout = new Button("Logout");
 	protected static Button button_Quit = new Button("Quit");
 
 	private static ViewSetOTP theView;
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
-
 	protected static Stage theStage;
 	protected static Pane theRootPane;
 	protected static User theUser;
-
 	public static Scene theSetOTPScene = null;
+
     // NOTE: we initialize selected user to this particular value because it's the initial
     // value of the combo box. If not set to this, the else branch of
 	protected static String theSelectedUser = "<Select a User>";
@@ -134,7 +136,14 @@ public class ViewSetOTP {
 		setupButtonUI(button_RandomPassword, "Dialog", 16, 180, Pos.BASELINE_LEFT, buttonPosX, 205);
 		button_RandomPassword.setOnAction((_) -> { text_SetPassword.setText(theDatabase.generateOneTimePassword()); });
 
-		// GUI Area 3
+        setupButtonUI(button_ChangePassword, "Dialog", 18, 300, Pos.CENTER, width/2-150, 375);
+        button_ChangePassword.setOnAction((_) -> { ControllerSetOTP.performChange();});
+        alert_ChangePassword.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+        alert_ChangePassword.setTitle("Set One-Time Password Confirmation");
+        alert_ChangePassword.setHeaderText("You are about to permanently change this user's password.");
+        alert_ChangePassword.setContentText("Are you sure you want to proceed?");
+
+		// GUI footer buttons
 		setupButtonUI(button_Return, "Dialog", 18, 210, Pos.CENTER, 20, 540);
         setupButtonUI(button_Logout, "Dialog", 18, 210, Pos.CENTER, 300, 540);
         setupButtonUI(button_Quit,   "Dialog", 18, 210, Pos.CENTER, 570, 540);
