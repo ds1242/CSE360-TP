@@ -122,6 +122,8 @@ public class ViewUserUpdate {
 	public static Scene theUserUpdateScene = null;	// The Scene each invocation populates
 
 	private static Optional<String> result;		// The result from a pop-up dialog
+	
+	protected static Alert alertPasswordEmailError = new Alert(AlertType.INFORMATION);
 
 	protected static Alert alertPasswordEmailError = new Alert(AlertType.INFORMATION);
 
@@ -250,6 +252,9 @@ public class ViewUserUpdate {
 
 		dialogUpdateEmailAddresss.setTitle("Update Email Address");
 		dialogUpdateEmailAddresss.setHeaderText("Update your Email Address");
+		
+		alertPasswordEmailError.setTitle("Error Updating Password");
+		alertPasswordEmailError.setHeaderText("Unable to update password");
 
 		alertPasswordEmailError.setTitle("Error Updating Password");
 		alertPasswordEmailError.setHeaderText("Unable to update password");
