@@ -542,6 +542,32 @@ public class Database {
 		return;
 	}
 	
+	/*******
+	 * <p> Method: void updatePassword(String username, String firstName) </p>
+	 * 
+	 * <p> Description: Update the password of a user given that user's username and the new
+	 *		password.</p>
+	 *
+	 *<p> This stores the password in plaintext. Do we need to hash this later?
+	 * 
+	 * @param username is the username of the user
+	 * 
+	 * @param password is the new password for the user
+	 *  
+	 */
+	// update the first name
+	public void updatePassword(String username, String password) {
+	    String query = "UPDATE userDB SET password = ? WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, password);
+	        pstmt.setString(2, username);
+	        pstmt.executeUpdate();
+	        currentPassword = password;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
 	
 	/*******
 	 * <p> Method: String getFirstName(String username) </p>
