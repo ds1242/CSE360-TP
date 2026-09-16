@@ -547,6 +547,8 @@ public class Database {
 	 * 
 	 * <p> Description: Update the password of a user given that user's username and the new
 	 *		password.</p>
+	 *
+	 *<p> This stores the password in plaintext. Do we need to hash this later?
 	 * 
 	 * @param username is the username of the user
 	 * 

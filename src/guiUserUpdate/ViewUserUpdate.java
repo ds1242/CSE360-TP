@@ -5,9 +5,11 @@ import java.util.Optional;
 import database.Database;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -120,6 +122,8 @@ public class ViewUserUpdate {
 	public static Scene theUserUpdateScene = null;	// The Scene each invocation populates
 
 	private static Optional<String> result;		// The result from a pop-up dialog
+	
+	protected static Alert alertPasswordError = new Alert(AlertType.INFORMATION);
 
 	/*-********************************************************************************************
 
@@ -225,6 +229,8 @@ public class ViewUserUpdate {
 		dialogUpdatePreferredFirstName = new TextInputDialog("");
 		dialogUpdateEmailAddresss = new TextInputDialog("");
 		dialogUpdatePassword = new TextInputDialog("");
+		
+		
 
 		// Establish the label for each of the dialogs.
 		dialogUpdatePassword.setTitle("Update your Password");
@@ -244,6 +250,9 @@ public class ViewUserUpdate {
 		
 		dialogUpdateEmailAddresss.setTitle("Update Email Address");
 		dialogUpdateEmailAddresss.setHeaderText("Update your Email Address");
+		
+		alertPasswordError.setTitle("Error Updating Password");
+		alertPasswordError.setHeaderText("Unable to update password");
 
 		// Label theScene with the name of the startup screen, centered at the top of the pane
 		setupLabelUI(label_ApplicationTitle, "Arial", 28, width, Pos.CENTER, 0, 5);
@@ -269,20 +278,28 @@ public class ViewUserUpdate {
         	// Check if password entered is valid
         	// show alert error and return
         	// else update password name
-        	String validPassword = EmailAddressRecognizer.checkEmailAddress(result.get());
+        	String validPassword = PasswordEvaluator.evaluatePassword(result.get());
+        	
         	if(validPassword != "") {
         		// TODO: update this to a different error
+        		alertPasswordError.setContentText(validPassword);
+        		alertPasswordError.showAndWait();
+        		return;
+        	} 
+        	
+        	if (validPassword.length() > 32) {
+        		// check for length of password
         		TextLengthEvaluator evaluator = TextLengthEvaluator.instance();
         		evaluator.showAlertDialogue();
         		return;
-        	} else {
+        	}  	else {
         		//TODO: need a method to update the password in the DB
 	    		result.ifPresent(_ -> theDatabase.updatePassword(theUser.getUserName(), result.get()));
 	    		theDatabase.getUserAccountDetails(theUser.getUserName());
 	    		String newPassword = theDatabase.getCurrentPassword();
-	           	theUser.setEmailAddress(newPassword);
-	        	if (newPassword == null || newPassword.length() < 1)label_CurrentEmailAddress.setText("<none>");
-	        	else label_CurrentEmailAddress.setText(newPassword);
+	           	theUser.setPassword(newPassword);
+	        	if (newPassword == null || newPassword.length() < 1)label_CurrentPassword.setText("<none>");
+	        	else label_CurrentPassword.setText(newPassword);
         	}});
         
         // First Name
