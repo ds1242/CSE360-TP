@@ -1,0 +1,12 @@
+[[lib]]
+jars = [
+    "lib/javafx-sdk-25.0.4/lib/javafx.base.jar",
+    "lib/javafx-sdk-25.0.4/lib/javafx.controls.jar",
+    "lib/javafx-sdk-25.0.4/lib/javafx.graphics.jar",
+    "lib/javafx-sdk-25.0.4/lib/javafx.fxml.jar",
+]
+src = "lib/javafx-sdk-25.0.4/src.zip"
+
+[[lib]]
+jars = ["lib/h2/bin/h2-2.4.240.jar"]
+src  = "lib/h2/src/main"
