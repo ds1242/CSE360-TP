@@ -123,7 +123,7 @@ public class ViewUserUpdate {
 
 	private static Optional<String> result;		// The result from a pop-up dialog
 	
-	protected static Alert alertPasswordError = new Alert(AlertType.INFORMATION);
+	protected static Alert alertPasswordEmailError = new Alert(AlertType.INFORMATION);
 
 	/*-********************************************************************************************
 
@@ -251,8 +251,8 @@ public class ViewUserUpdate {
 		dialogUpdateEmailAddresss.setTitle("Update Email Address");
 		dialogUpdateEmailAddresss.setHeaderText("Update your Email Address");
 		
-		alertPasswordError.setTitle("Error Updating Password");
-		alertPasswordError.setHeaderText("Unable to update password");
+		alertPasswordEmailError.setTitle("Error Updating Password");
+		alertPasswordEmailError.setHeaderText("Unable to update password");
 
 		// Label theScene with the name of the startup screen, centered at the top of the pane
 		setupLabelUI(label_ApplicationTitle, "Arial", 28, width, Pos.CENTER, 0, 5);
@@ -281,8 +281,8 @@ public class ViewUserUpdate {
         	String validPassword = PasswordEvaluator.evaluatePassword(result.get());
         	
         	if(validPassword != "") {
-        		alertPasswordError.setContentText(validPassword);
-        		alertPasswordError.showAndWait();
+        		alertPasswordEmailError.setContentText(validPassword);
+        		alertPasswordEmailError.showAndWait();
         		return;
         	} 
         	
@@ -403,8 +403,8 @@ public class ViewUserUpdate {
         	String validEmail = EmailAddressRecognizer.checkEmailAddress(result.get());
         	if(validEmail != "") {
         		// TODO: update this to a different error
-        		TextLengthEvaluator evaluator = TextLengthEvaluator.instance();
-        		evaluator.showAlertDialogue();
+        		alertPasswordEmailError.setContentText(validEmail);
+        		alertPasswordEmailError.showAndWait();
         		return;
         	} else {
 	    		result.ifPresent(_ -> theDatabase.updateEmailAddress(theUser.getUserName(), result.get()));
