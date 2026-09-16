@@ -115,6 +115,7 @@ public class ControllerSetOTP {
             String newPassword = ViewSetOTP.text_SetPassword.getText();
             theDatabase.updatePassword(selectedUser, newPassword, true);
 
+
             guiAdminHome.ViewAdminHome.displayAdminHome(ViewSetOTP.theStage, ViewSetOTP.theUser);
         }
     }

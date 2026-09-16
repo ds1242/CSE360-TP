@@ -27,14 +27,10 @@ public class ControllerNewPassword {
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
 
 	/**********
-	 * <p> Method: public doCreateUser() </p>
+	 * <p> Method: public doChangePassword() </p>
 	 *
-	 * <p> Description: This method is called when the user has clicked on the User Setup
-	 * button.  This method checks the input fields to see that they are valid.  If so, it then
-	 * creates the account by adding information to the database.
-	 *
-	 * The method reaches batch to the view page and to fetch the information needed rather than
-	 * passing that information as parameters.
+	 * <p> Description: This method is called when the user has clicked on the Change Password button.
+     * If password is valid, it will update the password information to the database. </p>
 	 *
 	 */
 	protected static void doChangePassword() {
