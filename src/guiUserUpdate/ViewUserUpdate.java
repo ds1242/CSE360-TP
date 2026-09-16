@@ -281,13 +281,12 @@ public class ViewUserUpdate {
         	String validPassword = PasswordEvaluator.evaluatePassword(result.get());
         	
         	if(validPassword != "") {
-        		// TODO: update this to a different error
         		alertPasswordError.setContentText(validPassword);
         		alertPasswordError.showAndWait();
         		return;
         	} 
         	
-        	if (validPassword.length() > 32) {
+        	if (result.get().length() > 32) {
         		// check for length of password
         		TextLengthEvaluator evaluator = TextLengthEvaluator.instance();
         		evaluator.showAlertDialogue();
