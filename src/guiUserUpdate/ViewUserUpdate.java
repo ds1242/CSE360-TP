@@ -124,6 +124,8 @@ public class ViewUserUpdate {
 	private static Optional<String> result;		// The result from a pop-up dialog
 	
 	protected static Alert alertPasswordEmailError = new Alert(AlertType.INFORMATION);
+	
+	
 
 	protected static Alert alertPasswordEmailError = new Alert(AlertType.INFORMATION);
 
@@ -293,8 +295,7 @@ public class ViewUserUpdate {
 
         	if (result.get().length() > 32) {
         		// check for length of password
-        		TextLengthEvaluator evaluator = TextLengthEvaluator.instance();
-        		evaluator.showAlertDialogue();
+        		TextLengthEvaluator.instance().showAlertDialogue();
         		return;
         	}  	else {
         		//TODO: need a method to update the password in the DB
@@ -316,8 +317,8 @@ public class ViewUserUpdate {
         	// show alert error and return
         	// else update first name
         	if(result.get().length() > 32) {
-        		TextLengthEvaluator evaluator = TextLengthEvaluator.instance();
-        		evaluator.showAlertDialogue();
+        		// display alert dialog
+        		TextLengthEvaluator.instance().showAlertDialogue();
         		return;
         	} else {
         		result.ifPresent(_ -> theDatabase.updateFirstName(theUser.getUserName(), result.get()));
@@ -339,8 +340,8 @@ public class ViewUserUpdate {
         	// show alert error and return
         	// else update middle name
         	if(result.get().length() > 32) {
-        		TextLengthEvaluator evaluator = TextLengthEvaluator.instance();
-        		evaluator.showAlertDialogue();
+        		// display alert dialog
+        		TextLengthEvaluator.instance().showAlertDialogue();
         		return;
         	} else {
         		result.ifPresent(_ -> theDatabase.updateMiddleName(theUser.getUserName(), result.get()));
@@ -361,8 +362,8 @@ public class ViewUserUpdate {
         	// show alert error and return
         	// else update last name
         	if(result.get().length() > 32) {
-        		TextLengthEvaluator evaluator = TextLengthEvaluator.instance();
-        		evaluator.showAlertDialogue();
+        		// display alert dialog
+        		TextLengthEvaluator.instance().showAlertDialogue();
         		return;
         	} else {
 	    		result.ifPresent(_ -> theDatabase.updateLastName(theUser.getUserName(), result.get()));
@@ -385,8 +386,8 @@ public class ViewUserUpdate {
         	// show alert error and return
         	// else update preferred name
         	if(result.get().length() > 32) {
-        		TextLengthEvaluator evaluator = TextLengthEvaluator.instance();
-        		evaluator.showAlertDialogue();
+        		// display alert dialog
+        		TextLengthEvaluator.instance().showAlertDialogue();
         		return;
         	} else {
         		result.ifPresent(_ -> theDatabase.updatePreferredFirstName(theUser.getUserName(), result.get()));
