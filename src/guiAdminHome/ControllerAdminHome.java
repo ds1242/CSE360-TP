@@ -114,12 +114,6 @@ public class ControllerAdminHome {
 	 */
 	protected static void setOnetimePassword () {
 		guiSetOTP.ViewSetOTP.displaySetOTP(ViewAdminHome.theStage, ViewAdminHome.theUser);
-
-		// System.out.println("\n*** WARNING ***: One-Time Password Not Yet Implemented");
-		// ViewAdminHome.alertNotImplemented.setTitle("*** WARNING ***");
-		// ViewAdminHome.alertNotImplemented.setHeaderText("One-Time Password Issue");
-		// ViewAdminHome.alertNotImplemented.setContentText("One-Time Password Not Yet Implemented");
-		// ViewAdminHome.alertNotImplemented.showAndWait();
 	}
 
 	/**********
@@ -131,11 +125,7 @@ public class ControllerAdminHome {
 	 * this function has not yet been implemented. </p>
 	 */
 	protected static void deleteUser() {
-		System.out.println("\n*** WARNING ***: Delete User Not Yet Implemented");
-		ViewAdminHome.alertNotImplemented.setTitle("*** WARNING ***");
-		ViewAdminHome.alertNotImplemented.setHeaderText("Delete User Issue");
-		ViewAdminHome.alertNotImplemented.setContentText("Delete User Not Yet Implemented");
-		ViewAdminHome.alertNotImplemented.showAndWait();
+        guiAdminDeleteUser.ViewAdminDeleteUser.displayDeleteUser(ViewAdminHome.theStage, ViewAdminHome.theUser);
 	}
 
 	/**********
