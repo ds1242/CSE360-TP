@@ -124,10 +124,6 @@ public class ViewUserUpdate {
 	private static Optional<String> result;		// The result from a pop-up dialog
 	
 	protected static Alert alertPasswordEmailError = new Alert(AlertType.INFORMATION);
-	
-	
-
-	protected static Alert alertPasswordEmailError = new Alert(AlertType.INFORMATION);
 
 	/*-********************************************************************************************
 
