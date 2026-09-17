@@ -70,14 +70,23 @@ public class ControllerNewAccount {
 		String password = ViewNewAccount.text_Password1.getText();
 
 		//Check user-name for validity with UserName Evaluator
-		if (UsernameEvaluator.checkForValidUserName(username) != "") {
+		String userNameError = UsernameEvaluator.checkForValidUserName(username);
+		if (userNameError != "") {
 			//issue with user-name. Display string error in GUI format...
+			ViewNewAccount.alertUsernamePasswordFormatError.setHeaderText("UserName is not formatted correctly!");
+			ViewNewAccount.alertUsernamePasswordFormatError.setContentText(userNameError);
+			ViewNewAccount.alertUsernamePasswordFormatError.showAndWait();
 			return;
 		}
 
 		//Check password for validity with Password Evaluator
-		if (PasswordEvaluator.evaluatePassword(password) != "") {
+		String passwordError = PasswordEvaluator.evaluatePassword(password);
+		if (passwordError != "") {
 			//issue with password. Display string error with GUI format...
+			ViewNewAccount.alertUsernamePasswordFormatError.setHeaderText("Password is not formatted correctly!");
+			ViewNewAccount.alertUsernamePasswordFormatError.setContentText(passwordError);
+			ViewNewAccount.alertUsernamePasswordFormatError.showAndWait();
+			ViewNewAccount.text_Password2.clear();
 			return;
 		}
 

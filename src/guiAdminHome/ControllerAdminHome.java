@@ -1,7 +1,7 @@
 package guiAdminHome;
 
 import database.Database;
-import cse360.GRP.ADES.evaluator.EmailAddressRecognizer;
+import cse360.GRP.ADES.evaluator.EmailAddressEvaluator;
 
 /*******
  * <p> Title: GUIAdminHomePage Class. </p>
@@ -185,7 +185,7 @@ public class ControllerAdminHome {
 		// EmailAddressRecognizer package with checkEmailAddress to check for valid
 		// email. Returns an error string to be displayed if an invalid email is used
 		// otherwise empty.
-		String validEmail = EmailAddressRecognizer.checkEmailAddress(emailAddress);
+		String validEmail = EmailAddressEvaluator.checkEmailAddress(emailAddress);
 		if (validEmail != "") {
 			ViewAdminHome.alertEmailError.setContentText(validEmail);
 			ViewAdminHome.alertEmailError.showAndWait();
