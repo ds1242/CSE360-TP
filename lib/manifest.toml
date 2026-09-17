@@ -9,4 +9,5 @@ src = "lib/javafx-sdk-25.0.4/src.zip"
 
 [[lib]]
 jars = ["lib/h2/bin/h2-2.4.240.jar"]
-src  = "lib/h2/src/main"
+src = "lib/h2/src.zip"
+# src  = "lib/h2/src/main"
