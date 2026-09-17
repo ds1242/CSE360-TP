@@ -1,5 +1,5 @@
 package passwordEvaluationTestbedMain;
-import userNameRecognizerTestbed.*;
+import cse360.GRP.ADES.evaluator.*;
 
 /*******
  * <p> Title: PasswordEvaluationTestingAutomation Class. </p>
@@ -78,11 +78,25 @@ public class PasswordEvaluationTestingAutomation {
 		performUsernameTestCase(13, "-voldemort", false);
 		
 		// This is a properly written negative test case
-		// It tests to make sure
+		// It tests to make sure the email length is not to long
 		performEmailTestCase(14, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012"
 				+ "3456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789A"
 				+ "BCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJ"
 				+ "KLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", false);
+		
+		// This is a properly written negative test case
+		// This tests to make sure the email is not empty
+		performEmailTestCase(15, "", false);
+		
+		// This is a properly written negative test case
+		// It tests to make sure that there are not invalid special characters
+		performEmailTestCase(15, "YippyKiAy@yip&py.com", false);
+		performEmailTestCase(16, "YippyKiAy@-yippy.com", false);
+		performEmailTestCase(15, "YippyKiAy@yippy.com-", false);
+		performEmailTestCase(15, "-YippyKiAy@yippy.com", false);
+		performEmailTestCase(15, "YippyKiAy13yippy.com", false);
+		performEmailTestCase(15, "YippyKiAy@yip&py.com", false);
+		performEmailTestCase(15, "YippyKiAy@yippycom", false);
 
 		
 		/************** End of the test cases **************/
@@ -109,7 +123,7 @@ public class PasswordEvaluationTestingAutomation {
 		System.out.println("\nFinite state machine execution trace:");
 		
 		/************** Call the recognizer to process the input **************/
-		String resultText= passwordPopUpWindow.Model.evaluatePassword(inputText);
+		String resultText= PasswordEvaluator.evaluatePassword(inputText);
 		
 		/************** Interpret the result and display that interpreted information **************/
 		System.out.println();
@@ -148,7 +162,7 @@ public class PasswordEvaluationTestingAutomation {
 				numFailed++;
 			}
 		}
-		displayEvaluation();
+		
 	}
 	
 	private static void performUsernameTestCase(int testCase, String inputText, boolean expectedPass) {
@@ -161,7 +175,7 @@ public class PasswordEvaluationTestingAutomation {
 		
 		/************** Call the recognizer to process the input **************/
 		 
-		String resultText= UserNameRecognizer.checkForValidUserName(inputText);
+		String resultText= UsernameEvaluator.checkForValidUserName(inputText);
 		
 		/************** Interpret the result and display that interpreted information **************/
 		System.out.println();
@@ -170,14 +184,14 @@ public class PasswordEvaluationTestingAutomation {
 		if (resultText != "") {
 			 // If the test case expected the test to pass then this is a failure
 			if (expectedPass) {
-				System.out.println("***Failure*** The username <" + inputText + "> is invalid." + 
+				System.out.println("***Failure*** The UserName <" + inputText + "> is invalid." + 
 						"\nBut it was supposed to be valid, so this is a failure!\n");
 				System.out.println("Error message: " + resultText);
 				numFailed++;
 			}
 			// If the test case expected the test to fail then this is a success
 			else {			
-				System.out.println("***Success*** The username <" + inputText + "> is invalid." + 
+				System.out.println("***Success*** The UserName <" + inputText + "> is invalid." + 
 						"\nBut it was supposed to be invalid, so this is a pass!\n");
 				System.out.println("Error message: " + resultText);
 				numPassed++;
@@ -188,13 +202,64 @@ public class PasswordEvaluationTestingAutomation {
 		else {	
 			// If the test case expected the test to pass then this is a success
 			if (expectedPass) {	
-				System.out.println("***Success*** The username <" + inputText + 
+				System.out.println("***Success*** The UserName <" + inputText + 
 						"> is valid, so this is a pass!");
 				numPassed++;
 			}
 			// If the test case expected the test to fail then this is a failure
 			else {
-				System.out.println("***Failure*** The username <" + inputText + 
+				System.out.println("***Failure*** The UserName <" + inputText + 
+						"> was judged as valid" + 
+						"\nBut it was supposed to be invalid, so this is a failure!");
+				numFailed++;
+			}
+		}
+	}
+	
+private static void performEmailTestCase(int testCase, String inputText, boolean expectedPass) {
+		
+		/************** Display an individual test case header **************/
+		System.out.println("____________________________________________________________________________\n\nTest case: " + testCase);
+		System.out.println("Input: \"" + inputText + "\"");
+		System.out.println("______________");
+		System.out.println("\nFinite state machine execution trace:");
+		
+		/************** Call the recognizer to process the input **************/
+		 
+		String resultText= EmailAddressRecognizer.checkEmailAddress(inputText);
+		
+		/************** Interpret the result and display that interpreted information **************/
+		System.out.println();
+		
+		// If the resulting text is empty, the recognizer accepted the input
+		if (resultText != "") {
+			 // If the test case expected the test to pass then this is a failure
+			if (expectedPass) {
+				System.out.println("***Failure*** The Email <" + inputText + "> is invalid." + 
+						"\nBut it was supposed to be valid, so this is a failure!\n");
+				System.out.println("Error message: " + resultText);
+				numFailed++;
+			}
+			// If the test case expected the test to fail then this is a success
+			else {			
+				System.out.println("***Success*** The Email <" + inputText + "> is invalid." + 
+						"\nBut it was supposed to be invalid, so this is a pass!\n");
+				System.out.println("Error message: " + resultText);
+				numPassed++;
+			}
+		}
+		
+		// If the resulting text is empty, the recognizer accepted the input
+		else {	
+			// If the test case expected the test to pass then this is a success
+			if (expectedPass) {	
+				System.out.println("***Success*** The Email <" + inputText + 
+						"> is valid, so this is a pass!");
+				numPassed++;
+			}
+			// If the test case expected the test to fail then this is a failure
+			else {
+				System.out.println("***Failure*** The Email <" + inputText + 
 						"> was judged as valid" + 
 						"\nBut it was supposed to be invalid, so this is a failure!");
 				numFailed++;
@@ -203,33 +268,6 @@ public class PasswordEvaluationTestingAutomation {
 	}
 	
 	
-	private static void displayEvaluation() {
-		
-		if (passwordPopUpWindow.Model.foundUpperCase)
-			System.out.println("At least one upper case letter - Satisfied");
-		else
-			System.out.println("At least one upper case letter - Not Satisfied");
 
-		if (passwordPopUpWindow.Model.foundLowerCase)
-			System.out.println("At least one lower case letter - Satisfied");
-		else
-			System.out.println("At least one lower case letter - Not Satisfied");
-	
-
-		if (passwordPopUpWindow.Model.foundNumericDigit)
-			System.out.println("At least one digit - Satisfied");
-		else
-			System.out.println("At least one digit - Not Satisfied");
-
-		if (passwordPopUpWindow.Model.foundSpecialChar)
-			System.out.println("At least one special character - Satisfied");
-		else
-			System.out.println("At least one special character - Not Satisfied");
-
-		if (passwordPopUpWindow.Model.foundLongEnough)
-			System.out.println("At least 8 characters - Satisfied");
-		else
-			System.out.println("At least 8 characters - Not Satisfied");
-	}
 	
 }
