@@ -61,6 +61,9 @@ public class ViewNewAccount {
 
 	// This alert is used should the user enter two passwords that do not match
 	protected static Alert alertUsernamePasswordError = new Alert(AlertType.INFORMATION);
+	
+	//Alert is used to show error about password and username format issues.
+	protected static Alert alertUsernamePasswordFormatError = new Alert(AlertType.INFORMATION);
 
     protected static Button button_Quit = new Button("Quit");
 
@@ -194,6 +197,8 @@ public class ViewNewAccount {
 		alertUsernamePasswordError.setTitle("Passwords Do Not Match");
 		alertUsernamePasswordError.setHeaderText("The two passwords must be identical.");
 		alertUsernamePasswordError.setContentText("Correct the passwords and try again.");
+		
+		alertUsernamePasswordFormatError.setTitle("Incorrect Input Format!");
 
         // Set up the account creation and login
         setupButtonUI(button_UserSetup, "Dialog", 18, 200, Pos.CENTER, 475, 210);

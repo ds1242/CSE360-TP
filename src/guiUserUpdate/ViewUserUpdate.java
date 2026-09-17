@@ -15,7 +15,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import entityClasses.User;
 import cse360.GRP.ADES.evaluator.PasswordEvaluator;
-import cse360.GRP.ADES.evaluator.EmailAddressRecognizer;
+import cse360.GRP.ADES.evaluator.EmailAddressEvaluator;
 import cse360.GRP.ADES.evaluator.textLengthEvaluation.TextLengthEvaluator;
 
 /*******
@@ -403,7 +403,7 @@ public class ViewUserUpdate {
         	// Check if email entered is valid
         	// show alert error and return
         	// else update email name
-        	String validEmail = EmailAddressRecognizer.checkEmailAddress(result.get());
+        	String validEmail = EmailAddressEvaluator.checkEmailAddress(result.get());
         	if(validEmail != "") {
         		// TODO: update this to a different error
         		alertPasswordEmailError.setContentText(validEmail);

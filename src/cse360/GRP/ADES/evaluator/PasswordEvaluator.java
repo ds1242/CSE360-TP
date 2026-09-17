@@ -114,25 +114,25 @@ public class PasswordEvaluator {
 		// Construct a String with a list of the requirement elements that were found.
 		String errMessage = "";
 		if (!foundUpperCase)
-			errMessage += "Upper case; ";
+			errMessage += "At Least (1) Upper Case Letter..\n";
 		
 		if (!foundLowerCase)
-			errMessage += "Lower case; ";
+			errMessage += "At least (1) Lower Case Letter..\n";
 		
 		if (!foundNumericDigit)
-			errMessage += "Numeric digits; ";
+			errMessage += "At least (1) Numeric digit(s)..\n";
 			
 		if (!foundSpecialChar)
-			errMessage += "Special character; ";
+			errMessage += "At least (1) Special character..\n";
 			
 		if (!foundLongEnough)
-			errMessage += "At least 8 characters; ";
+			errMessage += "At least (8) Characters In Length..\n";
 		
 		if (errMessage == "")
 			return "";
 		
 		// If it gets here, there something was not found, so return an appropriate message
 		passwordIndexofError = currentCharNdx;
-		return errMessage + "conditions were not satisfied";
+		return "Required:\n" + errMessage;
 	}
 }

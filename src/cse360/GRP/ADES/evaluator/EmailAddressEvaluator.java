@@ -1,7 +1,7 @@
 package cse360.GRP.ADES.evaluator;
 
 
-public class EmailAddressRecognizer {
+public class EmailAddressEvaluator {
 	/**
 	 * <p> Title: FSM-translated EmailAddressRecognizer. </p>
 	 * 

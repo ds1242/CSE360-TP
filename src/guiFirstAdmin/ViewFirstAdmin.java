@@ -63,7 +63,7 @@ public class ViewFirstAdmin {
 	protected static PasswordField text_AdminPassword2 = new PasswordField();
 	private static Button button_AdminSetup = new Button("Setup Admin Account");
 
-	// This alert is used should the user enter two passwords that do not match
+	// This alert is used should the user enter incorrect username / password formats.
 	protected static Alert alertUsernamePasswordError = new Alert(AlertType.INFORMATION);
 
 	// This button allow the user to abort creating the first admin account and terminate
@@ -74,6 +74,7 @@ public class ViewFirstAdmin {
 	private static Pane theRootPane;
 	private static Scene theFirstAdminScene = null;
 	private static final int theRole = 1;		// Admin: 1; Role1: 2; Role2: 3
+	
 		
 	
 	/*-********************************************************************************************
@@ -195,6 +196,8 @@ public class ViewFirstAdmin {
 				label_TitleLine2, text_AdminUsername, text_AdminPassword1, 
 				text_AdminPassword2, button_AdminSetup, label_PasswordsDoNotMatch,
 				button_Quit);
+		
+		alertUsernamePasswordError.setTitle("Incorrect Input Format!");
 	}
 	
 	
