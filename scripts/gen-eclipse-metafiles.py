@@ -5,7 +5,7 @@ import tomllib
 from pathlib import Path
 
 
-PROJECT_NAME = "CSE360-TP"
+PROJECT_NAME = "FoundationsF26"
 
 project_lines = [
     '<?xml version="1.0" encoding="UTF-8"?>',
