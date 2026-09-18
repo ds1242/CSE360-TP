@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import entityClasses.User;
 
@@ -224,22 +225,23 @@ public class Database {
 
 	}
 
-/*******
- *  <p> Method: List getUserList() </p>
- *
- *  <P> Description: Generate an List of Strings, one for each user in the database,
- *  starting with "<Select User>" at the start of the list. </p>
- *
- *  @return a list of userNames found in the database.
- */
-	public List<String> getUserList () {
+    /*******
+     *  <p> Method: List getUserList() </p>
+     *
+     *  <P> Description: Generate an List of Strings, one for each user in the database,
+     *  starting with "<Select User>" at the start of the list. </p>
+     *
+     *  @return a list of userNames found in the database.
+     */
+	public List<String> getUserList(Predicate<String> filter) {
 		List<String> userList = new ArrayList<String>();
 		userList.add("<Select a User>");
 		String query = "SELECT userName FROM userDB";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				userList.add(rs.getString("userName"));
+                String userName = rs.getString("userName");
+                if (filter.test(userName)) userList.add(userName);
 			}
 		} catch (SQLException e) {
 	        return null;
@@ -247,6 +249,43 @@ public class Database {
 //		System.out.println(userList);
 		return userList;
 	}
+
+    public List<String> getUserList() {
+        return getUserList(userName -> true);
+    }
+
+    /*******
+     *  <p> Method: List getAllUsers() </p>
+     *
+     *  <P> Description: Generate an List of Users, one for each user in the database </p>
+     *
+     *  @return a list of Users found in the database.
+     */
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM userDB";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                users.add(new User(
+                    rs.getString("userName"),
+                    rs.getString("password"),
+                    rs.getString("firstName"),
+                    rs.getString("middleName"),
+                    rs.getString("lastName"),
+                    rs.getString("preferredFirstName"),
+                    rs.getString("emailAddress"),
+                    rs.getBoolean("adminRole"),
+                    rs.getBoolean("newRole1"),
+                    rs.getBoolean("newRole2"),
+                    rs.getBoolean("oneTimePassword")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
 
 /*******
  * <p> Method: boolean loginAdmin(User user) </p>
@@ -574,6 +613,25 @@ public class Database {
 
 	public void updatePassword(String username, String password) {
         updatePassword(username, password, false);
+	}
+
+	/*******
+	 * <p> Method: void deleteUser(String username) </p>
+	 *
+	 * <p> Description: Delete a user from the database given that user's username </p>
+	 *
+	 * @param username is the username of the user
+	 *
+	 */
+	public void deleteUser(String username) {
+	    String query = "DELETE FROM userDB WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, username);
+	        pstmt.executeUpdate();
+            System.out.println("*** database.deleteUser(): " + pstmt.toString());
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
 
 	/*******

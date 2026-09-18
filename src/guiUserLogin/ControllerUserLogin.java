@@ -107,8 +107,6 @@ public class ControllerUserLogin {
         );
 
 
-        // System.out.println(theDatabase.getPassword());
-        System.out.println(theDatabase.getOneTimePassword());
         if (user.getOneTimePassword()) {
             guiNewPassword.ViewNewPassword.displayNewPassword(theStage, user);
         } else {
