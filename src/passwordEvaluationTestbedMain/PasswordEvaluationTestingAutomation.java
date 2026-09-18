@@ -63,6 +63,9 @@ public class PasswordEvaluationTestingAutomation {
 		
 		// This is a properly written negative username test
 		// It tests to see if the username length is to long
+		
+		// How many characters long are we accepting for usernames? 16 or 32
+		
 		performUsernameTestCase(9, "ThisTestIsForOverThirtyTwoCharacte", false);
 		
 		// This is a properly written negative username test
@@ -75,6 +78,9 @@ public class PasswordEvaluationTestingAutomation {
 		
 		// This is a properly written negative username test
 		// It tests to make sure it doesn't end in a non alphanumeric character
+		
+		// This is also showing an invalid error message for the '-'
+		
 		performUsernameTestCase(12, "UseTheForce-", false);
 		
 		// This is a properly written negative username test
@@ -138,9 +144,6 @@ public class PasswordEvaluationTestingAutomation {
 		
 		// This is a properly written negative Email test case
 		// It tests that it doesn't allow two '@' characters
-		
-		// Error message here is unidentifiable for second '@' sign.. without the arrow. it 
-		// potential fix could be invalid character symbol ?? tough one w/o arrow
 		
 		performEmailTestCase(25, "a.b-c_13@v.A-base@ball13.lol", false);
 		
