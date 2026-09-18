@@ -202,8 +202,13 @@ public class EmailAddressRecognizer {
 				else if(currentChar == '-') {
 					nextState = 4;
 				}
+				
+				else {
+					running = false;
+				}
+				
 				domainPartCounter++;
-
+				
 				// The execution of this state is finished
 				break;
 

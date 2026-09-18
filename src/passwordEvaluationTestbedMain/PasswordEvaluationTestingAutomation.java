@@ -1,5 +1,7 @@
 package passwordEvaluationTestbedMain;
 import cse360.GRP.ADES.evaluator.*;
+import cse360.GRP.ADES.evaluator.textLengthEvaluation.*;
+
 
 /*******
  * <p> Title: PasswordEvaluationTestingAutomation Class. </p>
@@ -31,22 +33,23 @@ public class PasswordEvaluationTestingAutomation {
 		/************** Start of the test cases **************/
 		
 		// This is a properly written positive test
-		performTestCase(1, "Aa!15678", true);
+		performPasswordTestCase(1, "Aa!15678", true);
 		
 		// This is a properly written negative test
-		performTestCase(2, "A!", false);
+		performPasswordTestCase(2, "A!", false);
 		
 		// This is an improperly written negative test, because the password
 		// is valid, but the second parameter asserts that it is not valid
-		performTestCase(3, "Aa!15678", false);
+		performPasswordTestCase(3, "Aa!15678", false);
 		
 		// These are improperly written positive test, because the password 
 		// is not valid, but the second parameter asserts that it is valid
-		performTestCase(4, "A!", true);
-		performTestCase(5, "", true);
+		performPasswordTestCase(4, "A!", true);
+		performPasswordTestCase(5, "", true);
 		// Add more test cases here
 		
-		// This properly tests a valid username
+		// This is a properly written valid username test
+		// It properly tests a valid username
 		performUsernameTestCase(6, "TP1user&name", true);
 		
 		// This is a properly written negative username test
@@ -77,26 +80,72 @@ public class PasswordEvaluationTestingAutomation {
 		// It tests to make sure it starts with A-Z, a-z
 		performUsernameTestCase(13, "-voldemort", false);
 		
-		// This is a properly written negative test case
+		// This is a properly written positive Email test case
+		// It tests that all valid characters are allowed in LP, and DP
+		performEmailTestCase(14, "a.b-c_13@v.A-baseball13.lol", true);
+		
+		// This is a properly written negative Email test case
 		// It tests to make sure the email length is not to long
-		performEmailTestCase(14, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012"
+		performEmailTestCase(15, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012"
 				+ "3456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789A"
 				+ "BCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJ"
-				+ "KLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", false);
+				+ "KLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012@ab.com", false);
 		
-		// This is a properly written negative test case
+		// This is a properly written negative Email test case
 		// This tests to make sure the email is not empty
-		performEmailTestCase(15, "", false);
+		performEmailTestCase(16, "", false);
 		
-		// This is a properly written negative test case
+		// This is a properly written negative Email test case
 		// It tests to make sure that there are not invalid special characters
-		performEmailTestCase(15, "YippyKiAy@yip&py.com", false);
-		performEmailTestCase(16, "YippyKiAy@-yippy.com", false);
-		performEmailTestCase(15, "YippyKiAy@yippy.com-", false);
-		performEmailTestCase(15, "-YippyKiAy@yippy.com", false);
-		performEmailTestCase(15, "YippyKiAy13yippy.com", false);
-		performEmailTestCase(15, "YippyKiAy@yip&py.com", false);
-		performEmailTestCase(15, "YippyKiAy@yippycom", false);
+		performEmailTestCase(17, "YippyKiAy@yip&py.com", false);
+		
+		// This is a properly written negative Email test case
+		// It tests to make sure that a letter proceeds '@'
+		performEmailTestCase(18, "YippyKiAy@-yippy.com", false);
+		
+		// This is a properly written negative Email test case
+		// It tests that DP ends in an alphanumeric character
+		performEmailTestCase(19, "YippyKiAy@yippy.com-", false);
+		
+		// This is a properly written negative Email test case
+		// It tests that LP starts with a alphanumeric character
+		performEmailTestCase(20, "-YippyKiAy@yippy.com", false);
+		
+		// This is a properly written negative Email test case
+		// It tests that LP ends with a alphanumeric character
+		performEmailTestCase(21, "YippyKiAy-@yippy.com", false);
+		
+		// This is a properly written negative Email test case
+		// It tests that it contains a '@' character
+		performEmailTestCase(22, "YippyKiAy13yippy.com", false);
+		
+		// This is a properly written negative Email test case
+		// It tests that DP doesn't contain invalid special characters
+		performEmailTestCase(23, "YippyKiAy@yip&py.com", false);
+		
+		// This is a properly written negative Email test case
+		// It tests that DP contains needs a '.' character
+		
+		// this is actually not needed unless we change the FSM to make a valid email to part DP
+		
+		performEmailTestCase(24, "YippyKiAy@yippycom", false);
+		
+		// This is a properly written negative Email test case
+		// It tests that it doesn't allow two '@' characters
+		performEmailTestCase(25, "a.b-c_13@v.A-base@ball13.lol", false);
+		
+		// This is a properly written negative Email test case
+		// It tests that the domain part is under 70 characters long
+		performEmailTestCase(26, "a.b-c_13@DomainPartIsTooLongDotComMon"
+				+ "PriorToThisIsTwentyEightCharactersLong123.com", false);
+		
+		// This is a properly written positive update to the names inputs
+		// It tests that the length and characters are correct
+		performUpdateNamesTestCase(27, "Perf@rmedC$rrect-ly", true);
+		
+		// This is a properly written negative update to the names input
+		// It tests that the length is not over the 32 max length
+		performUpdateNamesTestCase(28, "PerformedIncorrectlyOverThirtyTwo", false);
 
 		
 		/************** End of the test cases **************/
@@ -114,7 +163,7 @@ public class PasswordEvaluationTestingAutomation {
 	 * that the interactive JavaFX mainline uses, interprets the returned value,
 	 * and displays the interpreted result.
 	 */
-	private static void performTestCase(int testCase, String inputText, boolean expectedPass) {
+	private static void performPasswordTestCase(int testCase, String inputText, boolean expectedPass) {
 				
 		/************** Display an individual test case header **************/
 		System.out.println("____________________________________________________________________________\n\nTest case: " + testCase);
@@ -266,8 +315,19 @@ private static void performEmailTestCase(int testCase, String inputText, boolean
 			}
 		}
 	}
-	
-	
 
+private static void performUpdateNamesTestCase(int testCase, String inputText, boolean expectedPass) {
 	
+		/************** Display an individual test case header **************/
+		System.out.println("____________________________________________________________________________\n\nTest case: " + testCase);
+		System.out.println("Input: \"" + inputText + "\"");
+		System.out.println("______________");
+		System.out.println("\nFinite state machine execution trace:");
+	
+		/************** Call the recognizer to process the input **************/
+	
+		if(inputText.length() > 32) {
+			TextLengthEvaluator.instance().showAlertDialogue();
+		}
+	}
 }

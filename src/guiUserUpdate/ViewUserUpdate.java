@@ -266,17 +266,16 @@ public class ViewUserUpdate {
         // Display the titles, values, and update buttons for the various admin account attributes.
         // If the attributes is null or empty, display "<none>".
 
-        // USername
+        // UserName
         setupLabelUI(label_Username, "Arial", 18, 190, Pos.BASELINE_RIGHT, 5, 100);
         setupLabelUI(label_CurrentUsername, "Arial", 18, 260, Pos.BASELINE_LEFT, 200, 100);
         setupButtonUI(button_UpdateUsername, "Dialog", 18, 275, Pos.CENTER, 500, 93);
 
-        // password
+        // Password
         setupLabelUI(label_Password, "Arial", 18, 190, Pos.BASELINE_RIGHT, 5, 150);
         setupLabelUI(label_CurrentPassword, "Arial", 18, 260, Pos.BASELINE_LEFT, 200, 150);
         setupButtonUI(button_UpdatePassword, "Dialog", 18, 275, Pos.CENTER, 500, 143);
         button_UpdatePassword.setOnAction((_) -> {
-        	//TODO: double check this works
         	result = dialogUpdatePassword.showAndWait();
         	// Check if password entered is valid
         	// show alert error and return
@@ -405,7 +404,6 @@ public class ViewUserUpdate {
         	// else update email name
         	String validEmail = EmailAddressRecognizer.checkEmailAddress(result.get());
         	if(validEmail != "") {
-        		// TODO: update this to a different error
         		alertPasswordEmailError.setContentText(validEmail);
         		alertPasswordEmailError.showAndWait();
         		return;
