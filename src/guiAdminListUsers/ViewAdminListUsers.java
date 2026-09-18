@@ -191,21 +191,4 @@ public class ViewAdminListUsers {
 		b.setLayoutX(x);
 		b.setLayoutY(y);
 	}
-
-	/**********
-	 * Private local method to initialize the standard fields for a ComboBox
-	 *
-	 * @param c		The ComboBox object to be initialized
-	 * @param ff	The font to be used
-	 * @param f		The size of the font to be used
-	 * @param w		The width of the ComboBox
-	 * @param x		The location from the left edge (x axis)
-	 * @param y		The location from the top (y axis)
-	 */
-	protected static void setupComboBoxUI(ComboBox <String> c, String ff, double f, double w, double x, double y) {
-		c.setStyle("-fx-font: " + f + " " + ff + ";");
-		c.setMinWidth(w);
-		c.setLayoutX(x);
-		c.setLayoutY(y);
-	}
 }
