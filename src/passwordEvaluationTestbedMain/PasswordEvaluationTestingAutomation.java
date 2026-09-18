@@ -11,6 +11,7 @@ import cse360.GRP.ADES.evaluator.textLengthEvaluation.*;
  * <p> Copyright: Lynn Robert Carter © 2022 </p>
  * 
  * @author Lynn Robert Carter
+ * @author editions by Andrew Kannas
  * 
  * @version 1.00	2022-02-25 A set of semi-automated test cases
  * @version 2.00	2024-09-22 Updated for use at ASU
@@ -89,7 +90,8 @@ public class PasswordEvaluationTestingAutomation {
 		performEmailTestCase(15, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012"
 				+ "3456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789A"
 				+ "BCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJ"
-				+ "KLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012@ab.com", false);
+				+ "KLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01"
+				+ "KLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012@abc.com", false);
 		
 		// This is a properly written negative Email test case
 		// This tests to make sure the email is not empty
@@ -105,6 +107,10 @@ public class PasswordEvaluationTestingAutomation {
 		
 		// This is a properly written negative Email test case
 		// It tests that DP ends in an alphanumeric character
+		
+		// Error the FSM is accepting a '-' as the last character
+		
+		
 		performEmailTestCase(19, "YippyKiAy@yippy.com-", false);
 		
 		// This is a properly written negative Email test case
@@ -132,6 +138,10 @@ public class PasswordEvaluationTestingAutomation {
 		
 		// This is a properly written negative Email test case
 		// It tests that it doesn't allow two '@' characters
+		
+		// Error message here is unidentifiable for second '@' sign.. without the arrow. it 
+		// potential fix could be invalid character symbol ?? tough one w/o arrow
+		
 		performEmailTestCase(25, "a.b-c_13@v.A-base@ball13.lol", false);
 		
 		// This is a properly written negative Email test case
