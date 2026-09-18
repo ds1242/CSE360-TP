@@ -1,7 +1,7 @@
 package guiAdminHome;
 
 import database.Database;
-import cse360.GRP.ADES.evaluator.EmailAddressRecognizer;
+import cse360.GRP.ADES.evaluator.EmailAddressEvaluator;
 
 /*******
  * <p> Title: GUIAdminHomePage Class. </p>
@@ -114,12 +114,6 @@ public class ControllerAdminHome {
 	 */
 	protected static void setOnetimePassword () {
 		guiSetOTP.ViewSetOTP.displaySetOTP(ViewAdminHome.theStage, ViewAdminHome.theUser);
-
-		// System.out.println("\n*** WARNING ***: One-Time Password Not Yet Implemented");
-		// ViewAdminHome.alertNotImplemented.setTitle("*** WARNING ***");
-		// ViewAdminHome.alertNotImplemented.setHeaderText("One-Time Password Issue");
-		// ViewAdminHome.alertNotImplemented.setContentText("One-Time Password Not Yet Implemented");
-		// ViewAdminHome.alertNotImplemented.showAndWait();
 	}
 
 	/**********
@@ -131,11 +125,7 @@ public class ControllerAdminHome {
 	 * this function has not yet been implemented. </p>
 	 */
 	protected static void deleteUser() {
-		System.out.println("\n*** WARNING ***: Delete User Not Yet Implemented");
-		ViewAdminHome.alertNotImplemented.setTitle("*** WARNING ***");
-		ViewAdminHome.alertNotImplemented.setHeaderText("Delete User Issue");
-		ViewAdminHome.alertNotImplemented.setContentText("Delete User Not Yet Implemented");
-		ViewAdminHome.alertNotImplemented.showAndWait();
+        guiAdminDeleteUser.ViewAdminDeleteUser.displayDeleteUser(ViewAdminHome.theStage, ViewAdminHome.theUser);
 	}
 
 	/**********
@@ -185,7 +175,7 @@ public class ControllerAdminHome {
 		// EmailAddressRecognizer package with checkEmailAddress to check for valid
 		// email. Returns an error string to be displayed if an invalid email is used
 		// otherwise empty.
-		String validEmail = EmailAddressRecognizer.checkEmailAddress(emailAddress);
+		String validEmail = EmailAddressEvaluator.checkEmailAddress(emailAddress);
 		if (validEmail != "") {
 			ViewAdminHome.alertEmailError.setContentText(validEmail);
 			ViewAdminHome.alertEmailError.showAndWait();

@@ -108,17 +108,25 @@ public class ControllerFirstAdmin {
 	protected static void doSetupAdmin(Stage ps, int r) {
 
 		//Check user-name for validity with UserName Evaluator
-		if (UsernameEvaluator.checkForValidUserName(adminUsername) != "") {
+		String usernameError = UsernameEvaluator.checkForValidUserName(adminUsername);
+		if (usernameError != "") {
 			//issue with user-name. Display string error in GUI format...
+			ViewFirstAdmin.alertUsernamePasswordError.setHeaderText("UserName is not formatted correctly!");
+			ViewFirstAdmin.alertUsernamePasswordError.setContentText(usernameError);
+			ViewFirstAdmin.alertUsernamePasswordError.showAndWait();
 			return;
 		}
 
 		// Make sure the two passwords are the same
 		if (adminPassword1.compareTo(adminPassword2) == 0) {
-
+			String passwordError = PasswordEvaluator.evaluatePassword(adminPassword1);
 			//Check password for validity with Password Evaluator
-			if (PasswordEvaluator.evaluatePassword(adminPassword1) != "") {
+			if (passwordError != "") {
 				//issue with password. Display string error with GUI format...
+				ViewFirstAdmin.alertUsernamePasswordError.setHeaderText("Password is not formatted correctly!");
+				ViewFirstAdmin.alertUsernamePasswordError.setContentText(passwordError);
+				ViewFirstAdmin.alertUsernamePasswordError.showAndWait();
+				ViewFirstAdmin.text_AdminPassword2.clear();
 				return;
 			}
 
