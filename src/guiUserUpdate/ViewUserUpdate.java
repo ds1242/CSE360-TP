@@ -106,7 +106,6 @@ public class ViewUserUpdate {
 	private static TextInputDialog dialogUpdateLastName;
 	private static TextInputDialog dialogUpdatePreferredFirstName;
 	private static TextInputDialog dialogUpdateEmailAddresss;
-	private static TextInputDialog dialogUpdatePassword; // adding password
 
 	// These attributes are used to configure the page and populate it with this user's information
 	private static ViewUserUpdate theView;	// Used to determine if instantiation of the class
@@ -228,13 +227,8 @@ public class ViewUserUpdate {
 		dialogUpdateLastName = new TextInputDialog("");
 		dialogUpdatePreferredFirstName = new TextInputDialog("");
 		dialogUpdateEmailAddresss = new TextInputDialog("");
-		dialogUpdatePassword = new TextInputDialog("");
-
-
 
 		// Establish the label for each of the dialogs.
-		dialogUpdatePassword.setTitle("Update your Password");
-		dialogUpdatePassword.setHeaderText("Update your password");
 
 		dialogUpdateFirstName.setTitle("Update First Name");
 		dialogUpdateFirstName.setHeaderText("Update your First Name");
@@ -276,32 +270,8 @@ public class ViewUserUpdate {
         setupLabelUI(label_CurrentPassword, "Arial", 18, 260, Pos.BASELINE_LEFT, 200, 150);
         setupButtonUI(button_UpdatePassword, "Dialog", 18, 275, Pos.CENTER, 500, 143);
         button_UpdatePassword.setOnAction((_) -> {
-        	//TODO: double check this works
-        	result = dialogUpdatePassword.showAndWait();
-        	// Check if password entered is valid
-        	// show alert error and return
-        	// else update password name
-        	String validPassword = PasswordEvaluator.evaluatePassword(result.get());
-
-        	if(validPassword != "") {
-        		alertPasswordEmailError.setContentText(validPassword);
-        		alertPasswordEmailError.showAndWait();
-        		return;
-        	}
-
-        	if (result.get().length() > 32) {
-        		// check for length of password
-        		TextLengthEvaluator.instance().showAlertDialogue();
-        		return;
-        	}  	else {
-        		//TODO: need a method to update the password in the DB
-	    		result.ifPresent(_ -> theDatabase.updatePassword(theUser.getUserName(), result.get()));
-	    		theDatabase.getUserAccountDetails(theUser.getUserName());
-	    		String newPassword = theDatabase.getCurrentPassword();
-	           	theUser.setPassword(newPassword);
-	        	if (newPassword == null || newPassword.length() < 1)label_CurrentPassword.setText("<none>");
-	        	else label_CurrentPassword.setText(newPassword);
-        	}});
+        	guiNewPassword.ViewNewPassword.displayNewPassword(theStage, theUser);
+        });
 
         // First Name
         setupLabelUI(label_FirstName, "Arial", 18, 190, Pos.BASELINE_RIGHT, 5, 200);
