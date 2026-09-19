@@ -258,7 +258,7 @@ public class EmailAddressEvaluator {
 		case 0:
 			// State 0 is not a final state, so we can return a very specific error message
 			emailAddressIndexofError = currentCharNdx;		// Copy the index of the current character;
-			emailAddressErrorMessage = "May only be alphanumberic.\n";
+			emailAddressErrorMessage = "May only be alphanumeric.\n";
 			return emailAddressErrorMessage;
 
 		case 1:
