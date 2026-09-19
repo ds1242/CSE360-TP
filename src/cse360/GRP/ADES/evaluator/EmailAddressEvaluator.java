@@ -284,7 +284,7 @@ public class EmailAddressEvaluator {
 				emailAddressIndexofError = currentCharNdx;		// Copy the index of the current character;
 				emailAddressErrorMessage = "This must be the end of the input.\n";
 				return emailAddressErrorMessage + displayInput(input, currentCharNdx);
-			} else if(domainPartCounter > 70) {
+			} else if(domainPartCounter > 63) {
 				emailAddressIndexofError = currentCharNdx;
 				emailAddressErrorMessage = "Domain is too many characters\n";
 				return emailAddressErrorMessage + displayInput(input, currentCharNdx);
