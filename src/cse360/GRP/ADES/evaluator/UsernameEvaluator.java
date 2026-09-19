@@ -1,5 +1,6 @@
 package cse360.GRP.ADES.evaluator;
 
+import cse360.GRP.ADES.evaluator.textLengthEvaluation.TextLengthEvaluator;
 
 public class UsernameEvaluator {
 	/**
@@ -42,7 +43,9 @@ public class UsernameEvaluator {
 	private static boolean running;						// The flag that specifies if the FSM is 
 														// running
 	private static int userNameSize = 0;				// A numeric value may not exceed 16 characters
-	private static final int MAX_USERNAME_SIZE = 16; 	//Constant value placeholder for character length 
+	
+	private static final int MAX_USERNAME_SIZE = TextLengthEvaluator.MAX_TEXT_LENGTH; 	
+														//Constant value placeholder for character length 
 														//in user-name.
 	
 	
