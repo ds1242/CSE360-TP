@@ -111,9 +111,9 @@ public class ControllerFirstAdmin {
 		String usernameError = UsernameEvaluator.checkForValidUserName(adminUsername);
 		if (usernameError != "") {
 			//issue with user-name. Display string error in GUI format...
-			ViewFirstAdmin.alertUsernamePasswordError.setHeaderText("UserName is not formatted correctly!");
-			ViewFirstAdmin.alertUsernamePasswordError.setContentText(usernameError);
-			ViewFirstAdmin.alertUsernamePasswordError.showAndWait();
+			ViewFirstAdmin.alertUsernamePasswordFormatError.setHeaderText("UserName is not formatted correctly!");
+			ViewFirstAdmin.alertUsernamePasswordFormatError.setContentText(usernameError);
+			ViewFirstAdmin.alertUsernamePasswordFormatError.showAndWait();
 			return;
 		}
 
@@ -123,9 +123,9 @@ public class ControllerFirstAdmin {
 			//Check password for validity with Password Evaluator
 			if (passwordError != "") {
 				//issue with password. Display string error with GUI format...
-				ViewFirstAdmin.alertUsernamePasswordError.setHeaderText("Password is not formatted correctly!");
-				ViewFirstAdmin.alertUsernamePasswordError.setContentText(passwordError);
-				ViewFirstAdmin.alertUsernamePasswordError.showAndWait();
+				ViewFirstAdmin.alertUsernamePasswordFormatError.setHeaderText("Password is not formatted correctly!");
+				ViewFirstAdmin.alertUsernamePasswordFormatError.setContentText(passwordError);
+				ViewFirstAdmin.alertUsernamePasswordFormatError.showAndWait();
 				ViewFirstAdmin.text_AdminPassword2.clear();
 				return;
 			}

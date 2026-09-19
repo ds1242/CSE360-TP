@@ -64,7 +64,7 @@ public class ViewFirstAdmin {
 	private static Button button_AdminSetup = new Button("Setup Admin Account");
 
 	// This alert is used should the user enter incorrect username / password formats.
-	protected static Alert alertUsernamePasswordError = new Alert(AlertType.INFORMATION);
+	protected static Alert alertUsernamePasswordFormatError = new Alert(AlertType.INFORMATION);
 
 	// This button allow the user to abort creating the first admin account and terminate
 	private static Button button_Quit = new Button("Quit");
@@ -197,7 +197,7 @@ public class ViewFirstAdmin {
 				text_AdminPassword2, button_AdminSetup, label_PasswordsDoNotMatch,
 				button_Quit);
 		
-		alertUsernamePasswordError.setTitle("Incorrect Input Format!");
+		alertUsernamePasswordFormatError.setTitle("Incorrect Input Format!");
 	}
 	
 	
