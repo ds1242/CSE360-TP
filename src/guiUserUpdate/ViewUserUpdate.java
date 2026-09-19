@@ -127,6 +127,7 @@ public class ViewUserUpdate {
 	
 	// string to update user information
 	private String newUserInfoString;
+	private String userUpdateErrorMessage;
 
 	/*-********************************************************************************************
 
@@ -300,10 +301,12 @@ public class ViewUserUpdate {
         		alertPasswordEmailError.showAndWait();
         		return;
         	}
+        	
+        	userUpdateErrorMessage = TextLengthEvaluator.evaluateText(newUserInfoString);
 
-        	if (newUserInfoString.length() > 32) {
+        	if (userUpdateErrorMessage != "") {
         		// check for length of password
-        		TextLengthEvaluator.instance().showAlertDialogue();
+        		TextLengthEvaluator.instance().showAlertDialogue(userUpdateErrorMessage);
         		return;
         	}  	else {
         		
@@ -330,9 +333,12 @@ public class ViewUserUpdate {
         		System.out.println("User did not enter a first name");
         		return;
         	}
-        	if(newUserInfoString.length() > 32) {
-        		// display alert dialog
-        		TextLengthEvaluator.instance().showAlertDialogue();
+        	
+        	userUpdateErrorMessage = TextLengthEvaluator.evaluateText(newUserInfoString);
+
+        	if (userUpdateErrorMessage != "") {
+        		// check for length of first name
+        		TextLengthEvaluator.instance().showAlertDialogue(userUpdateErrorMessage);
         		return;
         	} else {
         		result.ifPresent(_ -> theDatabase.updateFirstName(theUser.getUserName(), newUserInfoString));
@@ -359,9 +365,12 @@ public class ViewUserUpdate {
         		System.out.println("User did not enter a middle name");
         		return;
         	}
-        	if(newUserInfoString.length() > 32) {
-        		// display alert dialog
-        		TextLengthEvaluator.instance().showAlertDialogue();
+        	
+        	userUpdateErrorMessage = TextLengthEvaluator.evaluateText(newUserInfoString);
+
+        	if (userUpdateErrorMessage != "") {
+        		// check for length of middle name
+        		TextLengthEvaluator.instance().showAlertDialogue(userUpdateErrorMessage);
         		return;
         	} else {
         		result.ifPresent(_ -> theDatabase.updateMiddleName(theUser.getUserName(), newUserInfoString));
@@ -387,9 +396,11 @@ public class ViewUserUpdate {
         		System.out.println("User did not enter last name");
         		return;
         	}
-        	if(newUserInfoString.length() > 32) {
-        		// display alert dialog
-        		TextLengthEvaluator.instance().showAlertDialogue();
+        	userUpdateErrorMessage = TextLengthEvaluator.evaluateText(newUserInfoString);
+
+        	if (userUpdateErrorMessage != "") {
+        		// check for length of last name
+        		TextLengthEvaluator.instance().showAlertDialogue(userUpdateErrorMessage);
         		return;
         	} else {
 	    		result.ifPresent(_ -> theDatabase.updateLastName(theUser.getUserName(), newUserInfoString));
@@ -417,9 +428,11 @@ public class ViewUserUpdate {
         		System.out.println("User did not enter a preferred first name");
         		return;
         	}
-        	if(newUserInfoString.length() > 32) {
-        		// display alert dialog
-        		TextLengthEvaluator.instance().showAlertDialogue();
+        	userUpdateErrorMessage = TextLengthEvaluator.evaluateText(newUserInfoString);
+
+        	if (userUpdateErrorMessage != "") {
+        		// check for length of preferred user name
+        		TextLengthEvaluator.instance().showAlertDialogue(userUpdateErrorMessage);
         		return;
         	} else {
         		result.ifPresent(_ -> theDatabase.updatePreferredFirstName(theUser.getUserName(), newUserInfoString));
