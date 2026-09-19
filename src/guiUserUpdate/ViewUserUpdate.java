@@ -281,7 +281,15 @@ public class ViewUserUpdate {
         	// Check if password entered is valid
         	// show alert error and return
         	// else update password name
-        	String validPassword = PasswordEvaluator.evaluatePassword(result.get());
+        	String newPassString = "";
+        	if(result.isPresent()) {
+        		newPassString = result.get();
+        	} else {
+        		System.out.println("User did not enter password");
+        		return;
+        	}
+        	
+        	String validPassword = PasswordEvaluator.evaluatePassword(newPassString);
 
         	if(validPassword != "") {
         		alertPasswordEmailError.setContentText(validPassword);
@@ -289,13 +297,13 @@ public class ViewUserUpdate {
         		return;
         	}
 
-        	if (result.get().length() > 32) {
+        	if (newPassString.length() > 32) {
         		// check for length of password
         		TextLengthEvaluator.instance().showAlertDialogue();
         		return;
         	}  	else {
-        		//TODO: need a method to update the password in the DB
-	    		result.ifPresent(_ -> theDatabase.updatePassword(theUser.getUserName(), result.get()));
+        		
+	    		theDatabase.updatePassword(theUser.getUserName(), newPassString);
 	    		theDatabase.getUserAccountDetails(theUser.getUserName());
 	    		String newPassword = theDatabase.getCurrentPassword();
 	           	theUser.setPassword(newPassword);
