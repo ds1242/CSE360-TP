@@ -28,8 +28,7 @@ public class TextLengthEvaluator {
 	//Constructor initializes alert box to correct settings.
 	private TextLengthEvaluator() {
 		textLengthAlert.setTitle("Incorrect Input Length!");
-		textLengthAlert.setContentText("Please correct the input to use a maximum of "
-		+ MAX_TEXT_LENGTH + " characters!");
+        textLengthAlert.setHeaderText("The input length is over the maximum allowed character count.");
 	}
 
 	//Retrieve an instance of the singleton.
@@ -40,13 +39,18 @@ public class TextLengthEvaluator {
 		return instance;
 	}
 
+    //Evalulate an input string to see if it is within the maximum length requirement.
     public static String evaluateText(String newText) {
-        return newText.length() > MAX_TEXT_LENGTH ? "The input length is over the maximum allowed character count." : "";
+        if (newText.length() > MAX_TEXT_LENGTH) {
+            return "Please correct the input to use a maximum of " + MAX_TEXT_LENGTH + " characters!";
+        } else {
+            return "";
+        }
     }
 
 	//Call on alert box to show and wait for the user to click out of the box.
 	public void showAlertDialogue(String errMessage) {
-        textLengthAlert.setHeaderText(errMessage);
+        this.textLengthAlert.setContentText(errMessage);
 		this.textLengthAlert.showAndWait();
 	}
 }
