@@ -272,7 +272,7 @@ public class UsernameEvaluator {
 		case 2:
 			// State 2 is not a final state, so we can return a very specific error message
 			userNameRecognizerErrorMessage +=
-				"A UserName character after a period\nmust be A-Z, a-z, 0-9.\n";
+				"A UserName character after a '.', '-', or '_'\nmust be A-Z, a-z, 0-9.\n";
 			return userNameRecognizerErrorMessage;
 		case 3:
 			// State 3 is not a final state, so we can return a very specific error message
