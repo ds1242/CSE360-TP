@@ -33,6 +33,11 @@ public class PasswordEvaluationTestingAutomation {
 
 		/************** Start of the test cases **************/
 		
+		// Tests 1-5 use the evaluatePassword method in the 
+		// PasswordEvaluator class
+		// The performPasswordTestCase method invokes the evaluatePassword
+		// method and tests the string with the password FSM
+		
 		// This is a properly written positive test
 		performPasswordTestCase(1, "Aa!15678", true);
 		
@@ -49,24 +54,73 @@ public class PasswordEvaluationTestingAutomation {
 		performPasswordTestCase(5, "", true);
 		// Add more test cases here
 		
+		
+		// Tests to make sure it fails without a Upper Case letter
+		performPasswordTestCase(6,  "aa!15678", false);
+		
+		// Tests to make sure there it fails without a special character
+		performPasswordTestCase(7, "Aa156789", false);
+		
+		// Tests to make sure it fails without a number character
+		performPasswordTestCase(8, "Aa!@#$%^&*", false);
+		
+		// Tests to make sure it fails without a lower case character
+		performPasswordTestCase(9, "AA156789", false);
+		
+		// Tests to make sure that there is a cap on the size of the password
+		performPasswordTestCase(10, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012"
+				+ "3456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789A"
+				+ "BCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJ"
+				+ "KLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01"
+				+ "KLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012@abc.com", false);
+		
+		
+		
+		
+		// Tests to make sure minimum length requirment is met????
+		// Current FSM is for 7 characters but states 8 in printout
+		performPasswordTestCase(11, "Aa1!123", false);
+		
+		// Tests to make sure all characters are allowed 
+		performPasswordTestCase(12, "Aa156789~`!@#$%^&*()_-+={}[]|\\\\:;\\\"'<>,.?/;", true);
+		
+		
+		
+		// Tests 5-29 use the evaluateUsername method in the UsernameEvaluator
+		// class
+		// The performUsernameTestCase method invokes the evaluateUsername
+		// methos and tests the string with the username FSM
+		
 		// This is a properly written valid username test
-		// It properly tests a valid username
-		performUsernameTestCase(6, "TP1user&name", true);
+		// It tests a valid username
+		performUsernameTestCase(11, "TP1user&name", true);
 		
 		// This is a properly written negative username test
 		// It tests to see if the username length is long enough
-		performUsernameTestCase(7, "abc", false);
+		performUsernameTestCase(12, "abc", false);
+		
+		
+		
+		// This one is really messed up needs length check and is stating
+		// invalid char after the first 3-4 numeric digits
+		
+		
+		
+		
 		
 		// This is a properly written negative username test
 		// It tests to see if there is any input
-		performUsernameTestCase(8, "", false);
+		performUsernameTestCase(13, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01KLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012@abc.com", false);
 		
 		// This is a properly written negative username test
 		// It tests to see if the username length is to long
 		
+		
+		
+		
 		// How many characters long are we accepting for usernames? 16 or 32
 		
-		performUsernameTestCase(9, "ThisTestIsForOverThirtyTwoCharacte", false);
+		performUsernameTestCase(14, "ThisTestIsForOverThirtyTwoCharacte", false);
 		
 		// This is a properly written negative username test
 		// It tests to see if a special character was used
@@ -93,11 +147,12 @@ public class PasswordEvaluationTestingAutomation {
 		
 		// This is a properly written negative Email test case
 		// It tests to make sure the email length is not to long
-		performEmailTestCase(15, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012"
-				+ "3456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789A"
-				+ "BCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJ"
-				+ "KLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01"
-				+ "KLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012@abc.com", false);
+		performEmailTestCase(15,"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijk"
+				+ "lmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+				+ "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNO"
+				+ "PQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789ABCD"
+				+ "EFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01KL"
+				+ "MNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012@abc.com", false);
 		
 		// This is a properly written negative Email test case
 		// This tests to make sure the email is not empty
