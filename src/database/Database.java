@@ -225,14 +225,14 @@ public class Database {
 
 	}
 
-/*******
- *  <p> Method: List getUserList() </p>
- *
- *  <P> Description: Generate an List of Strings, one for each user in the database,
- *  starting with "<Select User>" at the start of the list. </p>
- *
- *  @return a list of userNames found in the database.
- */
+    /*******
+     *  <p> Method: List getUserList() </p>
+     *
+     *  <P> Description: Generate an List of Strings, one for each user in the database,
+     *  starting with "<Select User>" at the start of the list. </p>
+     *
+     *  @return a list of userNames found in the database.
+     */
 	public List<String> getUserList(Predicate<String> filter) {
 		List<String> userList = new ArrayList<String>();
 		userList.add("<Select a User>");
@@ -252,6 +252,39 @@ public class Database {
 
     public List<String> getUserList() {
         return getUserList(userName -> true);
+    }
+
+    /*******
+     *  <p> Method: List getAllUsers() </p>
+     *
+     *  <P> Description: Generate an List of Users, one for each user in the database </p>
+     *
+     *  @return a list of Users found in the database.
+     */
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM userDB";
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                users.add(new User(
+                    rs.getString("userName"),
+                    rs.getString("password"),
+                    rs.getString("firstName"),
+                    rs.getString("middleName"),
+                    rs.getString("lastName"),
+                    rs.getString("preferredFirstName"),
+                    rs.getString("emailAddress"),
+                    rs.getBoolean("adminRole"),
+                    rs.getBoolean("newRole1"),
+                    rs.getBoolean("newRole2"),
+                    rs.getBoolean("oneTimePassword")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
 /*******
