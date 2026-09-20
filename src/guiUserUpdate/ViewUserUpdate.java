@@ -124,6 +124,10 @@ public class ViewUserUpdate {
 	private static Optional<String> result;		// The result from a pop-up dialog
 	
 	protected static Alert alertPasswordEmailError = new Alert(AlertType.INFORMATION);
+	
+	// string to update user information
+	private String newUserInfoString;
+	private String userUpdateErrorMessage;
 
 	/*-********************************************************************************************
 
@@ -218,6 +222,8 @@ public class ViewUserUpdate {
 
 	private ViewUserUpdate() {
 
+		
+		
 		// Create the Pane for the list of widgets and the Scene for the window
 		theRootPane = new Pane();
 		theUserUpdateScene = new Scene(theRootPane, width, height);
@@ -266,36 +272,45 @@ public class ViewUserUpdate {
         // Display the titles, values, and update buttons for the various admin account attributes.
         // If the attributes is null or empty, display "<none>".
 
-        // USername
+        // UserName
         setupLabelUI(label_Username, "Arial", 18, 190, Pos.BASELINE_RIGHT, 5, 100);
         setupLabelUI(label_CurrentUsername, "Arial", 18, 260, Pos.BASELINE_LEFT, 200, 100);
         setupButtonUI(button_UpdateUsername, "Dialog", 18, 275, Pos.CENTER, 500, 93);
 
-        // password
+        // Password
         setupLabelUI(label_Password, "Arial", 18, 190, Pos.BASELINE_RIGHT, 5, 150);
         setupLabelUI(label_CurrentPassword, "Arial", 18, 260, Pos.BASELINE_LEFT, 200, 150);
         setupButtonUI(button_UpdatePassword, "Dialog", 18, 275, Pos.CENTER, 500, 143);
         button_UpdatePassword.setOnAction((_) -> {
-        	//TODO: double check this works
         	result = dialogUpdatePassword.showAndWait();
         	// Check if password entered is valid
         	// show alert error and return
         	// else update password name
-        	String validPassword = PasswordEvaluator.evaluatePassword(result.get());
+        	
+        	if(result.isPresent()) {
+        		newUserInfoString = result.get();
+        	} else {
+        		System.out.println("User did not enter password");
+        		return;
+        	}
+        	
+        	String validPassword = PasswordEvaluator.evaluatePassword(newUserInfoString);
 
         	if(validPassword != "") {
         		alertPasswordEmailError.setContentText(validPassword);
         		alertPasswordEmailError.showAndWait();
         		return;
         	}
+        	
+        	userUpdateErrorMessage = TextLengthEvaluator.evaluateText(newUserInfoString);
 
-        	if (result.get().length() > 32) {
+        	if (userUpdateErrorMessage != "") {
         		// check for length of password
-        		TextLengthEvaluator.instance().showAlertDialogue();
+        		TextLengthEvaluator.instance().showAlertDialogue(userUpdateErrorMessage);
         		return;
         	}  	else {
-        		//TODO: need a method to update the password in the DB
-	    		result.ifPresent(_ -> theDatabase.updatePassword(theUser.getUserName(), result.get()));
+        		
+	    		theDatabase.updatePassword(theUser.getUserName(), newUserInfoString);
 	    		theDatabase.getUserAccountDetails(theUser.getUserName());
 	    		String newPassword = theDatabase.getCurrentPassword();
 	           	theUser.setPassword(newPassword);
@@ -312,12 +327,21 @@ public class ViewUserUpdate {
         	// Check if first name entered is longer than 32 characters
         	// show alert error and return
         	// else update first name
-        	if(result.get().length() > 32) {
-        		// display alert dialog
-        		TextLengthEvaluator.instance().showAlertDialogue();
+        	if(result.isPresent()) {
+        		newUserInfoString = result.get();
+        	} else {
+        		System.out.println("User did not enter a first name");
+        		return;
+        	}
+        	
+        	userUpdateErrorMessage = TextLengthEvaluator.evaluateText(newUserInfoString);
+
+        	if (userUpdateErrorMessage != "") {
+        		// check for length of first name
+        		TextLengthEvaluator.instance().showAlertDialogue(userUpdateErrorMessage);
         		return;
         	} else {
-        		result.ifPresent(_ -> theDatabase.updateFirstName(theUser.getUserName(), result.get()));
+        		result.ifPresent(_ -> theDatabase.updateFirstName(theUser.getUserName(), newUserInfoString));
         		theDatabase.getUserAccountDetails(theUser.getUserName());
         		String newName = theDatabase.getCurrentFirstName();
         		theUser.setFirstName(newName);
@@ -335,12 +359,21 @@ public class ViewUserUpdate {
         	// Check if middle name entered is longer than 32 characters
         	// show alert error and return
         	// else update middle name
-        	if(result.get().length() > 32) {
-        		// display alert dialog
-        		TextLengthEvaluator.instance().showAlertDialogue();
+        	if(result.isPresent()) {
+        		newUserInfoString = result.get();
+        	} else {
+        		System.out.println("User did not enter a middle name");
+        		return;
+        	}
+        	
+        	userUpdateErrorMessage = TextLengthEvaluator.evaluateText(newUserInfoString);
+
+        	if (userUpdateErrorMessage != "") {
+        		// check for length of middle name
+        		TextLengthEvaluator.instance().showAlertDialogue(userUpdateErrorMessage);
         		return;
         	} else {
-        		result.ifPresent(_ -> theDatabase.updateMiddleName(theUser.getUserName(), result.get()));
+        		result.ifPresent(_ -> theDatabase.updateMiddleName(theUser.getUserName(), newUserInfoString));
 	    		theDatabase.getUserAccountDetails(theUser.getUserName());
 	    		String newName = theDatabase.getCurrentMiddleName();
 	           	theUser.setMiddleName(newName);
@@ -357,12 +390,20 @@ public class ViewUserUpdate {
         	// Check if last name entered is longer than 32 characters
         	// show alert error and return
         	// else update last name
-        	if(result.get().length() > 32) {
-        		// display alert dialog
-        		TextLengthEvaluator.instance().showAlertDialogue();
+        	if(result.isPresent()) {
+        		newUserInfoString = result.get();
+        	} else {
+        		System.out.println("User did not enter last name");
+        		return;
+        	}
+        	userUpdateErrorMessage = TextLengthEvaluator.evaluateText(newUserInfoString);
+
+        	if (userUpdateErrorMessage != "") {
+        		// check for length of last name
+        		TextLengthEvaluator.instance().showAlertDialogue(userUpdateErrorMessage);
         		return;
         	} else {
-	    		result.ifPresent(_ -> theDatabase.updateLastName(theUser.getUserName(), result.get()));
+	    		result.ifPresent(_ -> theDatabase.updateLastName(theUser.getUserName(), newUserInfoString));
 	    		theDatabase.getUserAccountDetails(theUser.getUserName());
 	    		String newName = theDatabase.getCurrentLastName();
 	           	theUser.setLastName(newName);
@@ -381,12 +422,20 @@ public class ViewUserUpdate {
         	// Check if preferred name entered is longer than 32 characters
         	// show alert error and return
         	// else update preferred name
-        	if(result.get().length() > 32) {
-        		// display alert dialog
-        		TextLengthEvaluator.instance().showAlertDialogue();
+        	if(result.isPresent()) {
+        		newUserInfoString = result.get();
+        	} else {
+        		System.out.println("User did not enter a preferred first name");
+        		return;
+        	}
+        	userUpdateErrorMessage = TextLengthEvaluator.evaluateText(newUserInfoString);
+
+        	if (userUpdateErrorMessage != "") {
+        		// check for length of preferred user name
+        		TextLengthEvaluator.instance().showAlertDialogue(userUpdateErrorMessage);
         		return;
         	} else {
-        		result.ifPresent(_ -> theDatabase.updatePreferredFirstName(theUser.getUserName(), result.get()));
+        		result.ifPresent(_ -> theDatabase.updatePreferredFirstName(theUser.getUserName(), newUserInfoString));
 	    		theDatabase.getUserAccountDetails(theUser.getUserName());
 	    		String newName = theDatabase.getCurrentPreferredFirstName();
 	           	theUser.setPreferredFirstName(newName);
@@ -403,14 +452,19 @@ public class ViewUserUpdate {
         	// Check if email entered is valid
         	// show alert error and return
         	// else update email name
-        	String validEmail = EmailAddressEvaluator.checkEmailAddress(result.get());
+        	if(result.isPresent()) {
+        		newUserInfoString = result.get();
+        	} else {
+        		System.out.println("User did not enter an email");
+        		return;
+        	}
+        	String validEmail = EmailAddressEvaluator.checkEmailAddress(newUserInfoString);
         	if(validEmail != "") {
-        		// TODO: update this to a different error
         		alertPasswordEmailError.setContentText(validEmail);
         		alertPasswordEmailError.showAndWait();
         		return;
         	} else {
-	    		result.ifPresent(_ -> theDatabase.updateEmailAddress(theUser.getUserName(), result.get()));
+	    		result.ifPresent(_ -> theDatabase.updateEmailAddress(theUser.getUserName(), newUserInfoString));
 	    		theDatabase.getUserAccountDetails(theUser.getUserName());
 	    		String newEmail = theDatabase.getCurrentEmailAddress();
 	           	theUser.setEmailAddress(newEmail);

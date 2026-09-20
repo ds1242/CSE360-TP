@@ -3,7 +3,6 @@ package guiNewPassword;
 
 import cse360.GRP.ADES.evaluator.PasswordEvaluator;
 import database.Database;
-import entityClasses.User;
 import javafx.stage.Stage;
 
 /*******
@@ -16,9 +15,7 @@ import javafx.stage.Stage;
  * supports the user click on the "Quit" button widget.
  *
  */
-
 public class ControllerNewPassword {
-
 	/**
 	 * Default constructor is not used.
 	 */
@@ -37,29 +34,26 @@ public class ControllerNewPassword {
         String currentUsername = theDatabase.getCurrentUsername();
 		String newPassword = ViewNewPassword.text_Password1.getText();
 
-		if (PasswordEvaluator.evaluatePassword(newPassword) != "") {
-			//issue with password. Display string error with GUI format...
-			return;
-		}
-
+        String passwordErrorMessage = PasswordEvaluator.evaluatePassword(newPassword);
         boolean passwordsMatch =
             ViewNewPassword.text_Password1.getText().compareTo(ViewNewPassword.text_Password2.getText()) == 0;
-
-        String stdoutMessage = passwordsMatch ? "newPassword = " + newPassword : "passwords don't match";
-        System.out.println("*** ControllerNewPassword.doChangePassword(): " + stdoutMessage);
-
-		if (passwordsMatch) {
-            theDatabase.updatePassword(currentUsername, newPassword);
-            Stage ts = ViewNewPassword.theStage;
-            User user = ViewNewPassword.theUser;
-            // Navigate to the Welcome Login Page
-            guiUserLogin.ControllerUserLogin.displayHomePage(ts, user);
-		} else {
+        if (!passwordsMatch) {
+            System.out.println("*** ControllerNewPassword.doChangePassword(): passwords don't match");
 			// The two passwords are NOT the same, so clear the passwords, explain the passwords
 			// must be the same, and clear the message as soon as the first character is typed.
 			ViewNewPassword.text_Password1.setText("");
 			ViewNewPassword.text_Password2.setText("");
-			ViewNewPassword.alertUsernamePasswordError.showAndWait();
+			ViewNewPassword.alert_PasswordMismatchError.showAndWait();
+        } else if (!passwordErrorMessage.equals("")) {
+            System.out.println("*** ControllerNewPassword.doChangePassword(): password has errors");
+            ViewNewPassword.alert_PasswordInvalidError.setContentText(passwordErrorMessage);
+            ViewNewPassword.alert_PasswordInvalidError.showAndWait();
+        } else {
+            System.out.println("*** ControllerNewPassword.doChangePassword(): newPassword = " + newPassword);
+            theDatabase.updatePassword(currentUsername, newPassword);
+            Stage ts = ViewNewPassword.theStage;
+            // NOTE: we return user to login page after resetting password
+		    guiUserLogin.ViewUserLogin.displayUserLogin(ts);
 		}
 	}
 
