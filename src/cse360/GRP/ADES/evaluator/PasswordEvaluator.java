@@ -96,7 +96,7 @@ public class PasswordEvaluator {
 				passwordIndexofError = currentCharNdx;
 				return "*** Error *** An invalid character has been found!";
 			}
-			if (currentCharNdx >= 7) {
+			if (currentCharNdx >= 8) {
 				System.out.println("At least 8 characters found");
 				foundLongEnough = true;
 			}

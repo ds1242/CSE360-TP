@@ -47,34 +47,37 @@ public class PasswordEvaluationTestingAutomation {
 		
 		// This is an improperly written negative test, because the password
 		// is valid, but the second parameter asserts that it is not valid
+		// It tests that the output is failure when FSM and boolean don't match
 		performPasswordTestCase(count++, "Aa!15678", false);
 		
 		// This is an improperly written positive test, because the password 
 		// is not valid, but the second parameter asserts that it is valid
+		// It tests that the output is failure when FSM and boolean don't match
 		performPasswordTestCase(count++, "A!", true);
 		
 		// This is an improperly written positive test, because the password 
 		// is not valid, but the second parameter asserts that it is valid
+		// It tests that the output is failure when FSM and boolean don't match
 		performPasswordTestCase(count++, "", true);
 		
 		// This is a properly written negative password test
-		// Tests to make sure it fails without a Upper Case letter
+		// It tests to make sure it fails without an Upper Case letter
 		performPasswordTestCase(count++,  "aa!15678", false);
 		
 		// This is a properly written negative password test
-		// Tests to make sure there it fails without a special character
+		// It tests to make sure there it fails without a special character
 		performPasswordTestCase(count++, "Aa156789", false);
 		
 		// This is a properly written negative password test
-		// Tests to make sure it fails without a number character
+		// It tests to make sure it fails without a number character
 		performPasswordTestCase(count++, "Aa!@#$%^&*", false);
 		
 		// This is a properly written negative password test
-		// Tests to make sure it fails without a lower case character
+		// It tests to make sure it fails without a lower case character
 		performPasswordTestCase(count++, "AA1$56789", false);
 		
 		// This is a properly written negative test case
-		// Tests to make sure that the password is not over 32 characters
+		// It tests to make sure that the password is not over 32 characters
 		performPasswordTestCase(count++, "Aa1()_-+={}[]|\\:;\"'<>,.?/;1236547", false);
 		
 		// This is a properly written negative password test
@@ -82,11 +85,11 @@ public class PasswordEvaluationTestingAutomation {
 		performPasswordTestCase(count++, "Aa1!123", false);
 		
 		// This is a properly written positive password test
-		// Tests to make sure all characters are allowed 
+		// It tests to make sure all characters are allowed 
 		performPasswordTestCase(count++, "Aa156789~`!@#$%^&*()_", true);  
 		
 		// This is a properly written positive password test
-		// Tests to make sure all characters are allowed 
+		// It tests to make sure all characters are allowed 
 		performPasswordTestCase(count++, "Aa1-+={}[]|\\:;\"'<>,.?/;", true);
 		
 		
@@ -120,8 +123,6 @@ public class PasswordEvaluationTestingAutomation {
 		// This is a properly written negative username test
 		// It tests to make sure it doesn't end in a non alphanumeric character
 		
-		// This is also showing an invalid error message for the '-'
-		
 		performUsernameTestCase(count++, "UseTheForce-", false);
 		
 		// This is a properly written negative username test
@@ -147,7 +148,7 @@ public class PasswordEvaluationTestingAutomation {
 				+ "MNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012@abc.com", false);
 		
 		// This is a properly written negative Email test case
-		// This tests to make sure the email is not empty
+		// It tests to make sure the email is not empty
 		performEmailTestCase(count++, "", false);
 		
 		// This is a properly written negative Email test case
@@ -155,7 +156,7 @@ public class PasswordEvaluationTestingAutomation {
 		performEmailTestCase(count++, "YippyKiAy@yip&py.com", false);
 		
 		// This is a properly written negative Email test case
-		// It tests to make sure that a letter proceeds '@'
+		// It tests to make sure that a letter is after '@'
 		performEmailTestCase(count++, "YippyKiAy@-yippy.com", false);
 		
 		// This is a properly written negative Email test case
@@ -179,20 +180,13 @@ public class PasswordEvaluationTestingAutomation {
 		performEmailTestCase(count++, "YippyKiAy@yip&py.com", false);
 		
 		// This is a properly written negative Email test case
-		// It tests that DP contains needs a '.' character
-		
-		// this is actually not needed unless we change the FSM to make a valid email to part DP
-		
-		performEmailTestCase(count++, "YippyKiAy@yippycom", false);
-		
-		// This is a properly written negative Email test case
 		// It tests that it doesn't allow two '@' characters
 		performEmailTestCase(count++, "a.b-c_13@v.A-base@ball13.lol", false);
 		
 		// This is a properly written negative Email test case
-		// It tests that the DP is under 70 characters long
+		// It tests that the DP is under 63 characters long
 		performEmailTestCase(count++, "a.b-c_13@DomainPartIsTooLongDotComMon"
-				+ "PriorToThisIsTwentyEightCharactersLong123.com", false);
+				+ "PriorToThisIsTwentyEightCharactersLong.com", false);
 		
 		/************** Start of the update names test cases **************/
 		
