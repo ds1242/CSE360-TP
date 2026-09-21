@@ -42,7 +42,7 @@ public class UsernameEvaluator {
 	private static int currentCharNdx;					// The index of the current character
 	private static boolean running;						// The flag that specifies if the FSM is 
 														// running
-	private static int userNameSize = 0;				// A numeric value may not exceed 16 characters
+	private static int userNameSize = 0;				// A numeric value may not exceed 32 characters
 	
 	private static final int MAX_USERNAME_SIZE = TextLengthEvaluator.MAX_TEXT_LENGTH; 	
 														//Constant value placeholder for character length 
