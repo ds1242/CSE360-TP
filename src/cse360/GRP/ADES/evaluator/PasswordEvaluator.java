@@ -54,6 +54,9 @@ public class PasswordEvaluator {
 		if(input.length() <= 0) {
 			return "*** Error *** The password is empty!";
 		}
+
+		else if(input.length > 32) {
+			return "*** Error *** The password is to long!"
 		
 		// The input is not empty, so we can access the first character
 		currentChar = input.charAt(0);		// The current character from the above indexed position
