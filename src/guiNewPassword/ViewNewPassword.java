@@ -31,7 +31,8 @@ public class ViewNewPassword {
     protected static PasswordField text_Password2 = new PasswordField();
     protected static Button button_ChangePassword = new Button("Change Password");
 
-	protected static Alert alertUsernamePasswordError = new Alert(AlertType.INFORMATION);
+	protected static Alert alert_PasswordMismatchError = new Alert(AlertType.ERROR);
+	protected static Alert alert_PasswordInvalidError = new Alert(AlertType.ERROR);
 
     protected static Button button_Quit = new Button("Quit");
 
@@ -111,9 +112,11 @@ public class ViewNewPassword {
 		text_Password2.setPromptText("Enter the Password Again");
 		text_Password2.textProperty().addListener(new TextLengthChangeListener(text_Password2, true));
 
-		alertUsernamePasswordError.setTitle("Passwords Do Not Match");
-		alertUsernamePasswordError.setHeaderText("The two passwords must be identical.");
-		alertUsernamePasswordError.setContentText("Correct the passwords and try again.");
+		alert_PasswordMismatchError.setTitle("Passwords Do Not Match");
+		alert_PasswordMismatchError.setHeaderText("The two passwords must be identical.");
+		alert_PasswordMismatchError.setContentText("Correct the passwords and try again.");
+		alert_PasswordInvalidError.setTitle("Invalid Password");
+		alert_PasswordInvalidError.setHeaderText("The password has errors.");
 
         setupButtonUI(button_ChangePassword, "Dialog", 18, 200, Pos.CENTER, 475, 210);
         button_ChangePassword.setOnAction((_) -> { ControllerNewPassword.doChangePassword(); });

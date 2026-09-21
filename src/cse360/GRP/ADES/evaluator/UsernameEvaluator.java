@@ -42,7 +42,7 @@ public class UsernameEvaluator {
 	private static int currentCharNdx;					// The index of the current character
 	private static boolean running;						// The flag that specifies if the FSM is 
 														// running
-	private static int userNameSize = 0;				// A numeric value may not exceed 16 characters
+	private static int userNameSize = 0;				// A numeric value may not exceed 32 characters
 	
 	private static final int MAX_USERNAME_SIZE = TextLengthEvaluator.MAX_TEXT_LENGTH; 	
 														//Constant value placeholder for character length 
@@ -272,7 +272,7 @@ public class UsernameEvaluator {
 		case 2:
 			// State 2 is not a final state, so we can return a very specific error message
 			userNameRecognizerErrorMessage +=
-				"A UserName character after a period\nmust be A-Z, a-z, 0-9.\n";
+				"A UserName character after a '.', '-', or '_'\nmust be A-Z, a-z, 0-9.\n";
 			return userNameRecognizerErrorMessage;
 		case 3:
 			// State 3 is not a final state, so we can return a very specific error message
