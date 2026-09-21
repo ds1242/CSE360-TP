@@ -1,6 +1,5 @@
 package guiAdminDeleteUser;
 
-import java.util.List;
 import java.util.Optional;
 
 import database.Database;
