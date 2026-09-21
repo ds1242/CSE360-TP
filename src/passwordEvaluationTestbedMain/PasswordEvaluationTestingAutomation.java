@@ -38,9 +38,9 @@ public class PasswordEvaluationTestingAutomation {
 		/************** Test cases semi-automation report header **************/
 		System.out.println("______________________________________");
 		System.out.println("\nTesting Automation");
-
-		/************** Start of the password test cases **************/
-
+		System.out.println("/**************************************************************/");
+		System.out.println("/************** Start of the password test cases **************/");
+		System.out.println("/**************************************************************/");
 		// The performPassowrdtestCase methods use the evaluatePassword
 		// method in the PasswordEvaluator class to evaluate the test cases
 
@@ -99,9 +99,9 @@ public class PasswordEvaluationTestingAutomation {
 		// It tests to make sure all characters are allowed
 		performPasswordTestCase(count++, "Aa1-+={}[]|\\:;\"'<>,.?/;", true);
 
-
-		/************** Start of the username test cases **************/
-
+		System.out.println("/**************************************************************/");
+		System.out.println("/************** Start of the username test cases **************/");
+		System.out.println("/**************************************************************/");
 		// The performUserNameTestCase methods use the evaluateUsername
 		// method in the UsernameEvaluator class to evaluate the test cases
 
@@ -135,9 +135,9 @@ public class PasswordEvaluationTestingAutomation {
 		// This is a properly written negative username test
 		// It tests to make sure it starts with A-Z, a-z
 		performUsernameTestCase(count++, "-voldemort", false);
-
-		/************** Start of the email test cases **************/
-
+		System.out.println("/**************************************************************/");
+		System.out.println("/************** Start of the email test cases **************/");
+		System.out.println("/**************************************************************/");
 		// The performEmailTestCase methods use the checkEmailAddress method
 		// in the EmailAdressEvaluator class to evaluate the test cases
 
@@ -194,9 +194,9 @@ public class PasswordEvaluationTestingAutomation {
 		// It tests that the DP is under 63 characters long
 		performEmailTestCase(count++, "a.b-c_13@DomainPartIsTooLongDotComMon"
 				+ "PriorToThisIsTwentyEightCharactersLong.com", false);
-
-		/************** Start of the update names test cases **************/
-
+		System.out.println("/**************************************************************/");
+		System.out.println("/************** Start of the update names test cases **********/");
+		System.out.println("/**************************************************************/");
 		// The performUpdateNamesTestCase methods use the evaluateText method
 		// in the TextLengthEvaluator class to evaluate the test cases
 
