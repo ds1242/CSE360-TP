@@ -5,11 +5,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import entityClasses.Lesson;
 import entityClasses.User;
 
 /*******
@@ -62,6 +64,10 @@ public class Database {
 	private boolean currentNewRole1;
 	private boolean currentNewRole2;
 	private boolean currentOneTimePassword;
+	private String currentLessonText;
+	private String currentLessonTitle;
+	private LocalDateTime currentCreatedAt;
+	private LocalDateTime currentUpdatedAt;
 
 	/*******
 	 * <p> Method: Database </p>
@@ -102,7 +108,7 @@ public class Database {
 /*******
  * <p> Method: createTables </p>
  *
- * <p> Description: Used to create new instances of the two database tables used by this class.</p>
+ * <p> Description: Used to create new instances of the three database tables used by this class.</p>
  *
  */
 	private void createTables() throws SQLException {
@@ -128,6 +134,16 @@ public class Database {
 	    		+ "emailAddress VARCHAR(255), "
 	            + "role VARCHAR(10))";
 	    statement.execute(invitationCodesTable);
+	    
+	    // Create the lesson table
+	    String lessonString = "CREATE TABLE IF NOT EXISTS lessonDB("
+	    		+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+	    		+ "userName VARCHAR(255), "
+	    		+ "lessonTitle VARCHAR(255), "
+	    		+ "lessonText VARCHAR(255), "
+	    		+ "createdAt TIMESTAMP, "
+	    		+ "updatedAt TIMESTAMP)";
+	    statement.execute(lessonString);
 	}
 
 /*******
@@ -1099,7 +1115,135 @@ public class Database {
 	 *
 	 */
 	public boolean getOneTimePassword() { return currentOneTimePassword; };
+	
+	
+	
+	
+	/****************************************************************************
+	 * Lesson Database Items
+	 */
+	
+	
+	/*******
+	 * <p> Method: createLesson(Lesson lesson) </p>
+	 *
+	 * <p> Description: Creates a new row in the database using the lesson parameter. </p>
+	 *
+	 * @throws SQLException when there is an issue creating the SQL command or executing it.
+	 *
+	 * @param lesson specifies a lesson object to be added to the database.
+	 *
+	 */
+	 public void createLesson(Lesson lesson) throws SQLException {
+			String insertUser = "INSERT INTO lessonDB (userName, lessonTitle, lessonText)"
+					+ "VALUES (?, ?, ?)";
+			try (PreparedStatement pstmt = connection.prepareStatement(insertUser, Statement.RETURN_GENERATED_KEYS)) {
+				currentUsername = lesson.getLessonUsername();
+				pstmt.setString(1, currentUsername);
+				
+				currentLessonTitle = lesson.getLessonTitle();
+				pstmt.setString(2, currentLessonTitle);
+				
+				currentLessonText = lesson.getLessonText();
+				pstmt.setString(3, currentLessonText);
+					
+				pstmt.executeUpdate();
+				
+				try(ResultSet keySet = pstmt.getGeneratedKeys()) {
+					if(keySet.next()) {
+						lesson.setId(keySet.getLong(1));
+					}
+				}
+			}
+			
+	 }
+	
+	/*******
+	 * <p> Method: void deleteLesson(int lessonID) </p>
+	 *
+	 * <p> Description: Delete a lesson from the database given that lesson's id </p>
+	 *
+	 * @param lessonID is the id of the lesson
+	 *
+	 */
+	public void deleteLesson(int lessonID) {
+	    String query = "DELETE FROM lessonDB WHERE lessonID = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, lessonID);
+	        pstmt.executeUpdate();
+            System.out.println("*** database.deleteLesson(): " + pstmt.toString());
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	/*******
+	 * <p> Method: void updateLessonText(int lessonID, String lessonText) </p>
+	 *
+	 * <p> Description: Update the lesson text by lesson id</p>
+	 *
+	 * @param lessonID is the id of the lesson post
+	 *
+	 * @param lessonText is the new string of text for the lesson
+	 * 
+	 * update the current lesson text as well
+	 *
+	 */
 
+	public void updateLessonText(int lessonID, String lessonText) {
+	    String query = "UPDATE lessonID SET lessonText = ? WHERE id = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, lessonText);
+	        pstmt.setInt(2, lessonID);
+	        pstmt.executeUpdate();
+	        currentLessonText = lessonText;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	// updateLessonTitle
+	// getLessonByID
+	
+	/*******
+     *  <p> Method: List getAllLessonsByUser(String username) </p>
+     *
+     *  <P> Description: Generate an List of Lessons, unique to the the current user </p>
+     *  
+     *  @param username the username to get lessons
+     *
+     *  @return a list of Lessons found in the database.
+     */
+	public List<Lesson> getLessonsByUser(String username) {
+	    List<Lesson> lessons = new ArrayList<>();
+	    String query = "SELECT id, userName, lessonTitle, lessonText, createdAt, updatedAt "
+	            + "FROM lessonDB WHERE userName = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, username);
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            while (rs.next()) {
+	                lessons.add(new Lesson(
+	                    rs.getLong("id"),
+	                    rs.getString("userName"),
+	                    rs.getString("lessonTitle"),
+	                    rs.getString("lessonText"),
+	                    rs.getObject("createdAt", LocalDateTime.class),
+	                    rs.getObject("updatedAt", LocalDateTime.class)
+	                ));
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return lessons;
+	}
+
+	/*******************************************************************
+	 * END OF LESSON DATABASE ITEMS
+	 */
+	
+	
+	
 	/*******
 	 * <p> Debugging method</p>
 	 *
