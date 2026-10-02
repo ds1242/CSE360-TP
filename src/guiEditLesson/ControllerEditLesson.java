@@ -1,28 +1,8 @@
-package guiLessonsList;
+package guiEditLesson;
 
 import guiLessonsList.ViewLessonList;
 
-/*******
- * <p> Title: ControllerLessonList Class. </p>
- * 
- * <p> Description: The Java/FX-based Role 1 Home Page.  This class provides the controller
- * actions basic on the user's use of the JavaFX GUI widgets defined by the View class.
- * 
- * This page is a stub for establish future roles for the application.
- * 
- * The class has been written assuming that the View or the Model are the only class methods that
- * can invoke these methods.  This is why each has been declared at "protected".  Do not change any
- * of these methods to public.</p>
- * 
- * <p> Copyright: TODO: © 2026 </p>
- * 
- * @author TODO:
- * 
- * @version 1.00		2025-10-02 Initial version
- */
-
-public class ControllerLessonList {
-
+public class ControllerEditLesson {
 	/********************************************************************************************
 
 	User Interface Actions for this page
@@ -36,7 +16,7 @@ public class ControllerLessonList {
 	/**
 	 * Default constructor is not used.
 	 */
-	public ControllerLessonList() {
+	public ControllerEditLesson() {
 	}
 
 	/**********
@@ -46,8 +26,8 @@ public class ControllerLessonList {
 	 * the user account attributes. </p>
 	 * 
 	 */
-	protected static void performAddLesson () {
-		guiEditLesson.ViewEditLesson.displayEditLesson(ViewLessonList.theStage, ViewLessonList.theUser);
+	protected static void performListLesson () {
+		guiLessonsList.ViewLessonList.displayLessonList(ViewEditLesson.theStage, ViewEditLesson.theUser);
 	}	
 
 	/**********
@@ -59,7 +39,7 @@ public class ControllerLessonList {
 	 * 
 	 */
 	protected static void performLogout() {
-		guiUserLogin.ViewUserLogin.displayUserLogin(ViewLessonList.theStage);
+		guiUserLogin.ViewUserLogin.displayUserLogin(ViewEditLesson.theStage);
 	}
 	
 	/**********

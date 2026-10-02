@@ -1,7 +1,5 @@
 package guiRole1;
 
-import guiLessonsList.ViewLessonList;
-
 /*******
  * <p> Title: ControllerRole1Home Class. </p>
  * 
