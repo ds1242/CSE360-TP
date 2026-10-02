@@ -51,6 +51,7 @@ public class Lesson {
 	 * 
 	 * <p> Description: This constructor takes in all six params for a lesson to work with the database</p>
 	 * 
+	 * @param id specifies the id, comes from the db
 	 * @param userName specifies the account username for the lesson
 	 * @param lessonTitle specifies the title of the lesson
 	 * @param lessonText specifies the text for this lesson
@@ -69,17 +70,26 @@ public class Lesson {
 	/**
 	 * <p> Method: setId(Long lessonId)</p>
 	 * 
-	 * <p> Description: this method updates a lesson text and updates the modified at date time</p>
-	 * @param text specifies the new account text
+	 * <p> Description: this method updates a lesson id</p>
+	 * @param text specifies the lesson id
 	 */
 	public void setId(Long lessonId) {
 		this.id = lessonId;
 	}
 	
 	/**
+	 * <p> Method: setUserName(String username)</p>
+	 * 
+	 * <p> Description: this method updates a lesson username</p>
+	 * @param username sets the username of the lesson
+	 */
+	public void setUserName(String username) {
+		this.username = username;
+	}
+	/**
 	 * <p> Method: setLessonText(String lessonText)</p>
 	 * 
-	 * <p> Description: this method updates a lesson text and updates the modified at date time</p>
+	 * <p> Description: this method updates a lesson text</p>
 	 * @param text specifies the new account text
 	 */
 	public void setLessonText(String text) {
@@ -87,7 +97,7 @@ public class Lesson {
 	}
 	
 	/**
-	 * <p> Method: setLessonTitle(String lessonText)</p>
+	 * <p> Method: setLessonTitle(String title)</p>
 	 * 
 	 * <p> Description: this method updates a lesson title and updates the modified at date time</p>
 	 * @param text specifies the new account text
@@ -127,9 +137,10 @@ public class Lesson {
 	}
 	
 	/**
-	 * <p> Method: getLessonText()</p>
+	 * <p> Method: getLessonTitle()</p>
 	 * 
 	 * <p> Description: this method returns the lesson title</p>
+	 * @return title
 	 * 
 	 */
 	public String getLessonTitle() {

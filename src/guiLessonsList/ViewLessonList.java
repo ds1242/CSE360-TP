@@ -1,4 +1,4 @@
-package guiRole1;
+package guiLessonsList;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,25 +10,24 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import database.Database;
 import entityClasses.User;
-import guiLessonsList.ControllerLessonList;
 
 
 /*******
- * <p> Title: ViewRole1Home Class. </p>
+ * <p> Title: ViewLessonList Class. </p>
  * 
  * <p> Description: The Java/FX-based Role1 Home Page.  The page is a stub for some role needed for
  * the application.  The widgets on this page are likely the minimum number and kind for other role
  * pages that may be needed.</p>
  * 
- * <p> Copyright: Lynn Robert Carter © 2025 </p>
+ * <p> Copyright: David Shaw © 2025 </p>
  * 
- * @author Lynn Robert Carter
+ * @author David Shaw
  * 
- * @version 1.00		2025-08-20 Initial version
+ * @version 1.00		2026-10-02 Initial version
  *  
  */
 
-public class ViewRole1Home {
+public class ViewLessonList {
 	
 	/*-*******************************************************************************************
 
@@ -69,7 +68,7 @@ public class ViewRole1Home {
 	// This is the end of the GUI objects for the page.
 	
 	// These attributes are used to configure the page and populate it with this user's information
-	private static ViewRole1Home theView;		// Used to determine if instantiation of the class
+	private static ViewLessonList theView;		// Used to determine if instantiation of the class
 												// is needed
 
 	// Reference for the in-memory database so this package has access
@@ -111,14 +110,14 @@ public class ViewRole1Home {
 	 * @param user specifies the User for this GUI and it's methods
 	 * 
 	 */
-	public static void displayRole1Home(Stage ps, User user) {
+	public static void displayLessonList(Stage ps, User user) {
 		
 		// Establish the references to the GUI and the current user
 		theStage = ps;
 		theUser = user;
 		
 		// If not yet established, populate the static aspects of the GUI
-		if (theView == null) theView = new ViewRole1Home();		// Instantiate singleton if needed
+		if (theView == null) theView = new ViewLessonList();		// Instantiate singleton if needed
 		
 		// Populate the dynamic aspects of the GUI with the data from the user and the current
 		// state of the system.
@@ -128,7 +127,7 @@ public class ViewRole1Home {
 		label_UserDetails.setText("User: " + theUser.getUserName());
 				
 		// Set the title for the window, display the page, and wait for the Admin to do something
-		theStage.setTitle("CSE 360 Foundations: Role1 Home Page");
+		theStage.setTitle("Lessons Learned");
 		theStage.setScene(theViewRole1HomeScene);
 		theStage.show();
 	}
@@ -144,7 +143,7 @@ public class ViewRole1Home {
 	 * fields using the displayRole2Home method.</p>
 	 * 
 	 */
-	private ViewRole1Home() {
+	private ViewLessonList() {
 
 		// Create the Pane for the list of widgets and the Scene for the window
 		theRootPane = new Pane();
@@ -155,34 +154,33 @@ public class ViewRole1Home {
 		// Populate the window with the title and other common widgets and set their static state
 		
 		// GUI Area 1
-		label_PageTitle.setText("Role1 Home Page");
+		label_PageTitle.setText("Lessons Learned Page");
 		setupLabelUI(label_PageTitle, "Arial", 28, width, Pos.CENTER, 0, 5);
 
 		label_UserDetails.setText("User: " + theUser.getUserName());
 		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);
 		
 		setupButtonUI(button_UpdateThisUser, "Dialog", 18, 170, Pos.CENTER, 610, 45);
-		button_UpdateThisUser.setOnAction((_) -> {ControllerRole1Home.performUpdate(); });
+		button_UpdateThisUser.setOnAction((_) -> {ControllerLessonList.performUpdate(); });
 		
 		// GUI Area 2
 		
-		// Adding lessons learned
-		setupButtonUI(button_lessonsLearned, "Dialog", 18, 170, Pos.CENTER, 20, 100);
-		button_lessonsLearned.setOnAction((_) -> {ControllerRole1Home.perfromLessonsLearned(); });
+
+		setupButtonUI(button_lessonsLearned, "Dialog", 18, 170, Pos.CENTER, 20, 55);
 		
 		// GUI Area 3
         setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
-        button_Logout.setOnAction((_) -> {ControllerRole1Home.performLogout(); });
+        button_Logout.setOnAction((_) -> {ControllerLessonList.performLogout(); });
         
         setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
-        button_Quit.setOnAction((_) -> {ControllerRole1Home.performQuit(); });
+        button_Quit.setOnAction((_) -> {ControllerLessonList.performQuit(); });
 
 		// This is the end of the GUI initialization code
 		
 		// Place all of the widget items into the Root Pane's list of children
          theRootPane.getChildren().addAll(
 			label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
-	        line_Separator4, button_Logout, button_Quit, button_lessonsLearned);
+	        line_Separator4, button_Logout, button_Quit);
 }
 	
 	

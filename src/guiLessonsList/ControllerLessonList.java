@@ -1,9 +1,9 @@
-package guiRole1;
+package guiLessonsList;
 
 import guiLessonsList.ViewLessonList;
 
 /*******
- * <p> Title: ControllerRole1Home Class. </p>
+ * <p> Title: ControllerLessonList Class. </p>
  * 
  * <p> Description: The Java/FX-based Role 1 Home Page.  This class provides the controller
  * actions basic on the user's use of the JavaFX GUI widgets defined by the View class.
@@ -14,15 +14,15 @@ import guiLessonsList.ViewLessonList;
  * can invoke these methods.  This is why each has been declared at "protected".  Do not change any
  * of these methods to public.</p>
  * 
- * <p> Copyright: Lynn Robert Carter © 2025 </p>
+ * <p> Copyright: TODO: © 2025 </p>
  * 
- * @author Lynn Robert Carter
+ * @author TODO:
  * 
  * @version 1.00		2025-08-17 Initial version
  * @version 1.01		2025-09-16 Update Javadoc documentation *  
  */
 
-public class ControllerRole1Home {
+public class ControllerLessonList {
 
 	/*-*******************************************************************************************
 
@@ -37,7 +37,7 @@ public class ControllerRole1Home {
 	/**
 	 * Default constructor is not used.
 	 */
-	public ControllerRole1Home() {
+	public ControllerLessonList() {
 	}
 
 	/**********
@@ -48,7 +48,7 @@ public class ControllerRole1Home {
 	 * 
 	 */
 	protected static void performUpdate () {
-		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewRole1Home.theStage, ViewRole1Home.theUser);
+		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewLessonList.theStage, ViewLessonList.theUser);
 	}	
 
 	/**********
@@ -60,7 +60,7 @@ public class ControllerRole1Home {
 	 * 
 	 */
 	protected static void performLogout() {
-		guiUserLogin.ViewUserLogin.displayUserLogin(ViewRole1Home.theStage);
+		guiUserLogin.ViewUserLogin.displayUserLogin(ViewLessonList.theStage);
 	}
 	
 	/**********
@@ -73,18 +73,5 @@ public class ControllerRole1Home {
 	 */	
 	protected static void performQuit() {
 		System.exit(0);
-	}
-	
-	
-	/**********
-	 * <p> Method: performQuit() </p>
-	 * 
-	 * <p> Description: This method terminates the execution of the program.  It leaves the
-	 * database in a state where the normal login page will be displayed when the application is
-	 * restarted.</p>
-	 * 
-	 */	
-	protected static void perfromLessonsLearned() {
-		guiLessonsList.ViewLessonList.displayLessonList(ViewRole1Home.theStage, ViewRole1Home.theUser);
 	}
 }
