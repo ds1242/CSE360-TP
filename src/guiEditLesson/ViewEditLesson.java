@@ -1,8 +1,9 @@
 package guiEditLesson;
 
 
-
+import cse360.GRP.ADES.evaluator.textLengthEvaluation.TextLengthEvaluator;
 import database.Database;
+import entityClasses.Lesson;
 import entityClasses.User;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
 public class ViewEditLesson {
 	/********************************************************************************************
@@ -70,7 +72,11 @@ public class ViewEditLesson {
 	
 	
 	// text area for the lessonText
-	private static TextArea textArea = new TextArea();
+	protected static TextArea textArea = new TextArea();
+	protected static Button submitButton = new Button("Submit");
+	protected static Label label_LessonTitle = new Label("Lesson Title:");
+	protected static TextField textField_Title = new TextField();
+	
 
 	/********************************************************************************************
 
@@ -121,10 +127,14 @@ public class ViewEditLesson {
 		theStage.setScene(theViewRole1HomeScene);
 		theStage.show();
 		
-		// text area details
+		// title information
+		textField_Title.setText("");
+		textField_Title.setPromptText("Enter lesson title here...");
+		// lesson text information
+		textArea.setText("");
 		textArea.setPromptText("Add your lesson learned here...");
 		textArea.setWrapText(true);
-		textArea.setPrefRowCount(10);
+
 	}
 	
 	/**********
@@ -159,8 +169,31 @@ public class ViewEditLesson {
 		button_ListLessons.setOnAction((_) -> {ControllerEditLesson.performListLesson(); });
 		
 		// GUI Area 2
+		// form for adding a lesson
+		setupLabelUI(label_LessonTitle, "Arial", 16, 120, Pos.BASELINE_LEFT, 20, 110);
+		setupTextFieldUI(textField_Title, "Arial", 16, width - 40, 20, 140);
+		setupFormUI(textArea, "Arial", 16, width - 40, 220, 20, 190);
 		
-		
+		setupButtonUI(submitButton, "Dialog", 18, 150, Pos.CENTER, (width / 2) - 75, 450);
+	
+		submitButton.setOnAction((_) -> { 
+			// get user text and validate length then submit
+			
+			String userInput = textArea.getText();
+			if("".equals(userInput)) {
+				System.out.println("User did not enter text");
+				return;
+			}
+			
+			String validLengthMessage = TextLengthEvaluator.evaluateText(userInput);
+			if(validLengthMessage != "") {
+				System.out.printf("Error: %s\n", validLengthMessage);
+				return;
+			}
+			Lesson lesson = new Lesson(theUser.getUserName(), "title", userInput);
+			theDatabase.addLesson(lesson);
+			ControllerEditLesson.performSubmitLesson(); 
+			});
 		
 		// GUI Area 3
         setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
@@ -174,7 +207,7 @@ public class ViewEditLesson {
 		// Place all of the widget items into the Root Pane's list of children
          theRootPane.getChildren().addAll(
 			label_PageTitle, label_UserDetails, button_ListLessons, line_Separator1,
-	        line_Separator4, button_Logout, button_Quit);
+	        line_Separator4, button_Logout, button_Quit, textArea, submitButton, textField_Title);
 }
 	
 	
@@ -223,5 +256,44 @@ public class ViewEditLesson {
 		b.setAlignment(p);
 		b.setLayoutX(x);
 		b.setLayoutY(y);		
+	}
+	
+	/**********
+	 * Private local method to initialize the standard fields for a TextArea
+	 * 
+	 * @param ta    The TextArea object to be initialized
+	 * @param ff    The font family to be used
+	 * @param f     The font size
+	 * @param w     The width of the TextArea
+	 * @param h     The height of the TextArea
+	 * @param x     The X-coordinate on the layout pane
+	 * @param y     The Y-coordinate on the layout pane
+	 */
+	private static void setupFormUI(TextArea ta, String ff, double f, double w, double h, double x, double y) {
+		ta.setFont(Font.font(ff, f));
+		ta.setPrefWidth(w);
+		ta.setMaxWidth(w);
+		ta.setPrefHeight(h);
+		ta.setMaxHeight(h);
+		ta.setLayoutX(x);
+		ta.setLayoutY(y);
+	}
+	
+	/**********
+	 * Private local method to initialize the standard fields for a TextField
+	 * 
+	 * @param tf    The TextField object to be initialized
+	 * @param ff    The font family to be used
+	 * @param f     The font size
+	 * @param w     The width of the TextField
+	 * @param x     The location from the left edge (x axis)
+	 * @param y     The location from the top (y axis)
+	 */	
+	static void setupTextFieldUI(TextField tf, String ff, double f, double w, double x, double y) {
+		tf.setFont(Font.font(ff, f));
+		tf.setMinWidth(w);
+		tf.setMaxWidth(w);
+		tf.setLayoutX(x);
+		tf.setLayoutY(y);
 	}
 }

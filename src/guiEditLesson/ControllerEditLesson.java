@@ -1,5 +1,6 @@
 package guiEditLesson;
 
+import entityClasses.Lesson;
 import guiLessonsList.ViewLessonList;
 
 public class ControllerEditLesson {
@@ -42,6 +43,20 @@ public class ControllerEditLesson {
 		guiUserLogin.ViewUserLogin.displayUserLogin(ViewEditLesson.theStage);
 	}
 	
+	
+	/**********
+	 * <p> Method: performSubmitLesson() </p>
+	 * 
+	 * <p> Description: This method logs out the current user and proceeds to the lessons learned page
+	 * page where existing users can log in or potential new users with a invitation code can
+	 * start the process of setting up an account. </p>
+	 * 
+	 */
+	protected static void performSubmitLesson() {
+		guiLessonsList.ViewLessonList.displayLessonList(ViewEditLesson.theStage, ViewEditLesson.theUser);
+	};
+	
+		
 	/**********
 	 * <p> Method: performQuit() </p>
 	 * 
