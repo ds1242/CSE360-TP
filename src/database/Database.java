@@ -1318,6 +1318,36 @@ public class Database {
 		return lessons;
 	}
 
+	
+	/*******
+	 *  <p> Method: List getLessons() </p>
+	 *
+	 *  <P> Description: Generate an List of all Lessons </p>
+	 * 
+	 *  @return a list of Lessons found in the database.
+	 */
+	public List<Lesson> getLessons() {
+		List<Lesson> lessons = new ArrayList<>();
+		String query = "SELECT id, userName, lessonTitle, lessonText, createdAt, updatedAt "
+				+ "FROM lessonDB";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					lessons.add(new Lesson(
+							rs.getLong("id"),
+							rs.getString("userName"),
+							rs.getString("lessonTitle"),
+							rs.getString("lessonText"),
+							rs.getObject("createdAt", LocalDateTime.class),
+							rs.getObject("updatedAt", LocalDateTime.class)
+							));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lessons;
+	}
 	/*******************************************************************
 	 * END OF LESSON DATABASE ITEMS
 	 */

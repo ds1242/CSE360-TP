@@ -14,7 +14,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,15 +21,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class LessonTester {
 
-	// Colors to enhance my output
-	static String RED = "\u001B[31m";
+    // Colors to enhance output
+    static String RED = "\u001B[31m";
     static String GREEN = "\u001B[32m";
     static String RESET = "\u001B[0m";
     
     static String PASSED = GREEN + "PASSED" + RESET;
     static String FAILED = RED + "FAILED" + RESET;
     
-    // fake db connection 
     private Connection connection;
     private Database db;
 
@@ -61,27 +59,12 @@ public class LessonTester {
         System.out.println("--------------------------------------------------------------------------------");
     }
 
-    /**
-     * <p> Method: void performCreateLessonTestCase(int count, String userName, String lessonTitle, 
-     * String lessonText, boolean expectedSuccess, String expectedMessage) </p>
-     * 
-     * <p>Description: This method takes in the arguments required to run the test cases and returns the expected results</p>
-     * @param count
-     * @param userName
-     * @param lessonTitle
-     * @param lessonText
-     * @param expectedSuccess
-     * @param expectedMessage
-     */
+    // Create Tests
     public void performCreateLessonTestCase(int count, String userName, String lessonTitle, String lessonText, boolean expectedSuccess, String expectedMessage) {
         printHeader(count, "Create Lesson", expectedMessage, expectedSuccess);
 
         Lesson lesson = new Lesson(userName, lessonTitle, lessonText);
-        
-        // Capture the specific status message returned by addLesson
         String actualMessage = db.addLesson(lesson);
-
-        // REMOVED: The if-else block that was overwriting actualMessage
 
         System.out.printf("Inputs                : userName='%s', title='%s'%n", userName, lessonTitle);
         System.out.printf("Actual Outcome        : \"%s\" (Generated ID: %s)%n", actualMessage, lesson.getId());
@@ -90,8 +73,6 @@ public class LessonTester {
         System.out.printf("STATUS: %s\n", PASSED);
     }
 
-    
-    // Create Test Cases
     @Test 
     @Order(1)
     @DisplayName("1. Create Lesson - Valid positive test case")
@@ -122,17 +103,45 @@ public class LessonTester {
     }
 
     // Read Tests
+    public void performGetAllLessonsTestCase(int count, int expectedSize, boolean expectedSuccess, String expectedMessage) {
+        printHeader(count, "Get All Lessons", expectedMessage, expectedSuccess);
+
+        List<Lesson> lessons = db.getLessons();
+
+        String actualMessage = (lessons != null && !lessons.isEmpty()) ? "lessons listed" : "no lessons found";
+
+        System.out.printf("Actual Outcome        : \"%s\" (List Size: %d)%n", actualMessage, lessons != null ? lessons.size() : 0);
+        
+        assertNotNull(lessons, "Lessons list should not be null");
+        assertEquals(expectedSize, lessons.size(), "List size does not match expected");
+        assertEquals(expectedMessage, actualMessage);
+        System.out.printf("STATUS: %s\n", PASSED);
+    }
+
+    @Test 
+    @Order(5)
+    @DisplayName("5. List all Lessons - Positive")
+    public void testCase05_ReadAllList_Positive() {
+        db.addLesson(new Lesson("David Shaw", "Title 1", "Text 1"));
+        db.addLesson(new Lesson("David Shaw", "Title 2", "Text 2"));
+        db.addLesson(new Lesson("David Shaw", "Title 3", "Text 3"));
+        
+        performGetAllLessonsTestCase(5, 3, true, "lessons listed");
+
+        // matching information on individual lessons 
+        List<Lesson> lessons = db.getLessons();
+        for (int i = 0; i < lessons.size(); i++) {
+            assertEquals("David Shaw", lessons.get(i).getLessonUsername());
+            assertEquals("Title " + (i + 1), lessons.get(i).getLessonTitle());
+        }
+    }
+
     public void performGetUserLessonListTestCase(int count, String userName, boolean expectedSuccess, String expectedMessage) {
         printHeader(count, "Get User Lesson List", expectedMessage, expectedSuccess);
 
         List<Lesson> lessons = db.getLessonsByUser(userName);
 
-        String actualMessage;
-        if (lessons != null && !lessons.isEmpty()) {
-            actualMessage = "lessons listed";
-        } else {
-            actualMessage = "no users with lessons";
-        }
+        String actualMessage = (lessons != null && !lessons.isEmpty()) ? "lessons listed" : "no users with lessons";
 
         System.out.printf("Inputs                : userName='%s'%n", userName);
         System.out.printf("Actual Outcome        : \"%s\" (List Size: %d)%n", actualMessage, lessons != null ? lessons.size() : 0);
@@ -141,31 +150,26 @@ public class LessonTester {
     }
 
     @Test 
-    @Order(5)
-    @DisplayName("5. List Lessons for a user - Positive")
-    public void testCase05_ReadList_Positive() {
-    	
-    	System.out.println("Adding and then printing a set of lessons");
+    @Order(6)
+    @DisplayName("6. List Lessons for a user - Positive")
+    public void testCase06_ReadList_Positive() {
         db.addLesson(new Lesson("David Shaw", "Title 1", "Text 1"));
         db.addLesson(new Lesson("David Shaw", "Title 2", "Text 2"));
         db.addLesson(new Lesson("David Shaw", "Title 3", "Text 3"));
         
-        List<Lesson> lessons = new ArrayList<>();
-        lessons = db.getLessonsByUser("David Shaw");
-        for(Lesson lesson : lessons) {
-        	String title = lesson.getLessonTitle();
-        	String username = lesson.getLessonUsername();
-        	System.out.printf("Username : %s  Title: %s\n", username, title);
-        }
+        performGetUserLessonListTestCase(6, "David Shaw", true, "lessons listed");
         
-        performGetUserLessonListTestCase(5, "David Shaw", true, "lessons listed");
+        // checking for lesson by user
+        List<Lesson> lessons = db.getLessonsByUser("David Shaw");
+        assertNotNull(lessons);
+        assertEquals(3, lessons.size());
     }
 
     @Test 
-    @Order(6)
-    @DisplayName("6. List Lessons - Nonexistent User")
-    public void testCase06_ReadList_InvalidUser() {
-        performGetUserLessonListTestCase(6, "nonexistentUser", true, "no users with lessons");
+    @Order(7)
+    @DisplayName("7. List Lessons - Nonexistent User")
+    public void testCase07_ReadList_InvalidUser() {
+        performGetUserLessonListTestCase(7, "nonexistentUser", true, "no users with lessons");
     }
 
     public void performGetUserLessonByIDTestCase(int count, String userName, int lessonID, boolean expectedSuccess, String expectedMessage) {
@@ -191,35 +195,35 @@ public class LessonTester {
     }
 
     @Test 
-    @Order(7)
-    @DisplayName("7. Read Lesson By ID - Positive Case")
-    public void testCase07_ReadByID_Positive() {
+    @Order(8)
+    @DisplayName("8. Read Lesson By ID - Positive Case")
+    public void testCase08_ReadByID_Positive() {
         Lesson lesson = new Lesson("David Shaw", "Title", "Text");
         db.addLesson(lesson);
-        performGetUserLessonByIDTestCase(7, "David Shaw", lesson.getId().intValue(), true, "lesson " + lesson.getId() + " found");
-    }
-
-    @Test 
-    @Order(8)
-    @DisplayName("8. Read Lesson By ID - ID Not Found - Negative")
-    public void testCase08_ReadByID_NotFound() {
-        performGetUserLessonByIDTestCase(8, "David Shaw", 999, true, "no lesson with that id");
+        performGetUserLessonByIDTestCase(8, "David Shaw", lesson.getId().intValue(), true, "lesson " + lesson.getId() + " found");
     }
 
     @Test 
     @Order(9)
-    @DisplayName("9. Read Lesson By ID - Lesson Owned by Another - Negative")
-    public void testCase09_ReadByID_UnownedLesson() {
-        Lesson lesson = new Lesson("alice", "Title", "Text");
-        db.addLesson(lesson);
-        performGetUserLessonByIDTestCase(9, "David Shaw", lesson.getId().intValue(), true, "unable to update that lesson");
+    @DisplayName("9. Read Lesson By ID - ID Not Found - Negative")
+    public void testCase09_ReadByID_NotFound() {
+        performGetUserLessonByIDTestCase(9, "David Shaw", 999, true, "no lesson with that id");
     }
 
     @Test 
     @Order(10)
-    @DisplayName("10. Read Lesson By ID - Invalid User - Negative ")
-    public void testCase10_ReadByID_InvalidUser() {
-        performGetUserLessonByIDTestCase(10, "fakeUser", 999, true, "username is invalid");
+    @DisplayName("10. Read Lesson By ID - Lesson Owned by Another - Negative")
+    public void testCase10_ReadByID_UnownedLesson() {
+        Lesson lesson = new Lesson("alice", "Title", "Text");
+        db.addLesson(lesson);
+        performGetUserLessonByIDTestCase(10, "David Shaw", lesson.getId().intValue(), true, "unable to update that lesson");
+    }
+
+    @Test 
+    @Order(11)
+    @DisplayName("11. Read Lesson By ID - Invalid User - Negative")
+    public void testCase11_ReadByID_InvalidUser() {
+        performGetUserLessonByIDTestCase(11, "fakeUser", 999, true, "username is invalid");
     }
 
     // Update Tests
@@ -255,7 +259,7 @@ public class LessonTester {
 
     @Test 
     @Order(13)
-    @DisplayName("13. Update Lesson - Attempt to update lesson for another user - Negative ")
+    @DisplayName("13. Update Lesson - Attempt to update lesson for another user - Negative")
     public void testCase13_Update_UnownedLesson() {
         Lesson lesson = new Lesson("alice", "Title", "Alice Text");
         db.addLesson(lesson);

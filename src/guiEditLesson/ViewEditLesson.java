@@ -222,7 +222,7 @@ public class ViewEditLesson {
 			// edit or updating, this is wild
 			if(theLesson != null) {
 				theLesson.setLessonTitle(userTitle);
-				theLesson.setLessonText(validLengthMessage);
+				theLesson.setLessonText(userInput);
 				theLesson.setUpdatedAt(java.time.LocalDateTime.now());
 
 				theDatabase.updateLesson(theLesson);;
