@@ -1,11 +1,12 @@
 package guiLessonsList;
 
+import entityClasses.Lesson;
 import guiLessonsList.ViewLessonList;
 
 /*******
  * <p> Title: ControllerLessonList Class. </p>
  * 
- * <p> Description: The Java/FX-based Role 1 Home Page.  This class provides the controller
+ * <p> Description: The Java/FX-based Controller Lesson List.  This class provides the controller
  * actions basic on the user's use of the JavaFX GUI widgets defined by the View class.
  * 
  * This page is a stub for establish future roles for the application.
@@ -14,11 +15,11 @@ import guiLessonsList.ViewLessonList;
  * can invoke these methods.  This is why each has been declared at "protected".  Do not change any
  * of these methods to public.</p>
  * 
- * <p> Copyright: TODO: © 2026 </p>
+ * <p> Copyright: David Shaw © 2026 </p>
  * 
- * @author TODO:
+ * @author David Shaw
  * 
- * @version 1.00		2025-10-02 Initial version
+ * @version 1.00		2026-10-02 Initial version
  */
 
 public class ControllerLessonList {
@@ -47,7 +48,18 @@ public class ControllerLessonList {
 	 * 
 	 */
 	protected static void performAddLesson () {
-		guiEditLesson.ViewEditLesson.displayEditLesson(ViewLessonList.theStage, ViewLessonList.theUser);
+		guiEditLesson.ViewEditLesson.displayEditLesson(ViewLessonList.theStage, ViewLessonList.theUser, null);
+	}	
+	
+	/**********
+	 * <p> Method: performAddLesson() </p>
+	 * 
+	 * <p> Description: This method directs the user to the User Update Page so the user can change
+	 * the user account attributes. </p>
+	 * 
+	 */
+	protected static void performEditLesson (Lesson lesson) {
+		guiEditLesson.ViewEditLesson.displayEditLesson(ViewLessonList.theStage, ViewLessonList.theUser, lesson);
 	}	
 
 	/**********

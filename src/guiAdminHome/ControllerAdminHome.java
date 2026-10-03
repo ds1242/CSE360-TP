@@ -203,4 +203,16 @@ public class ControllerAdminHome {
 	protected static void performQuit() {
 		System.exit(0);
 	}
+	
+	/**********
+	 * <p> Method: performLessonsLearned() </p>
+	 * 
+	 * <p> Description: This method terminates the execution of the program.  It leaves the
+	 * database in a state where the normal login page will be displayed when the application is
+	 * restarted.</p>
+	 * 
+	 */	
+	protected static void performLessonsLearned() {
+		guiLessonsList.ViewLessonList.displayLessonList(ViewAdminHome.theStage, ViewAdminHome.theUser);
+	}
 }

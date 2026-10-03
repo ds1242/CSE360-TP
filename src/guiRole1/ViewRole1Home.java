@@ -168,7 +168,7 @@ public class ViewRole1Home {
 		
 		// Adding lessons learned
 		setupButtonUI(button_lessonsLearned, "Dialog", 18, 170, Pos.CENTER, 20, 100);
-		button_lessonsLearned.setOnAction((_) -> {ControllerRole1Home.perfromLessonsLearned(); });
+		button_lessonsLearned.setOnAction((_) -> {ControllerRole1Home.performLessonsLearned(); });
 		
 		// GUI Area 3
         setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);

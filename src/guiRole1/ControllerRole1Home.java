@@ -75,14 +75,14 @@ public class ControllerRole1Home {
 	
 	
 	/**********
-	 * <p> Method: performQuit() </p>
+	 * <p> Method: performLessonsLearned() </p>
 	 * 
 	 * <p> Description: This method terminates the execution of the program.  It leaves the
 	 * database in a state where the normal login page will be displayed when the application is
 	 * restarted.</p>
 	 * 
 	 */	
-	protected static void perfromLessonsLearned() {
+	protected static void performLessonsLearned() {
 		guiLessonsList.ViewLessonList.displayLessonList(ViewRole1Home.theStage, ViewRole1Home.theUser);
 	}
 }

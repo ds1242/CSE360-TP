@@ -8,18 +8,34 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+
+import javafx.scene.control.ListView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import java.util.List;
+import javafx.geometry.Insets;
+import javafx.scene.control.ListCell;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+
+import java.time.format.DateTimeFormatter;
+
+
 import database.Database;
 import entityClasses.User;
+
+import entityClasses.Lesson;
 
 
 /*******
  * <p> Title: ViewLessonList Class. </p>
  * 
- * <p> Description: The Java/FX-based Role1 Home Page.  The page is a stub for some role needed for
+ * <p> Description: The Java/FX-based View Lesson List.  The page is a stub for some role needed for
  * the application.  The widgets on this page are likely the minimum number and kind for other role
  * pages that may be needed.</p>
  * 
- * <p> Copyright: David Shaw © 2025 </p>
+ * <p> Copyright: David Shaw © 2026 </p>
  * 
  * @author David Shaw
  * 
@@ -52,10 +68,13 @@ public class ViewLessonList {
 	// This is a separator and it is used to partition the GUI for various tasks
 	protected static Line line_Separator1 = new Line(20, 95, width-20, 95);
 
-	// GUI Area 2: This is a stub, so there are no widgets here.  For an actual role page, this are
-	// would contain the widgets needed for the user to play the assigned role.
+	// GUI Area 2: 
 	
-	// TODO: This is where we want to list the lessons for the current user
+	// List of the storing the lessons followed by UI elements to display
+	private static List<Lesson> userLessons; 
+	protected static ListView<Lesson> listView_Lessons = new ListView<>();
+	private static ObservableList<Lesson> observableLessonList = FXCollections.observableArrayList();
+	
 	
 	
 	// This is a separator and it is used to partition the GUI for various tasks
@@ -82,6 +101,9 @@ public class ViewLessonList {
 
 	private static Scene theViewRole1HomeScene;	// The shared Scene each invocation populates
 	protected static final int theRole = 2;		// Admin: 1; Role1: 2; Role2: 3
+	
+	
+	
 
 	/*-*******************************************************************************************
 
@@ -126,15 +148,24 @@ public class ViewLessonList {
 		applicationMain.FoundationsMain.activeHomePage = theRole;
 		
 		label_UserDetails.setText("User: " + theUser.getUserName());
-				
-		// Set the title for the window, display the page, and wait for the Admin to do something
-		theStage.setTitle("Lessons Learned");
-		theStage.setScene(theViewRole1HomeScene);
-		theStage.show();
+
+		// populate the user lesson list
+		userLessons = theDatabase.getLessonsByUser(theUser.getUserName());
+		
+		observableLessonList.clear();
+	    if (userLessons != null) {
+	        observableLessonList.addAll(userLessons);
+	    }
+		
+		
+	    // Set the title for the window, display the page, and wait for the Admin to do something	
+	    theStage.setTitle("Lessons Learned");	
+	    theStage.setScene(theViewRole1HomeScene);
+	    theStage.show();
 	}
 	
 	/**********
-	 * <p> Method: ViewRole1Home() </p>
+	 * <p> Method: ViewLessonList() </p>
 	 * 
 	 * <p> Description: This method initializes all the elements of the graphical user interface.
 	 * This method determines the location, size, font, color, and change and event handlers for
@@ -166,8 +197,69 @@ public class ViewLessonList {
 		
 		// GUI Area 2
 		
-		// Place the list here
-		// Place the button to add here
+		listView_Lessons.setItems(observableLessonList);
+		listView_Lessons.setLayoutX(20);
+		listView_Lessons.setLayoutY(110);
+		listView_Lessons.setPrefWidth(width - 40);
+		listView_Lessons.setPrefHeight(400);
+		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		
+		listView_Lessons.setCellFactory((_) -> new ListCell<Lesson>() {
+			@Override
+			protected void updateItem(Lesson lesson, boolean empty) {
+				super.updateItem(lesson, empty);
+
+				// if empty, just skip
+				if (empty || lesson == null) {
+					setText(null);
+					setGraphic(null);
+					return;
+				}
+				
+				
+				// initialize all of the stuff
+				String createdStr = lesson.getCreatedAt() != null ? lesson.getCreatedAt().format(dtf) : "N/A";
+				String updatedStr = lesson.getUpdatedAt() != null ? lesson.getUpdatedAt().format(dtf) : "N/A";
+				String authorStr = "Author: " + (lesson.getLessonUsername() != null ? lesson.getLessonUsername() : "Unknown");
+				Label labelAuthor = new Label(authorStr);
+				Label labelTitle = new Label(lesson.getLessonTitle());
+				Label labelText = new Label(lesson.getLessonText());
+				Label labelDates = new Label("Created: " + createdStr + "  |  Updated: " + updatedStr);
+				Button button_editLesson = new Button("Edit");
+				setupButtonUI(button_editLesson, "Dialog", 12 , 60, Pos.CENTER, 0, 0);
+				button_editLesson.setOnAction((_) -> {
+					ControllerLessonList.performEditLesson(lesson);
+				});
+
+
+				labelTitle.setFont(Font.font("Arial", 16));
+				labelAuthor.setFont(Font.font("Arial", 16));
+				labelText.setFont(Font.font("Arial", 16));
+				labelDates.setFont(Font.font("Dialog", 16));
+
+				labelText.setWrapText(true);
+
+				// Header
+				HBox header = new HBox(labelTitle, button_editLesson);
+				HBox.setHgrow(labelTitle, Priority.ALWAYS);
+				header.setSpacing(10);
+				
+				
+				// Footer 
+				HBox footer = new HBox(labelAuthor, labelDates);
+				HBox.setHgrow(labelAuthor, Priority.ALWAYS);
+				footer.setSpacing(20);
+
+				// Entire row
+				VBox rowLayout = new VBox(8, header, labelText, footer);
+				rowLayout.setPadding(new Insets(10));
+
+				setGraphic(rowLayout);
+			}
+
+		});
+
 		
 		// GUI Area 3
         setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
@@ -180,12 +272,12 @@ public class ViewLessonList {
 		
 		// Place all of the widget items into the Root Pane's list of children
          theRootPane.getChildren().addAll(
-			label_PageTitle, label_UserDetails, button_AddLesson, line_Separator1,
+			label_PageTitle, label_UserDetails, button_AddLesson, line_Separator1, listView_Lessons,
 	        line_Separator4, button_Logout, button_Quit);
 }
 	
 	
-	/*-********************************************************************************************
+	/*********************************************************************************************
 
 	Helper methods to reduce code length
 

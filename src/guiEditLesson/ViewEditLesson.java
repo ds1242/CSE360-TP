@@ -20,44 +20,44 @@ public class ViewEditLesson {
 	/********************************************************************************************
 
 	Attributes
-	
+
 	 */
-	
+
 	// These are the application values required by the user interface
-	
+
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
 	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
 
 	// These are the widget attributes for the GUI. There are 3 areas for this GUI.
-	
+
 	// GUI Area 1: It informs the user about the purpose of this page, whose account is being used,
 	// and a button to allow this user to update the account settings
 	protected static Label label_PageTitle = new Label();
 	protected static Label label_UserDetails = new Label();
 	protected static Button button_ListLessons = new Button("Lessons Learned");
-	
+
 	// This is a separator and it is used to partition the GUI for various tasks
 	protected static Line line_Separator1 = new Line(20, 95, width-20, 95);
 
 	// GUI ARea 2: This is a stub, so there are no widgets here.  For an actual role page, this are
 	// would contain the widgets needed for the user to play the assigned role.
 	protected static Button button_lessonsLearned = new Button("Lessons Learned");
-	
-	
+
+
 	// This is a separator and it is used to partition the GUI for various tasks
 	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
-	
+
 	// GUI Area 3: This is last of the GUI areas.  It is used for quitting the application and for
 	// logging out.
 	protected static Button button_Logout = new Button("Logout");
 	protected static Button button_Quit = new Button("Quit");
 
 	// This is the end of the GUI objects for the page.
-	
+
 	// These attributes are used to configure the page and populate it with this user's information
 	private static ViewEditLesson theView;		// Used to determine if instantiation of the class
-												// is needed
+	// is needed
 
 	// Reference for the in-memory database so this package has access
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
@@ -65,23 +65,24 @@ public class ViewEditLesson {
 	protected static Stage theStage;			// The Stage that JavaFX has established for us	
 	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets
 	protected static User theUser;				// The current logged in User
-	
+	protected static Lesson theLesson;
 
-	private static Scene theViewRole1HomeScene;	// The shared Scene each invocation populates
+
+	private static Scene theViewRoleEditAddLessonScene;	// The shared Scene each invocation populates
 	protected static final int theRole = 2;		// Admin: 1; Role1: 2; Role2: 3
-	
-	
+
+
 	// text area for the lessonText
 	protected static TextArea textArea = new TextArea();
 	protected static Button submitButton = new Button("Submit");
 	protected static Label label_LessonTitle = new Label("Lesson Title:");
 	protected static TextField textField_Title = new TextField();
-	
+
 
 	/********************************************************************************************
 
 	Constructors
-	
+
 	 */
 
 
@@ -106,37 +107,57 @@ public class ViewEditLesson {
 	 * @param user specifies the User for this GUI and it's methods
 	 * 
 	 */
-	public static void displayEditLesson(Stage ps, User user) {
-		
+	public static void displayEditLesson(Stage ps, User user, Lesson lesson) {
+
 		// Establish the references to the GUI and the current user
 		theStage = ps;
 		theUser = user;
-		
+
+		// if we are editing a lesson then set
+		theLesson = lesson;
+
 		// If not yet established, populate the static aspects of the GUI
 		if (theView == null) theView = new ViewEditLesson();		// Instantiate singleton if needed
-		
+
 		// Populate the dynamic aspects of the GUI with the data from the user and the current
 		// state of the system.
 		theDatabase.getUserAccountDetails(user.getUserName());
 		applicationMain.FoundationsMain.activeHomePage = theRole;
-		
+
 		label_UserDetails.setText("User: " + theUser.getUserName());
-				
+
 		// Set the title for the window, display the page, and wait for the Admin to do something
-		theStage.setTitle("Add a new lesson");
-		theStage.setScene(theViewRole1HomeScene);
-		theStage.show();
-		
+		// making this dynamic now to reuse edit and add lesson stuff
+		String pageTitle;
+		if(theLesson != null) {
+			pageTitle = "Edit Lesson";
+		} else {
+			pageTitle = "Add a new lesson";
+		}
+		theStage.setTitle(pageTitle);
+
+
 		// title information
-		textField_Title.setText("");
-		textField_Title.setPromptText("Enter lesson title here...");
+		if(theLesson != null) {
+			textField_Title.setText(theLesson.getLessonTitle());
+			textArea.setText(theLesson.getLessonText());
+		} else {
+			textField_Title.setText("");
+			textField_Title.setPromptText("Enter lesson title here...");
+			textArea.setText("");
+			textArea.setPromptText("Add your lesson learned here...");
+		}
+
 		// lesson text information
-		textArea.setText("");
-		textArea.setPromptText("Add your lesson learned here...");
+
 		textArea.setWrapText(true);
 
+
+		theStage.setScene(theViewRoleEditAddLessonScene);
+		theStage.show();
+
 	}
-	
+
 	/**********
 	 * <p> Method: ViewEditLesson() </p>
 	 * 
@@ -152,71 +173,89 @@ public class ViewEditLesson {
 
 		// Create the Pane for the list of widgets and the Scene for the window
 		theRootPane = new Pane();
-		theViewRole1HomeScene = new Scene(theRootPane, width, height);	// Create the scene
-		
+		theViewRoleEditAddLessonScene = new Scene(theRootPane, width, height);	// Create the scene
+
 		// Set the title for the window
-		
+
 		// Populate the window with the title and other common widgets and set their static state
-		
+
 		// GUI Area 1
 		label_PageTitle.setText("Add a New Lesson");
 		setupLabelUI(label_PageTitle, "Arial", 28, width, Pos.CENTER, 0, 5);
 
 		label_UserDetails.setText("User: " + theUser.getUserName());
 		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);
-		
+
 		setupButtonUI(button_ListLessons, "Dialog", 18, 170, Pos.CENTER, 610, 45);
 		button_ListLessons.setOnAction((_) -> {ControllerEditLesson.performListLesson(); });
-		
+
 		// GUI Area 2
 		// form for adding a lesson
 		setupLabelUI(label_LessonTitle, "Arial", 16, 120, Pos.BASELINE_LEFT, 20, 110);
 		setupTextFieldUI(textField_Title, "Arial", 16, width - 40, 20, 140);
 		setupFormUI(textArea, "Arial", 16, width - 40, 220, 20, 190);
-		
+
 		setupButtonUI(submitButton, "Dialog", 18, 150, Pos.CENTER, (width / 2) - 75, 450);
-	
+
 		submitButton.setOnAction((_) -> { 
 			// get user text and validate length then submit
-			
+			String userTitle = textField_Title.getText();
 			String userInput = textArea.getText();
-			if("".equals(userInput)) {
+
+			if(userTitle.isEmpty()) {
+				System.out.println("User did not enter a title");
+				return;
+			}
+
+			if(userInput.isEmpty()) {
 				System.out.println("User did not enter text");
 				return;
 			}
-			
+
+
 			String validLengthMessage = TextLengthEvaluator.evaluateText(userInput);
-			if(validLengthMessage != "") {
+			if(!validLengthMessage.isEmpty()) {
 				System.out.printf("Error: %s\n", validLengthMessage);
 				return;
 			}
-			Lesson lesson = new Lesson(theUser.getUserName(), "title", userInput);
-			theDatabase.addLesson(lesson);
+
+			// edit or updating, this is wild
+			if(theLesson != null) {
+				theLesson.setLessonTitle(userTitle);
+				theLesson.setLessonText(validLengthMessage);
+				theLesson.setUpdatedAt(java.time.LocalDateTime.now());
+
+				theDatabase.updateLesson(theLesson);;
+			} else {
+				Lesson lesson = new Lesson(theUser.getUserName(), userTitle, userInput);
+				theDatabase.addLesson(lesson);
+
+			}
 			ControllerEditLesson.performSubmitLesson(); 
-			});
-		
+		});
+
 		// GUI Area 3
-        setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
-        button_Logout.setOnAction((_) -> {ControllerEditLesson.performLogout(); });
-        
-        setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
-        button_Quit.setOnAction((_) -> {ControllerEditLesson.performQuit(); });
+		setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
+		button_Logout.setOnAction((_) -> {ControllerEditLesson.performLogout(); });
+
+		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
+		button_Quit.setOnAction((_) -> {ControllerEditLesson.performQuit(); });
 
 		// This is the end of the GUI initialization code
-		
+
 		// Place all of the widget items into the Root Pane's list of children
-         theRootPane.getChildren().addAll(
-			label_PageTitle, label_UserDetails, button_ListLessons, line_Separator1,
-	        line_Separator4, button_Logout, button_Quit, textArea, submitButton, textField_Title);
-}
-	
-	
+		theRootPane.getChildren().addAll(
+				label_PageTitle, label_UserDetails, button_ListLessons, line_Separator1,
+				line_Separator4, button_Logout, button_Quit, textArea, submitButton, textField_Title);
+	}
+
+
 	/*-********************************************************************************************
 
 	Helper methods to reduce code length
 
 	 */
-	
+
 	/**********
 	 * Private local method to initialize the standard fields for a label
 	 * 
@@ -236,8 +275,8 @@ public class ViewEditLesson {
 		l.setLayoutX(x);
 		l.setLayoutY(y);		
 	}
-	
-	
+
+
 	/**********
 	 * Private local method to initialize the standard fields for a button
 	 * 
@@ -257,7 +296,7 @@ public class ViewEditLesson {
 		b.setLayoutX(x);
 		b.setLayoutY(y);		
 	}
-	
+
 	/**********
 	 * Private local method to initialize the standard fields for a TextArea
 	 * 
@@ -278,7 +317,7 @@ public class ViewEditLesson {
 		ta.setLayoutX(x);
 		ta.setLayoutY(y);
 	}
-	
+
 	/**********
 	 * Private local method to initialize the standard fields for a TextField
 	 * 
