@@ -99,7 +99,7 @@ public class ViewLessonList {
 	protected static User theUser;				// The current logged in User
 	
 
-	private static Scene theViewRole1HomeScene;	// The shared Scene each invocation populates
+	public static Scene theViewLessonListScene;	// The shared Scene each invocation populates
 	protected static final int theRole = 2;		// Admin: 1; Role1: 2; Role2: 3
 	
 	
@@ -160,8 +160,24 @@ public class ViewLessonList {
 		
 	    // Set the title for the window, display the page, and wait for the Admin to do something	
 	    theStage.setTitle("Lessons Learned");	
-	    theStage.setScene(theViewRole1HomeScene);
+	    theStage.setScene(theViewLessonListScene);
 	    theStage.show();
+	}
+	
+	/***********
+	 * <p>Method: refreshLessons() </p>
+	 * 
+	 * <p>Description: this method refreshes the lessons so it updates correctly when a user clicks
+	 * the delete button and removes a lesson </p>
+	 * 
+	 * 
+	 */
+	protected static void refreshLessons() {
+	    userLessons = theDatabase.getLessonsByUser(theUser.getUserName());
+	    observableLessonList.clear();
+	    if (userLessons != null) {
+	        observableLessonList.addAll(userLessons);
+	    }
 	}
 	
 	/**********
@@ -179,7 +195,7 @@ public class ViewLessonList {
 
 		// Create the Pane for the list of widgets and the Scene for the window
 		theRootPane = new Pane();
-		theViewRole1HomeScene = new Scene(theRootPane, width, height);	// Create the scene
+		theViewLessonListScene = new Scene(theRootPane, width, height);	// Create the scene
 		
 		// Set the title for the window
 		
@@ -231,6 +247,12 @@ public class ViewLessonList {
 				button_editLesson.setOnAction((_) -> {
 					ControllerLessonList.performEditLesson(lesson);
 				});
+				Button button_deleteLesson = new Button("Delete");
+				setupButtonUI(button_deleteLesson, "Dialog", 12 , 60, Pos.CENTER, 80, 0);
+				button_deleteLesson.setOnAction((_) -> {
+					theDatabase.deleteLesson(lesson.getId().intValue(), lesson.getLessonUsername());
+					ControllerLessonList.repaintTheWindow();
+				});
 
 
 				labelTitle.setFont(Font.font("Arial", 16));
@@ -241,7 +263,7 @@ public class ViewLessonList {
 				labelText.setWrapText(true);
 
 				// Header
-				HBox header = new HBox(labelTitle, button_editLesson);
+				HBox header = new HBox(labelTitle, button_editLesson, button_deleteLesson);
 				HBox.setHgrow(labelTitle, Priority.ALWAYS);
 				header.setSpacing(10);
 				
@@ -272,8 +294,15 @@ public class ViewLessonList {
 		
 		// Place all of the widget items into the Root Pane's list of children
          theRootPane.getChildren().addAll(
-			label_PageTitle, label_UserDetails, button_AddLesson, line_Separator1, listView_Lessons,
-	        line_Separator4, button_Logout, button_Quit);
+			label_PageTitle, 
+			label_UserDetails, 
+			button_AddLesson, 
+			line_Separator1, 
+			listView_Lessons,
+	        line_Separator4, 
+	        button_Logout, 
+	        button_Quit
+        		 );
 }
 	
 	

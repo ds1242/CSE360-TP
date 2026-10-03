@@ -43,8 +43,8 @@ public class LessonTester {
         // Register Users into the db for lessons 
         db.register(new User("David Shaw", "password", "David", "", "Shaw", "David",
                 "david@test.com", false, true, false, false));
-        db.register(new User("alice", "password", "Alice", "", "Smith", "Alice",
-                "alice@test.com", false, true, false, false));
+        db.register(new User("Tasha Shaw", "password", "Tasha", "", "Shaw", "Tasha",
+                "Tasha Shaw@test.com", false, true, false, false));
     }
 
     @AfterEach
@@ -224,7 +224,7 @@ public class LessonTester {
     @Order(10)
     @DisplayName("10. Read Lesson By ID - Lesson Owned by Another - Negative")
     public void testCase10_ReadByID_UnownedLesson() {
-        Lesson lesson = new Lesson("alice", "Title", "Text");
+        Lesson lesson = new Lesson("Tasha Shaw", "Title", "Text");
         db.addLesson(lesson);
         performGetUserLessonByIDTestCase(10, "David Shaw", lesson.getId().intValue(), false, "unable to read that lesson");
     }
@@ -239,9 +239,7 @@ public class LessonTester {
     // Update Tests
     public void performUpdateLessonLearnedTestCase(int count, String userName, int lessonID, String newText, boolean expectedSuccess, String expectedMessage) {
         printHeader(count, "Update Lesson", expectedMessage, expectedSuccess);
-
-        // Build the lesson to send to the database. If the id doesn't exist,
-        // build a stand-in so the database can report that itself.
+        
         Lesson toUpdate = db.getLessonByID(lessonID);
         if (toUpdate == null) {
             toUpdate = new Lesson((long) lessonID, userName, "Title", newText, null, null);
@@ -264,8 +262,7 @@ public class LessonTester {
         Lesson l = new Lesson("David Shaw", "Title", "Old Text");
         db.addLesson(l);
         performUpdateLessonLearnedTestCase(12, "David Shaw", l.getId().intValue(), "New Updated Text", true, "lesson updated");
-
-        // confirm the new text was actually saved
+        
         assertEquals("New Updated Text", db.getLessonByID(l.getId().intValue()).getLessonText());
     }
 
@@ -273,12 +270,12 @@ public class LessonTester {
     @Order(13)
     @DisplayName("13. Update Lesson - Attempt to update lesson for another user - Negative")
     public void testCase13_Update_UnownedLesson() {
-        Lesson lesson = new Lesson("alice", "Title", "Alice Text");
+        Lesson lesson = new Lesson("Tasha Shaw", "Title", "Tasha Shaw Text");
         db.addLesson(lesson);
         performUpdateLessonLearnedTestCase(13, "David Shaw", lesson.getId().intValue(), "text to replace another users text", false, "user is not allowed to update that lesson");
 
-        // alice's lesson must be unchanged
-        assertEquals("Alice Text", db.getLessonByID(lesson.getId().intValue()).getLessonText());
+        
+        assertEquals("Tasha Shaw Text", db.getLessonByID(lesson.getId().intValue()).getLessonText());
     }
 
     @Test 
@@ -297,7 +294,6 @@ public class LessonTester {
         String longText = "B".repeat(300);
         performUpdateLessonLearnedTestCase(15, "David Shaw", lesson.getId().intValue(), longText, false, "lesson text is too long");
 
-        // the old text must still be stored
         assertEquals("Old Text", db.getLessonByID(lesson.getId().intValue()).getLessonText());
     }
 
@@ -321,7 +317,6 @@ public class LessonTester {
         db.addLesson(lesson);
         performLessonDeleteTestCase(16, "David Shaw", lesson.getId().intValue(), true, "lesson deleted");
 
-        // the lesson must be gone
         assertNull(db.getLessonByID(lesson.getId().intValue()), "Lesson should have been deleted");
     }
 
@@ -340,7 +335,6 @@ public class LessonTester {
         db.addLesson(lesson);
         performLessonDeleteTestCase(18, "fakeUser", lesson.getId().intValue(), false, "cannot delete that lesson");
 
-        // the lesson must still be in the database
         assertNotNull(db.getLessonByID(lesson.getId().intValue()), "Lesson should still exist");
     }
 
@@ -348,11 +342,10 @@ public class LessonTester {
     @Order(19)
     @DisplayName("19. Delete Lesson - Delete Another Users Lesson - Negative")
     public void testCase19_Delete_UnownedLesson() {
-        Lesson lesson = new Lesson("alice", "Title", "Text");
+        Lesson lesson = new Lesson("Tasha Shaw", "Title", "Text");
         db.addLesson(lesson);
         performLessonDeleteTestCase(19, "David Shaw", lesson.getId().intValue(), false, "cannot delete that lesson");
 
-        // the lesson must still be in the database
         assertNotNull(db.getLessonByID(lesson.getId().intValue()), "Lesson should still exist");
     }
 }

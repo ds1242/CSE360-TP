@@ -80,7 +80,15 @@ public class Database {
 	public Database () {
 
 	}
-
+	
+	/**
+	 * Constructor for unit tests 
+	 */
+	public Database(Connection connection) throws SQLException {
+		this.connection = connection;
+		this.statement = connection.createStatement();
+		createTables();
+	}
 
 	/*******
 	 * <p> Method: connectToDatabase </p>
@@ -105,14 +113,7 @@ public class Database {
 		}
 	}
 
-	/**
-	 * Constructor for unit tests 
-	 */
-	public Database(Connection connection) throws SQLException {
-		this.connection = connection;
-		this.statement = connection.createStatement();
-		createTables();
-	}
+	
 
 
 	/*******
@@ -1181,25 +1182,6 @@ public class Database {
 
 
 	/*******
-	 * <p> Method: void deleteLesson(int lessonID) </p>
-	 * 
-	 * <p> Description: Removes a lesson record from lessonDB given its ID. </p>
-	 * 
-	 * @param lessonID the primary key ID of the lesson to delete
-	 * @return 
-	 */
-	public void deleteLesson(int lessonID) {
-		String query = "DELETE FROM lessonDB WHERE id = ?";
-
-		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-			pstmt.setInt(1, lessonID);
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/*******
 	 * <p> Method: void updateLesson(Lesson lesson) </p>
 	 * 
 	 * <p> Description: Updates an existing lesson record in lessonDB. </p>
@@ -1265,6 +1247,8 @@ public class Database {
 		}
 		return updateLesson(lesson);
 	}
+	
+	
 
 
 	/*******
@@ -1427,6 +1411,25 @@ public class Database {
 		return "lesson deleted";
 	}
 	
+	
+	/*******
+	 * <p> Method: void deleteLesson(int lessonID) </p>
+	 * 
+	 * <p> Description: Removes a lesson record from lessonDB given its ID. </p>
+	 * 
+	 * @param lessonID the primary key ID of the lesson to delete
+	 * @return 
+	 */
+	public void deleteLesson(int lessonID) {
+		String query = "DELETE FROM lessonDB WHERE id = ?";
+
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, lessonID);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/*******************************************************************
 	 * END OF LESSON DATABASE ITEMS

@@ -39,6 +39,32 @@ public class ControllerLessonList {
 	 */
 	public ControllerLessonList() {
 	}
+	
+	/**********
+	 * <p> Method: repaintTheWindow() </p>
+	 *
+	 * <p> Description: This method determines the current state of the window and then establishes
+	 * the appropriate list of widgets in the Pane to show the proper set of current values. </p>
+	 *
+	 */
+	protected static void repaintTheWindow() {
+		ViewLessonList.refreshLessons();
+		ViewLessonList.theRootPane.getChildren().clear();
+		ViewLessonList.theRootPane.getChildren().addAll(
+				ViewLessonList.label_PageTitle,
+				ViewLessonList.label_UserDetails,
+				ViewLessonList.button_AddLesson,
+				ViewLessonList.line_Separator1,
+				ViewLessonList.listView_Lessons,
+				ViewLessonList.line_Separator4,
+				ViewLessonList.button_Logout,
+				ViewLessonList.button_Quit
+        );
+
+		ViewLessonList.theStage.setTitle("Lesson List");
+		ViewLessonList.theStage.setScene(ViewLessonList.theViewLessonListScene);
+		ViewLessonList.theStage.show();
+	}
 
 	/**********
 	 * <p> Method: performAddLesson() </p>

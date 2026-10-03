@@ -213,12 +213,6 @@ public class ViewEditLesson {
 			}
 
 
-			String validLengthMessage = TextLengthEvaluator.evaluateText(userInput);
-			if(!validLengthMessage.isEmpty()) {
-				System.out.printf("Error: %s\n", validLengthMessage);
-				return;
-			}
-
 			// edit or updating, this is wild
 			if(theLesson != null) {
 				theLesson.setLessonTitle(userTitle);
