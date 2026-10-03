@@ -1146,9 +1146,10 @@ public class Database {
 	 *
 	 */
 	public String addLesson(Lesson lesson) {
-		if ("invalidUser".equals(lesson.getLessonUsername())) {
-			return "no matching username, unable to create a lesson";
+		if (!doesUserExist(lesson.getLessonUsername())) {
+          return "no matching username, unable to create a lesson";
 		}
+
 		if (lesson.getLessonText() == null || lesson.getLessonText().trim().isEmpty()) {
 			return "no lesson learned information";
 		}
@@ -1240,6 +1241,31 @@ public class Database {
 			return "error updating lesson";
 		}
 	}
+	
+	/*******
+	 * <p> Method: String updateLesson(Lesson lesson, String username) </p>
+	 *
+	 * <p> Description: Updates a lesson only if the user exists and owns it. </p>
+	 *
+	 * @param lesson the lesson holding the updated information
+	 * @param username the user asking to make the update
+	 * @return a message describing the result
+	 */
+	public String updateLesson(Lesson lesson, String username) {
+		if (!doesUserExist(username)) {
+			return "user is not allowed to update that lesson";
+		}
+ 
+		Lesson existing = getLessonByID(lesson.getId().intValue());
+		if (existing == null) {
+			return "no lesson by that id";
+		}
+		if (!existing.getLessonUsername().equals(username)) {
+			return "user is not allowed to update that lesson";
+		}
+		return updateLesson(lesson);
+	}
+
 
 	/*******
 	 *  <p> Method: Lesson getLessonByID(int lessonID) </p>
@@ -1348,6 +1374,60 @@ public class Database {
 		}
 		return lessons;
 	}
+	
+	
+	/*******
+	 * <p> Method: String checkLessonAccess(int lessonID, String username) </p>
+	 *
+	 * <p> Description: Checks that the user exists, the lesson exists, and the lesson
+	 * belongs to that user. </p>
+	 *
+	 * @param lessonID the id of the lesson being read
+	 * @param username the user asking to read it
+	 * @return a message describing the result
+	 */
+	public String checkLessonAccess(int lessonID, String username) {
+		if (!doesUserExist(username)) {
+			return "username is invalid";
+		}
+ 
+		Lesson lesson = getLessonByID(lessonID);
+		if (lesson == null) {
+			return "no lesson with that id";
+		}
+		if (!lesson.getLessonUsername().equals(username)) {
+			return "unable to read that lesson";
+		}
+		return "lesson " + lessonID + " found";
+	}
+	
+	/*******
+	 * <p> Method: String deleteLesson(int lessonID, String username) </p>
+	 *
+	 * <p> Description: Deletes a lesson only if the user exists and owns it. </p>
+	 *
+	 * @param lessonID the id of the lesson to delete
+	 * @param username the user asking to delete it
+	 * @return a message describing the result
+	 */
+	public String deleteLesson(int lessonID, String username) {
+		if (!doesUserExist(username)) {
+			return "cannot delete that lesson";
+		}
+ 
+		Lesson existing = getLessonByID(lessonID);
+		if (existing == null) {
+			return "no lesson by that id";
+		}
+		if (!existing.getLessonUsername().equals(username)) {
+			return "cannot delete that lesson";
+		}
+ 
+		deleteLesson(lessonID);
+		return "lesson deleted";
+	}
+	
+	
 	/*******************************************************************
 	 * END OF LESSON DATABASE ITEMS
 	 */

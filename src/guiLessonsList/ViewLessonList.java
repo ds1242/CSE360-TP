@@ -150,7 +150,7 @@ public class ViewLessonList {
 		label_UserDetails.setText("User: " + theUser.getUserName());
 
 		// populate the user lesson list
-		userLessons = theDatabase.getLessons();
+		userLessons = theDatabase.getLessonsByUser(theUser.getUserName());
 		
 		observableLessonList.clear();
 	    if (userLessons != null) {

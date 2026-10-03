@@ -39,6 +39,12 @@ public class LessonTester {
         connection = DriverManager.getConnection(jdbcUrl, "sa", "");
 
         db = new Database(connection);
+
+        // Register Users into the db for lessons 
+        db.register(new User("David Shaw", "password", "David", "", "Shaw", "David",
+                "david@test.com", false, true, false, false));
+        db.register(new User("alice", "password", "Alice", "", "Smith", "Alice",
+                "alice@test.com", false, true, false, false));
     }
 
     @AfterEach
@@ -108,12 +114,19 @@ public class LessonTester {
 
         List<Lesson> lessons = db.getLessons();
 
-        String actualMessage = (lessons != null && !lessons.isEmpty()) ? "lessons listed" : "no lessons found";
+        int actualSize = 0;
+        String actualMessage = "no lessons found";
+        if (lessons != null) {
+            actualSize = lessons.size();
+            if (!lessons.isEmpty()) {
+                actualMessage = "lessons listed";
+            }
+        }
 
-        System.out.printf("Actual Outcome        : \"%s\" (List Size: %d)%n", actualMessage, lessons != null ? lessons.size() : 0);
+        System.out.printf("Actual Outcome        : \"%s\" (List Size: %d)%n", actualMessage, actualSize);
         
         assertNotNull(lessons, "Lessons list should not be null");
-        assertEquals(expectedSize, lessons.size(), "List size does not match expected");
+        assertEquals(expectedSize, actualSize, "List size does not match expected");
         assertEquals(expectedMessage, actualMessage);
         System.out.printf("STATUS: %s\n", PASSED);
     }
@@ -136,15 +149,23 @@ public class LessonTester {
         }
     }
 
+    // Checks that users exist and have lessons entered
     public void performGetUserLessonListTestCase(int count, String userName, boolean expectedSuccess, String expectedMessage) {
         printHeader(count, "Get User Lesson List", expectedMessage, expectedSuccess);
 
         List<Lesson> lessons = db.getLessonsByUser(userName);
 
-        String actualMessage = (lessons != null && !lessons.isEmpty()) ? "lessons listed" : "no users with lessons";
+        int actualSize = 0;
+        String actualMessage = "no users with lessons";
+        if (lessons != null) {
+            actualSize = lessons.size();
+            if (!lessons.isEmpty()) {
+                actualMessage = "lessons listed";
+            }
+        }
 
         System.out.printf("Inputs                : userName='%s'%n", userName);
-        System.out.printf("Actual Outcome        : \"%s\" (List Size: %d)%n", actualMessage, lessons != null ? lessons.size() : 0);
+        System.out.printf("Actual Outcome        : \"%s\" (List Size: %d)%n", actualMessage, actualSize);
         assertEquals(expectedMessage, actualMessage);
         System.out.printf("STATUS: %s\n", PASSED);
     }
@@ -175,18 +196,7 @@ public class LessonTester {
     public void performGetUserLessonByIDTestCase(int count, String userName, int lessonID, boolean expectedSuccess, String expectedMessage) {
         printHeader(count, "Get Lesson By ID", expectedMessage, expectedSuccess);
 
-        Lesson lesson = db.getLessonByID(lessonID);
-
-        String actualMessage;
-        if ("fakeUser".equals(userName)) {
-            actualMessage = "username is invalid";
-        } else if (lesson == null) {
-            actualMessage = "no lesson with that id";
-        } else if (!lesson.getLessonUsername().equals(userName)) {
-            actualMessage = "unable to update that lesson";
-        } else {
-            actualMessage = "lesson " + lessonID + " found";
-        }
+        String actualMessage = db.checkLessonAccess(lessonID, userName);
 
         System.out.printf("Inputs                : userName='%s', lessonID=%d%n", userName, lessonID);
         System.out.printf("Actual Outcome        : \"%s\"%n", actualMessage);
@@ -207,7 +217,7 @@ public class LessonTester {
     @Order(9)
     @DisplayName("9. Read Lesson By ID - ID Not Found - Negative")
     public void testCase09_ReadByID_NotFound() {
-        performGetUserLessonByIDTestCase(9, "David Shaw", 999, true, "no lesson with that id");
+        performGetUserLessonByIDTestCase(9, "David Shaw", 999, false, "no lesson with that id");
     }
 
     @Test 
@@ -216,31 +226,30 @@ public class LessonTester {
     public void testCase10_ReadByID_UnownedLesson() {
         Lesson lesson = new Lesson("alice", "Title", "Text");
         db.addLesson(lesson);
-        performGetUserLessonByIDTestCase(10, "David Shaw", lesson.getId().intValue(), true, "unable to update that lesson");
+        performGetUserLessonByIDTestCase(10, "David Shaw", lesson.getId().intValue(), false, "unable to read that lesson");
     }
 
     @Test 
     @Order(11)
     @DisplayName("11. Read Lesson By ID - Invalid User - Negative")
     public void testCase11_ReadByID_InvalidUser() {
-        performGetUserLessonByIDTestCase(11, "fakeUser", 999, true, "username is invalid");
+        performGetUserLessonByIDTestCase(11, "fakeUser", 999, false, "username is invalid");
     }
 
     // Update Tests
     public void performUpdateLessonLearnedTestCase(int count, String userName, int lessonID, String newText, boolean expectedSuccess, String expectedMessage) {
         printHeader(count, "Update Lesson", expectedMessage, expectedSuccess);
 
-        Lesson existing = db.getLessonByID(lessonID);
-        String actualMessage;
-
-        if (existing == null) {
-            actualMessage = "no lesson by that id";
-        } else if (!existing.getLessonUsername().equals(userName)) {
-            actualMessage = "user is not allowed to update that lesson";
+        // Build the lesson to send to the database. If the id doesn't exist,
+        // build a stand-in so the database can report that itself.
+        Lesson toUpdate = db.getLessonByID(lessonID);
+        if (toUpdate == null) {
+            toUpdate = new Lesson((long) lessonID, userName, "Title", newText, null, null);
         } else {
-            existing.setLessonText(newText);
-            actualMessage = db.updateLesson(existing);
+            toUpdate.setLessonText(newText);
         }
+
+        String actualMessage = db.updateLesson(toUpdate, userName);
 
         System.out.printf("Inputs                : userName='%s', lessonID=%d, newText='%s'%n", userName, lessonID, newText);
         System.out.printf("Actual Outcome        : \"%s\"%n", actualMessage);
@@ -255,6 +264,9 @@ public class LessonTester {
         Lesson l = new Lesson("David Shaw", "Title", "Old Text");
         db.addLesson(l);
         performUpdateLessonLearnedTestCase(12, "David Shaw", l.getId().intValue(), "New Updated Text", true, "lesson updated");
+
+        // confirm the new text was actually saved
+        assertEquals("New Updated Text", db.getLessonByID(l.getId().intValue()).getLessonText());
     }
 
     @Test 
@@ -263,14 +275,17 @@ public class LessonTester {
     public void testCase13_Update_UnownedLesson() {
         Lesson lesson = new Lesson("alice", "Title", "Alice Text");
         db.addLesson(lesson);
-        performUpdateLessonLearnedTestCase(13, "David Shaw", lesson.getId().intValue(), "text to replace another users text", true, "user is not allowed to update that lesson");
+        performUpdateLessonLearnedTestCase(13, "David Shaw", lesson.getId().intValue(), "text to replace another users text", false, "user is not allowed to update that lesson");
+
+        // alice's lesson must be unchanged
+        assertEquals("Alice Text", db.getLessonByID(lesson.getId().intValue()).getLessonText());
     }
 
     @Test 
     @Order(14)
     @DisplayName("14. Update Lesson - Nonexistent Lesson ID")
     public void testCase14_Update_InvalidLessonID() {
-        performUpdateLessonLearnedTestCase(14, "David Shaw", 999, "New Text", true, "no lesson by that id");
+        performUpdateLessonLearnedTestCase(14, "David Shaw", 999, "New Text", false, "no lesson by that id");
     }
 
     @Test 
@@ -280,26 +295,17 @@ public class LessonTester {
         Lesson lesson = new Lesson("David Shaw", "Title", "Old Text");
         db.addLesson(lesson);
         String longText = "B".repeat(300);
-        performUpdateLessonLearnedTestCase(15, "David Shaw", lesson.getId().intValue(), longText, true, "lesson text is too long");
+        performUpdateLessonLearnedTestCase(15, "David Shaw", lesson.getId().intValue(), longText, false, "lesson text is too long");
+
+        // the old text must still be stored
+        assertEquals("Old Text", db.getLessonByID(lesson.getId().intValue()).getLessonText());
     }
 
     // Delete Tests
-    public void performLessonDeleteTestCase(int count, String userName, int lessonID, String expectedMessage) {
-        printHeader(count, "Delete Lesson", expectedMessage, true);
+    public void performLessonDeleteTestCase(int count, String userName, int lessonID, boolean expectedSuccess, String expectedMessage) {
+        printHeader(count, "Delete Lesson", expectedMessage, expectedSuccess);
 
-        Lesson existing = db.getLessonByID(lessonID);
-        String actualMessage;
-
-        if ("fakeUser".equals(userName)) {
-            actualMessage = "cannot delete that lesson";
-        } else if (existing == null) {
-            actualMessage = "no lesson by that id";
-        } else if (!existing.getLessonUsername().equals(userName)) {
-            actualMessage = "cannot delete that lesson";
-        } else {
-            db.deleteLesson(lessonID);
-            actualMessage = "lesson deleted";
-        }
+        String actualMessage = db.deleteLesson(lessonID, userName);
 
         System.out.printf("Inputs                : userName='%s', lessonID=%d%n", userName, lessonID);
         System.out.printf("Actual Outcome        : \"%s\"%n", actualMessage);
@@ -313,14 +319,17 @@ public class LessonTester {
     public void testCase16_Delete_Positive() {
         Lesson lesson = new Lesson("David Shaw", "Title", "Text");
         db.addLesson(lesson);
-        performLessonDeleteTestCase(16, "David Shaw", lesson.getId().intValue(), "lesson deleted");
+        performLessonDeleteTestCase(16, "David Shaw", lesson.getId().intValue(), true, "lesson deleted");
+
+        // the lesson must be gone
+        assertNull(db.getLessonByID(lesson.getId().intValue()), "Lesson should have been deleted");
     }
 
     @Test 
     @Order(17)
     @DisplayName("17. Delete Lesson - Missing ID - Negative")
     public void testCase17_Delete_InvalidLessonID() {
-        performLessonDeleteTestCase(17, "David Shaw", 999, "no lesson by that id");
+        performLessonDeleteTestCase(17, "David Shaw", 999, false, "no lesson by that id");
     }
 
     @Test 
@@ -329,7 +338,10 @@ public class LessonTester {
     public void testCase18_Delete_InvalidUsername() {
         Lesson lesson = new Lesson("David Shaw", "Title", "Text");
         db.addLesson(lesson);
-        performLessonDeleteTestCase(18, "fakeUser", lesson.getId().intValue(), "cannot delete that lesson");
+        performLessonDeleteTestCase(18, "fakeUser", lesson.getId().intValue(), false, "cannot delete that lesson");
+
+        // the lesson must still be in the database
+        assertNotNull(db.getLessonByID(lesson.getId().intValue()), "Lesson should still exist");
     }
 
     @Test 
@@ -338,6 +350,9 @@ public class LessonTester {
     public void testCase19_Delete_UnownedLesson() {
         Lesson lesson = new Lesson("alice", "Title", "Text");
         db.addLesson(lesson);
-        performLessonDeleteTestCase(19, "David Shaw", lesson.getId().intValue(), "cannot delete that lesson");
+        performLessonDeleteTestCase(19, "David Shaw", lesson.getId().intValue(), false, "cannot delete that lesson");
+
+        // the lesson must still be in the database
+        assertNotNull(db.getLessonByID(lesson.getId().intValue()), "Lesson should still exist");
     }
 }
