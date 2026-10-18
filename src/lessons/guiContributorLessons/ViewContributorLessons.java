@@ -52,8 +52,8 @@ public class ViewContributorLessons {
 	 */
 
 	// These are the application values required by the user interface
-	private static double width = applicationMain.HW2Main.WINDOW_WIDTH;
-	private static double height = applicationMain.HW2Main.WINDOW_HEIGHT;
+	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
+	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
 	// The date format used in the "Date Created" column. Year first so dates also sort correctly
 	// as text.

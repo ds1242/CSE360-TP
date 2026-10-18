@@ -40,8 +40,8 @@ public class ViewFirstAdmin {
 
 	// These are the application values required by the user interface
 	
-	private static double width = applicationMain.HW2Main.WINDOW_WIDTH;
-	private static double height = applicationMain.HW2Main.WINDOW_HEIGHT;
+	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
+	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
 	// These are the widget attributes for the GUI
 	
@@ -105,7 +105,7 @@ public class ViewFirstAdmin {
 		
 		// Populate the dynamic aspects of the GUI with the data from the user and the current
 		// state of the system.
-		applicationMain.HW2Main.activeHomePage = theRole;	// 1: Admin; 2: Role1; 3 Roles2
+		applicationMain.FoundationsMain.activeHomePage = theRole;	// 1: Admin; 2: Role1; 3 Roles2
 
 		// Set the title for the window, display the page, and wait for the Admin to do something
 		theStage.setTitle("CSE 360 Foundation Code: First User Account Setup");	

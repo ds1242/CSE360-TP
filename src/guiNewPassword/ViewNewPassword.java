@@ -21,8 +21,8 @@ import javafx.stage.Stage;
  *
  */
 public class ViewNewPassword {
-	private static double width = applicationMain.HW2Main.WINDOW_WIDTH;
-	private static double height = applicationMain.HW2Main.WINDOW_HEIGHT;
+	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
+	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
 	private static Label label_ApplicationTitle = new Label("Foundation Application New Password Page");
     protected static Label label_NewUserCreation = new Label(" User Update Password.");

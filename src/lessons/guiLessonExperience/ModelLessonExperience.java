@@ -41,7 +41,7 @@ public class ModelLessonExperience {
 			"This experience entry could not be found. Is it in the database?";
 
 	// Reference for the in-memory database so this package has access
-	private static Database theDatabase = applicationMain.HW2Main.database;
+	private static Database theDatabase = applicationMain.FoundationsMain.database;
 
 	/**
 	 * Default constructor is not used.

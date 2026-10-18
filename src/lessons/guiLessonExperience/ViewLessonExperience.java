@@ -48,8 +48,8 @@ public class ViewLessonExperience {
 	 */
 
 	// These are the application values required by the user interface
-	private static double width = applicationMain.HW2Main.WINDOW_WIDTH;
-	private static double height = applicationMain.HW2Main.WINDOW_HEIGHT;
+	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
+	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
 
 	// GUI Area 1: It informs the user about the purpose of this page, whose account is being used,

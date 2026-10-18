@@ -17,7 +17,7 @@ public class ControllerAdminDeleteUser {
 	 */
 	public ControllerAdminDeleteUser() {}
 
-	private static Database theDatabase = applicationMain.HW2Main.database;
+	private static Database theDatabase = applicationMain.FoundationsMain.database;
 
 	/**********
 	 * <p> Method: doSelectUser() </p>

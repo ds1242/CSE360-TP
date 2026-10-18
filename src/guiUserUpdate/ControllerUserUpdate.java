@@ -38,7 +38,7 @@ public class ControllerUserUpdate {
 	protected static void goToUserHomePage(Stage theStage, User theUser) {
 		
 		// Get the roles the user selected during login
-		int theRole = applicationMain.HW2Main.activeHomePage;
+		int theRole = applicationMain.FoundationsMain.activeHomePage;
 
 		// Use that role to proceed to that role's home page
 		switch (theRole) {

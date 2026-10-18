@@ -20,8 +20,8 @@ import javafx.stage.Stage;
 
 
 public class ViewAdminDeleteUser {
-	private static double width = applicationMain.HW2Main.WINDOW_WIDTH;
-	private static double height = applicationMain.HW2Main.WINDOW_HEIGHT;
+	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
+	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
 	protected static Label label_PageTitle = new Label();
 	protected static Label label_UserDetails = new Label();
@@ -40,7 +40,7 @@ public class ViewAdminDeleteUser {
 	protected static Button button_Quit = new Button("Quit");
 
 	private static ViewAdminDeleteUser theView;
-	private static Database theDatabase = applicationMain.HW2Main.database;
+	private static Database theDatabase = applicationMain.FoundationsMain.database;
 	protected static Stage theStage;
 	protected static Pane theRootPane;
 	protected static User theUser;

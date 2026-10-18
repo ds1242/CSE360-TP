@@ -47,7 +47,7 @@ public class ControllerUserLogin {
 	}
 
 	// Reference for the in-memory database so this package has access
-	private static Database theDatabase = applicationMain.HW2Main.database;
+	private static Database theDatabase = applicationMain.FoundationsMain.database;
 
 	private static Stage theStage;
 

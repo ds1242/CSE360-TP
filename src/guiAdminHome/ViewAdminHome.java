@@ -57,8 +57,8 @@ public class ViewAdminHome {
 	
 	// These are the application values required by the user interface
 	
-	private static double width = applicationMain.HW2Main.WINDOW_WIDTH;
-	private static double height = applicationMain.HW2Main.WINDOW_HEIGHT;
+	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
+	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
 	
 	// These are the widget attributes for the GUI. There are 5 areas for this GUI.
@@ -123,7 +123,7 @@ public class ViewAdminHome {
 												// is needed
 
 	// Reference for the in-memory database so this package has access
-	private static Database theDatabase = applicationMain.HW2Main.database;
+	private static Database theDatabase = applicationMain.FoundationsMain.database;
 	
 	protected static Stage theStage;			// The Stage that JavaFX has established for us
 	private static Pane theRootPane;			// The Pane that holds all the GUI widgets 
@@ -171,7 +171,7 @@ public class ViewAdminHome {
 		// Populate the dynamic aspects of the GUI with the data from the user and the current
 		// state of the system.
 		theDatabase.getUserAccountDetails(user.getUserName());		// Fetch this user's data
-		applicationMain.HW2Main.activeHomePage = theRole;	// Set this as the active Home																	// UserUpdate page
+		applicationMain.FoundationsMain.activeHomePage = theRole;	// Set this as the active Home																	// UserUpdate page
 
 		// Set the role for potential users to the default (No role selected)
 		combobox_SelectRole.getSelectionModel().select(0);

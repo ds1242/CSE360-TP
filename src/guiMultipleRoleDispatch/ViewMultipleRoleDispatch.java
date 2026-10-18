@@ -38,8 +38,8 @@ public class ViewMultipleRoleDispatch {
 
 	// These are the application values required by the user interface
 
-	private static double width = applicationMain.HW2Main.WINDOW_WIDTH;
-	private static double height = applicationMain.HW2Main.WINDOW_HEIGHT;
+	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
+	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
 
 	// These are the widget attributes for the GUI. There are 3 areas for this GUI.
@@ -75,7 +75,7 @@ public class ViewMultipleRoleDispatch {
 
 
 	// Reference for the in-memory database so this package has access
-	private static Database theDatabase = applicationMain.HW2Main.database;
+	private static Database theDatabase = applicationMain.FoundationsMain.database;
 
 	protected static Stage theStage;			// The Stage that JavaFX has established for us
 	private static Pane theRootPane;			// The Pane that holds all the GUI widgets 

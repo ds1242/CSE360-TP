@@ -30,7 +30,7 @@ public class ModelLessonDetails {
 	protected static final String DATABASE_ERROR = "Unable to connect to database at this time...";
 
 	// Reference for the in-memory database so this package has access
-	private static Database theDatabase = applicationMain.HW2Main.database;
+	private static Database theDatabase = applicationMain.FoundationsMain.database;
 
 	/**
 	 * Default constructor is not used.
