@@ -63,10 +63,10 @@ public class ControllerMultipleRoleDispatch {
 					guiMultipleRoleDispatch.ViewMultipleRoleDispatch.theUser);
 			
 		// See if Role1
-		} else if (role.compareTo("Role1") == 0) {
+		} else if (role.compareTo("Contributor") == 0) {
 
 			// It is Role1 Role
-			guiRole1.ViewRole1Home.displayRole1Home(
+			guiContributor.ViewContributorHome.displayContributorHome(
 					guiMultipleRoleDispatch.ViewMultipleRoleDispatch.theStage, 
 					guiMultipleRoleDispatch.ViewMultipleRoleDispatch.theUser);
 			

@@ -47,7 +47,7 @@ public class ControllerUserLogin {
 	}
 
 	// Reference for the in-memory database so this package has access
-	private static Database theDatabase = applicationMain.FoundationsMain.database;
+	private static Database theDatabase = applicationMain.HW2Main.database;
 
 	private static Stage theStage;
 
@@ -143,7 +143,7 @@ public class ControllerUserLogin {
 			} else if (user.getNewRole1()) {
 				loginResult = theDatabase.loginRole1(user);
 				if (loginResult) {
-					guiRole1.ViewRole1Home.displayRole1Home(theStage, user);
+					guiContributor.ViewContributorHome.displayContributorHome(theStage, user);
 				}
 			} else if (user.getNewRole2()) {
 				loginResult = theDatabase.loginRole2(user);

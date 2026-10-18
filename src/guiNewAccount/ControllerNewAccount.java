@@ -49,7 +49,7 @@ public class ControllerNewAccount {
 
 
 	// Reference for the in-memory database so this package has access
-	private static Database theDatabase = applicationMain.FoundationsMain.database;
+	private static Database theDatabase = applicationMain.HW2Main.database;
 
 	/**********
 	 * <p> Method: public doCreateUser() </p>
@@ -108,7 +108,7 @@ public class ControllerNewAccount {
 			if (ViewNewAccount.theRole.compareTo("Admin") == 0) {
 				roleCode = 1;
 				user = new User(username, password, "", "", "", "", "", true, false, false, false);
-			} else if (ViewNewAccount.theRole.compareTo("Role1") == 0) {
+			} else if (ViewNewAccount.theRole.compareTo("Contributor") == 0) {
 				roleCode = 2;
 				user = new User(username, password, "", "", "", "", "", false, true, false, false);
 			} else if (ViewNewAccount.theRole.compareTo("Role2") == 0) {
@@ -124,7 +124,7 @@ public class ControllerNewAccount {
         	user.setEmailAddress(ViewNewAccount.emailAddress);
 
         	// Inform the system about which role will be played
-			applicationMain.FoundationsMain.activeHomePage = roleCode;
+			applicationMain.HW2Main.activeHomePage = roleCode;
 
         	// Create the account based on user and proceed to the user account update page
             try {

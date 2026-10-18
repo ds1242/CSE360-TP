@@ -37,8 +37,8 @@ public class ViewUserLogin {
 
 	// These are the application values required by the user interface
 
-	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
-	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
+	private static double width = applicationMain.HW2Main.WINDOW_WIDTH;
+	private static double height = applicationMain.HW2Main.WINDOW_HEIGHT;
 
 	private static Label label_ApplicationTitle = new Label("Foundation Application Startup Page");
 

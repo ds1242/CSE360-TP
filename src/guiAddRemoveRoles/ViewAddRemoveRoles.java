@@ -39,8 +39,8 @@ public class ViewAddRemoveRoles {
 	
 	// These are the application values required by the user interface
 	
-	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
-	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
+	private static double width = applicationMain.HW2Main.WINDOW_WIDTH;
+	private static double height = applicationMain.HW2Main.WINDOW_HEIGHT;
 
 	
 	// These are the widget attributes for the GUI. There are 3 areas for this GUI.
@@ -91,7 +91,7 @@ public class ViewAddRemoveRoles {
 	private static ViewAddRemoveRoles theView;	// Used to determine if instantiation of the class
 												// is needed
 	// Reference for the in-memory database so this package has access
-	private static Database theDatabase = applicationMain.FoundationsMain.database;		
+	private static Database theDatabase = applicationMain.HW2Main.database;		
 
 	protected static Stage theStage;			// The Stage that JavaFX has established for us
 	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets 
@@ -161,7 +161,7 @@ public class ViewAddRemoveRoles {
 	 * This method determines the location, size, font, color, and change and event handlers for
 	 * each GUI object. </p>
 	 * 
-	 * This is a singleton, so this is performed just one.  Subsequent uses fill in the changeable
+	 * <p>This is a singleton, so this is performed just one.  Subsequent uses fill in the changeable
 	 * fields using the displayAddRempoveRoles method.</p>
 	 * 
 	 */

@@ -40,8 +40,8 @@ public class ViewNewAccount {
 	
 	// These are the application values required by the user interface
 	
-	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
-	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
+	private static double width = applicationMain.HW2Main.WINDOW_WIDTH;
+	private static double height = applicationMain.HW2Main.WINDOW_HEIGHT;
 	
 	// This is a simple GUI login Page, very similar to the FirstAdmin login page.  The only real
 	// difference is in this case we also know an email address, since it was used to send the
@@ -71,7 +71,7 @@ public class ViewNewAccount {
 	private static ViewNewAccount theView;		// Is instantiation of the class needed?
 
 	// Reference for the in-memory database so this package has access
-	private static Database theDatabase = applicationMain.FoundationsMain.database;		
+	private static Database theDatabase = applicationMain.HW2Main.database;		
 
 	protected static Stage theStage;			// The Stage that JavaFX has established for us
 	private static Pane theRootPane;			// The Pane that holds all the GUI widgets 

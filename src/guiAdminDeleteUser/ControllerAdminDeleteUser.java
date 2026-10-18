@@ -17,7 +17,7 @@ public class ControllerAdminDeleteUser {
 	 */
 	public ControllerAdminDeleteUser() {}
 
-	private static Database theDatabase = applicationMain.FoundationsMain.database;
+	private static Database theDatabase = applicationMain.HW2Main.database;
 
 	/**********
 	 * <p> Method: doSelectUser() </p>
@@ -89,7 +89,7 @@ public class ControllerAdminDeleteUser {
         if (result.isPresent() && result.get() == ButtonType.YES) {
             String selectedUser = ViewAdminDeleteUser.theSelectedUser;
             theDatabase.deleteUser(selectedUser);
-            System.out.print("*** ControllerAdminDeleteUser.performChange(): deleted user: " + selectedUser);
+            System.out.println("*** ControllerAdminDeleteUser.performChange(): deleted user: " + selectedUser);
             // NOTE: need to refresh combobox entries after deleting a user
             ViewAdminDeleteUser.populateComboBox();
             // guiAdminHome.ViewAdminHome.displayAdminHome(ViewAdminDeleteUser.theStage, ViewAdminDeleteUser.theUser);

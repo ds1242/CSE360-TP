@@ -21,7 +21,7 @@ public class ControllerNewPassword {
 	 */
 	public ControllerNewPassword() {}
 
-	private static Database theDatabase = applicationMain.FoundationsMain.database;
+	private static Database theDatabase = applicationMain.HW2Main.database;
 
 	/**********
 	 * <p> Method: public doChangePassword() </p>

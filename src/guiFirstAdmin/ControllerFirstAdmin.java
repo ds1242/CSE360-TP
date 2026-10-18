@@ -45,7 +45,7 @@ public class ControllerFirstAdmin {
 	private static String adminUsername = "";
 	private static String adminPassword1 = "";
 	private static String adminPassword2 = "";
-	protected static Database theDatabase = applicationMain.FoundationsMain.database;
+	protected static Database theDatabase = applicationMain.HW2Main.database;
 
 	/*-********************************************************************************************
 

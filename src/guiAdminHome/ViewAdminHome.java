@@ -57,8 +57,8 @@ public class ViewAdminHome {
 	
 	// These are the application values required by the user interface
 	
-	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
-	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
+	private static double width = applicationMain.HW2Main.WINDOW_WIDTH;
+	private static double height = applicationMain.HW2Main.WINDOW_HEIGHT;
 
 	
 	// These are the widget attributes for the GUI. There are 5 areas for this GUI.
@@ -88,7 +88,7 @@ public class ViewAdminHome {
 	protected static Label label_InvitationEmailAddress = new Label("Email Address");
 	protected static TextField text_InvitationEmailAddress = new TextField();
 	protected static ComboBox <String> combobox_SelectRole = new ComboBox <String>();
-	protected static String [] roles = {"Admin", "Role1", "Role2"};
+	protected static String [] roles = {"Admin", "Contributor", "Role2"};
 	protected static Button button_SendInvitation = new Button("Send Invitation");
 	protected static Alert alertEmailError = new Alert(AlertType.INFORMATION);
 	protected static Alert alertEmailSent = new Alert(AlertType.INFORMATION);
@@ -123,7 +123,7 @@ public class ViewAdminHome {
 												// is needed
 
 	// Reference for the in-memory database so this package has access
-	private static Database theDatabase = applicationMain.FoundationsMain.database;
+	private static Database theDatabase = applicationMain.HW2Main.database;
 	
 	protected static Stage theStage;			// The Stage that JavaFX has established for us
 	private static Pane theRootPane;			// The Pane that holds all the GUI widgets 
@@ -171,7 +171,7 @@ public class ViewAdminHome {
 		// Populate the dynamic aspects of the GUI with the data from the user and the current
 		// state of the system.
 		theDatabase.getUserAccountDetails(user.getUserName());		// Fetch this user's data
-		applicationMain.FoundationsMain.activeHomePage = theRole;	// Set this as the active Home																	// UserUpdate page
+		applicationMain.HW2Main.activeHomePage = theRole;	// Set this as the active Home																	// UserUpdate page
 
 		// Set the role for potential users to the default (No role selected)
 		combobox_SelectRole.getSelectionModel().select(0);

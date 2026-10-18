@@ -21,7 +21,7 @@ public class ControllerSetOTP {
 	 */
 	public ControllerSetOTP() {}
 
-	private static Database theDatabase = applicationMain.FoundationsMain.database;
+	private static Database theDatabase = applicationMain.HW2Main.database;
 
 	/**********
 	 * <p> Method: doSelectUser() </p>

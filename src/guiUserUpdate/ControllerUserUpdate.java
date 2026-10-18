@@ -38,7 +38,7 @@ public class ControllerUserUpdate {
 	protected static void goToUserHomePage(Stage theStage, User theUser) {
 		
 		// Get the roles the user selected during login
-		int theRole = applicationMain.FoundationsMain.activeHomePage;
+		int theRole = applicationMain.HW2Main.activeHomePage;
 
 		// Use that role to proceed to that role's home page
 		switch (theRole) {
@@ -46,7 +46,7 @@ public class ControllerUserUpdate {
 			guiAdminHome.ViewAdminHome.displayAdminHome(theStage, theUser);
 			break;
 		case 2:
-			guiRole1.ViewRole1Home.displayRole1Home(theStage, theUser);
+			guiContributor.ViewContributorHome.displayContributorHome(theStage, theUser);
 			break;
 		case 3:
 			guiRole2.ViewRole2Home.displayRole2Home(theStage, theUser);
