@@ -5,12 +5,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
 import entityClasses.User;
+import lessons.LessonExperience;
+import lessons.LessonRecord;
+import lessons.LessonsEvaluator;
+import lessons.LessonsLearnedManager;
+import lessons.TeammateEffort;
 
 /*******
  * <p> Title: Database Class. </p>
@@ -46,6 +52,7 @@ public class Database {
 	static final String PASS = "";
 
 	//  Shared variables used within this class
+	private String databaseUrl = DB_URL;		// The H2 database this object connects to
 	private Connection connection = null;		// Singleton to access the database
 	private Statement statement = null;			// The H2 Statement is used to construct queries
 
@@ -59,7 +66,7 @@ public class Database {
 	private String currentPreferredFirstName;
 	private String currentEmailAddress;
 	private boolean currentAdminRole;
-	private boolean currentNewRole1;
+	private boolean currentNewContributor;
 	private boolean currentNewRole2;
 	private boolean currentOneTimePassword;
 
@@ -72,6 +79,21 @@ public class Database {
 
 	public Database () {
 
+	}
+
+	/*******
+	 * <p> Method: Database(String databaseUrl) </p>
+	 *
+	 * <p> Description: Establishes a Database that uses a different H2 database than the
+	 * application's.  The lessons learned test bed uses this so its test lessons are stored in a
+	 * separate database file and never mix with real users and lessons.</p>
+	 *
+	 * @param databaseUrl is the JDBC URL of the H2 database to use, for example
+	 * 		"jdbc:h2:~/FoundationDatabaseTest"
+	 *
+	 */
+	public Database (String databaseUrl) {
+		this.databaseUrl = databaseUrl;
 	}
 
 
@@ -87,7 +109,7 @@ public class Database {
 	public void connectToDatabase() throws SQLException {
 		try {
 			Class.forName(JDBC_DRIVER); // Load the JDBC driver
-			connection = DriverManager.getConnection(DB_URL, USER, PASS);
+			connection = DriverManager.getConnection(databaseUrl, USER, PASS);
 			statement = connection.createStatement();
 			// You can use this command to clear the database and restart from fresh.
 			//statement.execute("DROP ALL OBJECTS");
@@ -102,7 +124,8 @@ public class Database {
 /*******
  * <p> Method: createTables </p>
  *
- * <p> Description: Used to create new instances of the two database tables used by this class.</p>
+ * <p> Description: Used to create new instances of the database tables used by this class: the
+ * users and invitation codes, plus the three lessons learned tables added for HW2.</p>
  *
  */
 	private void createTables() throws SQLException {
@@ -126,8 +149,60 @@ public class Database {
 	    String invitationCodesTable = "CREATE TABLE IF NOT EXISTS InvitationCodes ("
 	            + "code VARCHAR(10) PRIMARY KEY, "
 	    		+ "emailAddress VARCHAR(255), "
-	            + "role VARCHAR(10))";
+	            + "role VARCHAR(11))";
 	    statement.execute(invitationCodesTable);
+
+		// Create the lessons learned table.  The column sizes match the limits in
+		// lessons.LessonsEvaluator, so anything the evaluator accepts is guaranteed to fit.
+		String lessonsTable = "CREATE TABLE IF NOT EXISTS LessonsLearnedDB ("
+				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+				+ "title VARCHAR(" + LessonsEvaluator.TITLE_MAX + "), "
+				+ "description VARCHAR(" + LessonsEvaluator.DESCRIPTION_MAX + "), "
+				+ "category VARCHAR(50), "
+				+ "effortHours REAL, "
+				+ "creatorUsername VARCHAR(255), "
+				+ "createdAt TIMESTAMP, "
+				+ "titleLocked BOOL DEFAULT FALSE, "
+				+ "descriptionLocked BOOL DEFAULT FALSE, "
+				+ "categoryLocked BOOL DEFAULT FALSE, "
+				+ "effortLocked BOOL DEFAULT FALSE, "
+				+ "lastModifiedBy VARCHAR(255))";
+		statement.execute(lessonsTable);
+
+		// A LessonsLearnedDB table made by the first version of HW2 has one "locked" column
+		// instead of a lock per field.  Adding any missing columns lets that database keep its
+		// lessons instead of failing every lesson query.
+		statement.execute("ALTER TABLE LessonsLearnedDB ADD COLUMN IF NOT EXISTS "
+				+ "titleLocked BOOL DEFAULT FALSE");
+		statement.execute("ALTER TABLE LessonsLearnedDB ADD COLUMN IF NOT EXISTS "
+				+ "descriptionLocked BOOL DEFAULT FALSE");
+		statement.execute("ALTER TABLE LessonsLearnedDB ADD COLUMN IF NOT EXISTS "
+				+ "categoryLocked BOOL DEFAULT FALSE");
+		statement.execute("ALTER TABLE LessonsLearnedDB ADD COLUMN IF NOT EXISTS "
+				+ "effortLocked BOOL DEFAULT FALSE");
+		statement.execute("ALTER TABLE LessonsLearnedDB ADD COLUMN IF NOT EXISTS "
+				+ "lastModifiedBy VARCHAR(255)");
+
+		// Create the experience entries table.  ON DELETE CASCADE removes a lesson's experience
+		// entries when the lesson is deleted, so no orphaned entries are left behind.
+		String experienceTable = "CREATE TABLE IF NOT EXISTS LessonExperienceDB ("
+				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+				+ "lessonId INT, "
+				+ "whatWasDone VARCHAR(" + LessonsEvaluator.EXPERIENCE_TEXT_MAX + "), "
+				+ "howItWasDone VARCHAR(" + LessonsEvaluator.EXPERIENCE_TEXT_MAX + "), "
+				+ "durationHours REAL, "
+				+ "createdAt TIMESTAMP, "
+				+ "FOREIGN KEY (lessonId) REFERENCES LessonsLearnedDB(id) ON DELETE CASCADE)";
+		statement.execute(experienceTable);
+
+		// Create the teammate effort table: one row per teammate in an experience entry
+		String teammateTable = "CREATE TABLE IF NOT EXISTS TeammateEffortDB ("
+				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+				+ "experienceId INT, "
+				+ "teammateName VARCHAR(" + LessonsEvaluator.TEAMMATE_NAME_MAX + "), "
+				+ "effortEntry VARCHAR(" + LessonsEvaluator.EXPERIENCE_TEXT_MAX + "), "
+				+ "FOREIGN KEY (experienceId) REFERENCES LessonExperienceDB(id) ON DELETE CASCADE)";
+		statement.execute(teammateTable);
 	}
 
 /*******
@@ -211,8 +286,8 @@ public class Database {
 			currentAdminRole = user.getAdminRole();
 			pstmt.setBoolean(8, currentAdminRole);
 
-			currentNewRole1 = user.getNewRole1();
-			pstmt.setBoolean(9, currentNewRole1);
+			currentNewContributor = user.getNewRole1();
+			pstmt.setBoolean(9, currentNewContributor);
 
 			currentNewRole2 = user.getNewRole2();
 			pstmt.setBoolean(10, currentNewRole2);
@@ -229,8 +304,10 @@ public class Database {
      *  <p> Method: List getUserList() </p>
      *
      *  <P> Description: Generate an List of Strings, one for each user in the database,
-     *  starting with "<Select User>" at the start of the list. </p>
+     *  starting with "{Select User}" at the start of the list. </p>
      *
+     * 	@param filter provides a black-box filter for UserNames based on predicate.
+     * 
      *  @return a list of userNames found in the database.
      */
 	public List<String> getUserList(Predicate<String> filter) {
@@ -249,7 +326,12 @@ public class Database {
 //		System.out.println(userList);
 		return userList;
 	}
-
+	
+	/**
+	 * <p>Method: List(String) getUserList()</p>
+	 * <p>Description: Retrieves the User list from the database.</p>
+	 * @return List(String)
+	 */
     public List<String> getUserList() {
         return getUserList(userName -> true);
     }
@@ -444,6 +526,14 @@ public class Database {
 	    return code;
 	}
 
+	/**
+	 * <p> Method: String generateOneTimePassword() </p>
+	 * 
+	 * <p> Description: Generates a unique one time password, 6 characters in length.
+	 * 
+	 * 
+	 * @return String of 6 character UUID.
+	 */
     public String generateOneTimePassword() {
 	    return UUID.randomUUID().toString().substring(0, 6);
     }
@@ -594,6 +684,8 @@ public class Database {
 	 * @param username is the username of the user
 	 *
 	 * @param password is the new password for the user
+	 * 
+	 * @param oneTimePassword is the flag for a OTP.
 	 *
 	 */
 	public void updatePassword(String username, String password, boolean oneTimePassword) {
@@ -610,7 +702,13 @@ public class Database {
 	        e.printStackTrace();
 	    }
 	}
-
+	
+	/**
+	 * <p>Method: updatePassword(String username, String password)</p>
+	 * <p>Description: Updates the Users Password </p>
+	 * @param username is the current Users UserName
+	 * @param password is the current Users Password
+	 */
 	public void updatePassword(String username, String password) {
         updatePassword(username, password, false);
 	}
@@ -915,7 +1013,7 @@ public class Database {
 	    	currentPreferredFirstName = rs.getString(7);
 	    	currentEmailAddress = rs.getString(8);
 	    	currentAdminRole = rs.getBoolean(9);
-	    	currentNewRole1 = rs.getBoolean(10);
+	    	currentNewContributor = rs.getBoolean(10);
 	    	currentNewRole2 = rs.getBoolean(11);
             currentOneTimePassword = rs.getBoolean(12);
 			return true;
@@ -963,9 +1061,9 @@ public class Database {
 				pstmt.setString(2, username);
 				pstmt.executeUpdate();
 				if (value.compareTo("true") == 0)
-					currentNewRole1 = true;
+					currentNewContributor = true;
 				else
-					currentNewRole1 = false;
+					currentNewContributor = false;
 				return true;
 			} catch (SQLException e) {
 				return false;
@@ -1078,7 +1176,7 @@ public class Database {
 	 * @return true if this user plays a Student role, else false
 	 *
 	 */
-	public boolean getCurrentNewRole1() { return currentNewRole1; };
+	public boolean getCurrentNewRole1() { return currentNewContributor; };
 
 	/*******
 	 * <p> Method: boolean getCurrentNewRole2() </p>
@@ -1099,6 +1197,459 @@ public class Database {
 	 *
 	 */
 	public boolean getOneTimePassword() { return currentOneTimePassword; };
+
+	/*-*******************************************************************************************
+
+	Lessons Learned (HW2)
+
+	Unlike most methods in this class, the lesson methods throw SQLException instead of catching
+	it.  The Contributor pages must tell the user "Unable to connect to database at this time..."
+	(Story 2) rather than show an empty list as if it were correct, and they can only do that if
+	the failure reaches them.
+
+	 */
+
+	/*******
+	 * <p> Method: LessonRecord createLesson(String title, String description, String category,
+	 * 		float effort, String creatorUsername) </p>
+	 *
+	 * <p> Description: Stores a new lesson and returns it holding the id the database assigned.
+	 * The caller must already have validated the input with lessons.LessonsEvaluator; this method
+	 * only stores it.  New lessons have no locked fields.</p>
+	 *
+	 * @param title is the validated title
+	 *
+	 * @param description is the validated description
+	 *
+	 * @param category is the validated category
+	 *
+	 * @param effort is the validated effort in hours
+	 *
+	 * @param creatorUsername is the username of the contributor creating the lesson
+	 *
+	 * @return the stored lesson
+	 *
+	 * @throws SQLException when the lesson cannot be stored
+	 *
+	 */
+	public LessonRecord createLesson(String title, String description, String category,
+			float effort, String creatorUsername) throws SQLException {
+		LocalDateTime now = LocalDateTime.now();
+		String insertLesson = "INSERT INTO LessonsLearnedDB "
+				+ "(title, description, category, effortHours, creatorUsername, createdAt) "
+				+ "VALUES (?, ?, ?, ?, ?, ?)";
+		try (PreparedStatement pstmt = connection.prepareStatement(insertLesson,
+				Statement.RETURN_GENERATED_KEYS)) {
+			pstmt.setString(1, title);
+			pstmt.setString(2, description);
+			pstmt.setString(3, category);
+			pstmt.setFloat(4, effort);
+			pstmt.setString(5, creatorUsername);
+			pstmt.setTimestamp(6, Timestamp.valueOf(now));
+			pstmt.executeUpdate();
+
+			// Read back the id the database generated so the caller can refer to this lesson
+			int id = -1;
+			try (ResultSet keys = pstmt.getGeneratedKeys()) {
+				if (keys.next()) id = keys.getInt(1);
+			}
+			return new LessonRecord(id, title, description, category, effort, creatorUsername,
+					now, false, false, false, false, null);
+		}
+	}
+
+	/*******
+	 * <p> Method: LessonsLearnedManager getLessonsByCreator(String username) </p>
+	 *
+	 * <p> Description: Gets only the lessons created by one contributor, newest first (Story 2:
+	 * "The lessons shown are only lessons of which the user has defined").  The filtering is
+	 * done in the query, so other contributors' lessons never leave the database.</p>
+	 *
+	 * @param username is the contributor whose lessons are wanted
+	 *
+	 * @return the contributor's lessons (empty if there are none)
+	 *
+	 * @throws SQLException when the database cannot be read
+	 *
+	 */
+	public LessonsLearnedManager getLessonsByCreator(String username) throws SQLException {
+		String query = "SELECT * FROM LessonsLearnedDB WHERE creatorUsername = ? "
+				+ "ORDER BY createdAt DESC";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, username);
+			return readLessons(pstmt);
+		}
+	}
+
+	/*******
+	 * <p> Method: LessonsLearnedManager getAllLessons() </p>
+	 *
+	 * <p> Description: Gets every lesson in the system, newest first.  Not used by the
+	 * Contributor pages (contributors may only see their own lessons), but needed by roles such
+	 * as Viewer and Curator in later phases.</p>
+	 *
+	 * @return every lesson (empty if there are none)
+	 *
+	 * @throws SQLException when the database cannot be read
+	 *
+	 */
+	public LessonsLearnedManager getAllLessons() throws SQLException {
+		String query = "SELECT * FROM LessonsLearnedDB ORDER BY createdAt DESC";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			return readLessons(pstmt);
+		}
+	}
+
+	/*******
+	 * <p> Method: LessonRecord getLesson(int lessonId) </p>
+	 *
+	 * <p> Description: Gets one lesson as it is in the database right now.  The pages call this
+	 * just before viewing, saving, or deleting, so a lesson that was deleted or locked while the
+	 * page was open is noticed.</p>
+	 *
+	 * @param lessonId is the database id of the lesson
+	 *
+	 * @return the lesson, or null if it is not in the database
+	 *
+	 * @throws SQLException when the database cannot be read
+	 *
+	 */
+	public LessonRecord getLesson(int lessonId) throws SQLException {
+		String query = "SELECT * FROM LessonsLearnedDB WHERE id = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, lessonId);
+			return readLessons(pstmt).getLesson(0);
+		}
+	}
+
+	/*******
+	 * <p> Method: boolean updateLesson(int lessonId, String title, String description,
+	 * 		String category, float effort, String modifiedBy) </p>
+	 *
+	 * <p> Description: Replaces the core information of a lesson (Story 4) and records who made
+	 * the change.  The caller must already have validated the values and checked that no locked
+	 * field is being changed.</p>
+	 *
+	 * @param lessonId is the database id of the lesson
+	 *
+	 * @param title is the validated title
+	 *
+	 * @param description is the validated description
+	 *
+	 * @param category is the validated category
+	 *
+	 * @param effort is the validated effort in hours
+	 *
+	 * @param modifiedBy is the username of the user making the change
+	 *
+	 * @return true if the lesson was updated, false if it is no longer in the database
+	 *
+	 * @throws SQLException when the lesson cannot be updated
+	 *
+	 */
+	public boolean updateLesson(int lessonId, String title, String description, String category,
+			float effort, String modifiedBy) throws SQLException {
+		String query = "UPDATE LessonsLearnedDB SET title = ?, description = ?, category = ?, "
+				+ "effortHours = ?, lastModifiedBy = ? WHERE id = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, title);
+			pstmt.setString(2, description);
+			pstmt.setString(3, category);
+			pstmt.setFloat(4, effort);
+			pstmt.setString(5, modifiedBy);
+			pstmt.setInt(6, lessonId);
+			return pstmt.executeUpdate() > 0;
+		}
+	}
+
+	/*******
+	 * <p> Method: boolean deleteLesson(int lessonId) </p>
+	 *
+	 * <p> Description: Deletes a lesson (Story 5).  Its experience entries and their teammate
+	 * rows are deleted with it by the ON DELETE CASCADE rules set up in createTables.  The caller
+	 * must already have checked ownership and locks.</p>
+	 *
+	 * @param lessonId is the database id of the lesson
+	 *
+	 * @return true if the lesson was deleted, false if it was not in the database
+	 *
+	 * @throws SQLException when the lesson cannot be deleted
+	 *
+	 */
+	public boolean deleteLesson(int lessonId) throws SQLException {
+		String query = "DELETE FROM LessonsLearnedDB WHERE id = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, lessonId);
+			return pstmt.executeUpdate() > 0;
+		}
+	}
+
+	/*******
+	 * <p> Method: boolean setLessonFieldLock(int lessonId, String field, boolean locked) </p>
+	 *
+	 * <p> Description: Locks or unlocks one core field of a lesson.  There is no Curator page
+	 * yet, so nothing in the GUI calls this; it is here for the Curator role in a later phase and
+	 * for testing.  The field is named with one of the LessonRecord.FIELD_ constants.</p>
+	 *
+	 * @param lessonId is the database id of the lesson
+	 *
+	 * @param field is LessonRecord.FIELD_TITLE, FIELD_DESCRIPTION, FIELD_CATEGORY, or FIELD_EFFORT
+	 *
+	 * @param locked is true to lock the field, false to unlock it
+	 *
+	 * @return true if the lock was changed, false if the field name is not recognized or the
+	 * 		lesson is not in the database
+	 *
+	 * @throws SQLException when the lock cannot be changed
+	 *
+	 */
+	public boolean setLessonFieldLock(int lessonId, String field, boolean locked)
+			throws SQLException {
+		// The column name cannot be a ? parameter, so it is chosen from a fixed list here rather
+		// than built from the caller's text.  This keeps the query safe from SQL injection.
+		String column;
+		if (field.compareTo(LessonRecord.FIELD_TITLE) == 0) column = "titleLocked";
+		else if (field.compareTo(LessonRecord.FIELD_DESCRIPTION) == 0) column = "descriptionLocked";
+		else if (field.compareTo(LessonRecord.FIELD_CATEGORY) == 0) column = "categoryLocked";
+		else if (field.compareTo(LessonRecord.FIELD_EFFORT) == 0) column = "effortLocked";
+		else return false;
+
+		String query = "UPDATE LessonsLearnedDB SET " + column + " = ? WHERE id = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setBoolean(1, locked);
+			pstmt.setInt(2, lessonId);
+			return pstmt.executeUpdate() > 0;
+		}
+	}
+
+	/*******
+	 * <p> Method: LessonExperience createExperience(int lessonId, String whatWasDone,
+	 * 		String howItWasDone, float durationHours, List teammates) </p>
+	 *
+	 * <p> Description: Stores a new experience entry and its teammate rows (Story 6).  The entry
+	 * and its teammates are saved in one transaction, so a failure part way through never leaves
+	 * an entry with only some of its teammates.  The caller must already have validated every
+	 * value and checked that the user owns the lesson.</p>
+	 *
+	 * @param lessonId is the database id of the lesson the entry belongs to
+	 *
+	 * @param whatWasDone is the validated description of what was done
+	 *
+	 * @param howItWasDone is the validated description of how it was done
+	 *
+	 * @param durationHours is the validated duration in hours
+	 *
+	 * @param teammates is the validated effort of each teammate
+	 *
+	 * @return the stored experience entry
+	 *
+	 * @throws SQLException when the entry cannot be stored
+	 *
+	 */
+	public LessonExperience createExperience(int lessonId, String whatWasDone, String howItWasDone,
+			float durationHours, List<TeammateEffort> teammates) throws SQLException {
+		LocalDateTime now = LocalDateTime.now();
+		String insertExperience = "INSERT INTO LessonExperienceDB "
+				+ "(lessonId, whatWasDone, howItWasDone, durationHours, createdAt) "
+				+ "VALUES (?, ?, ?, ?, ?)";
+		connection.setAutoCommit(false);
+		try (PreparedStatement pstmt = connection.prepareStatement(insertExperience,
+				Statement.RETURN_GENERATED_KEYS)) {
+			pstmt.setInt(1, lessonId);
+			pstmt.setString(2, whatWasDone);
+			pstmt.setString(3, howItWasDone);
+			pstmt.setFloat(4, durationHours);
+			pstmt.setTimestamp(5, Timestamp.valueOf(now));
+			pstmt.executeUpdate();
+
+			int id = -1;
+			try (ResultSet keys = pstmt.getGeneratedKeys()) {
+				if (keys.next()) id = keys.getInt(1);
+			}
+			insertTeammates(id, teammates);
+			connection.commit();
+			return new LessonExperience(id, lessonId, whatWasDone, howItWasDone, durationHours,
+					now, teammates);
+		} catch (SQLException e) {
+			connection.rollback();
+			throw e;
+		} finally {
+			connection.setAutoCommit(true);
+		}
+	}
+
+	/*******
+	 * <p> Method: List getExperiences(int lessonId) </p>
+	 *
+	 * <p> Description: Gets every experience entry for a lesson, oldest first, each with its
+	 * teammate rows.</p>
+	 *
+	 * @param lessonId is the database id of the lesson
+	 *
+	 * @return the lesson's experience entries (empty if there are none)
+	 *
+	 * @throws SQLException when the database cannot be read
+	 *
+	 */
+	public List<LessonExperience> getExperiences(int lessonId) throws SQLException {
+		List<LessonExperience> experiences = new ArrayList<>();
+		String query = "SELECT * FROM LessonExperienceDB WHERE lessonId = ? ORDER BY createdAt, id";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, lessonId);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next()) {
+					int id = rs.getInt("id");
+					Timestamp created = rs.getTimestamp("createdAt");
+					experiences.add(new LessonExperience(
+							id,
+							rs.getInt("lessonId"),
+							rs.getString("whatWasDone"),
+							rs.getString("howItWasDone"),
+							rs.getFloat("durationHours"),
+							created == null ? null : created.toLocalDateTime(),
+							getTeammates(id)));
+				}
+			}
+		}
+		return experiences;
+	}
+
+	/*******
+	 * <p> Method: boolean updateExperience(int lessonId, int experienceId, String whatWasDone,
+	 * 		String howItWasDone, float durationHours, List teammates) </p>
+	 *
+	 * <p> Description: Replaces an experience entry and its teammate rows, in one transaction.
+	 * The lesson id is part of the match so an entry can only be changed through the lesson it
+	 * belongs to, which is the lesson whose ownership the caller checked.</p>
+	 *
+	 * @param lessonId is the database id of the lesson the entry belongs to
+	 *
+	 * @param experienceId is the database id of the entry
+	 *
+	 * @param whatWasDone is the validated description of what was done
+	 *
+	 * @param howItWasDone is the validated description of how it was done
+	 *
+	 * @param durationHours is the validated duration in hours
+	 *
+	 * @param teammates is the validated effort of each teammate
+	 *
+	 * @return true if the entry was updated, false if it is no longer in the database
+	 *
+	 * @throws SQLException when the entry cannot be updated
+	 *
+	 */
+	public boolean updateExperience(int lessonId, int experienceId, String whatWasDone,
+			String howItWasDone, float durationHours, List<TeammateEffort> teammates)
+					throws SQLException {
+		String query = "UPDATE LessonExperienceDB SET whatWasDone = ?, howItWasDone = ?, "
+				+ "durationHours = ? WHERE id = ? AND lessonId = ?";
+		connection.setAutoCommit(false);
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, whatWasDone);
+			pstmt.setString(2, howItWasDone);
+			pstmt.setFloat(3, durationHours);
+			pstmt.setInt(4, experienceId);
+			pstmt.setInt(5, lessonId);
+			if (pstmt.executeUpdate() == 0) {
+				connection.rollback();
+				return false;
+			}
+
+			// Replace the teammate rows rather than matching old rows to new ones
+			try (PreparedStatement pstmt2 = connection.prepareStatement(
+					"DELETE FROM TeammateEffortDB WHERE experienceId = ?")) {
+				pstmt2.setInt(1, experienceId);
+				pstmt2.executeUpdate();
+			}
+			insertTeammates(experienceId, teammates);
+			connection.commit();
+			return true;
+		} catch (SQLException e) {
+			connection.rollback();
+			throw e;
+		} finally {
+			connection.setAutoCommit(true);
+		}
+	}
+
+	/*******
+	 * <p> Method: boolean deleteExperience(int lessonId, int experienceId) </p>
+	 *
+	 * <p> Description: Deletes an experience entry.  Its teammate rows are deleted with it by
+	 * the ON DELETE CASCADE rule set up in createTables.</p>
+	 *
+	 * @param lessonId is the database id of the lesson the entry belongs to
+	 *
+	 * @param experienceId is the database id of the entry
+	 *
+	 * @return true if the entry was deleted, false if it was not in the database
+	 *
+	 * @throws SQLException when the entry cannot be deleted
+	 *
+	 */
+	public boolean deleteExperience(int lessonId, int experienceId) throws SQLException {
+		String query = "DELETE FROM LessonExperienceDB WHERE id = ? AND lessonId = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, experienceId);
+			pstmt.setInt(2, lessonId);
+			return pstmt.executeUpdate() > 0;
+		}
+	}
+
+	// Private helper: run a lesson query and turn every row into a LessonRecord
+	private LessonsLearnedManager readLessons(PreparedStatement pstmt) throws SQLException {
+		LessonsLearnedManager result = new LessonsLearnedManager();
+		try (ResultSet rs = pstmt.executeQuery()) {
+			while (rs.next()) {
+				Timestamp created = rs.getTimestamp("createdAt");
+				result.addLesson(new LessonRecord(
+						rs.getInt("id"),
+						rs.getString("title"),
+						rs.getString("description"),
+						rs.getString("category"),
+						rs.getFloat("effortHours"),
+						rs.getString("creatorUsername"),
+						created == null ? null : created.toLocalDateTime(),
+						rs.getBoolean("titleLocked"),
+						rs.getBoolean("descriptionLocked"),
+						rs.getBoolean("categoryLocked"),
+						rs.getBoolean("effortLocked"),
+						rs.getString("lastModifiedBy")));
+			}
+		}
+		return result;
+	}
+
+	// Private helper: store the teammate rows of one experience entry
+	private void insertTeammates(int experienceId, List<TeammateEffort> teammates)
+			throws SQLException {
+		String insertTeammate = "INSERT INTO TeammateEffortDB "
+				+ "(experienceId, teammateName, effortEntry) VALUES (?, ?, ?)";
+		try (PreparedStatement pstmt = connection.prepareStatement(insertTeammate)) {
+			for (TeammateEffort teammate : teammates) {
+				pstmt.setInt(1, experienceId);
+				pstmt.setString(2, teammate.getTeammateName());
+				pstmt.setString(3, teammate.getEffortEntry());
+				pstmt.executeUpdate();
+			}
+		}
+	}
+
+	// Private helper: get the teammate rows of one experience entry, in the order they were added
+	private List<TeammateEffort> getTeammates(int experienceId) throws SQLException {
+		List<TeammateEffort> teammates = new ArrayList<>();
+		String query = "SELECT * FROM TeammateEffortDB WHERE experienceId = ? ORDER BY id";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, experienceId);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				while (rs.next())
+					teammates.add(new TeammateEffort(rs.getString("teammateName"),
+							rs.getString("effortEntry")));
+			}
+		}
+		return teammates;
+	}
 
 	/*******
 	 * <p> Debugging method</p>

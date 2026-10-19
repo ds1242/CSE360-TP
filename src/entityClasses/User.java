@@ -26,7 +26,7 @@ public class User {
     private String preferredFirstName;
     private String emailAddress;
     private boolean adminRole;
-    private boolean role1;
+    private boolean contributor;
     private boolean role2;
     private boolean otp;
 
@@ -69,7 +69,7 @@ public class User {
         this.preferredFirstName = pfn;
         this.emailAddress = ea;
         this.adminRole = r1;
-        this.role1 = r2;
+        this.contributor = r2;
         this.role2 = r3;
         this.otp = otp;
     }
@@ -96,8 +96,8 @@ public class User {
      *
      */
     // Sets the role1 user.
-    public void setRole1User(boolean role) {
-    	this.role1=role;
+    public void setContributorUser(boolean role) {
+    	this.contributor=role;
     }
 
     /*****
@@ -219,7 +219,7 @@ public class User {
 	 *
      */
     // Gets the current value of the role1 attribute.
-	public boolean getNewRole1() { return role1; }
+	public boolean getNewRole1() { return contributor; }
 
     /*****
      * <p> Method: String getRole2() </p>
@@ -254,7 +254,7 @@ public class User {
     public int getNumRoles() {
     	int numRoles = 0;
     	if (adminRole) numRoles++;
-    	if (role1) numRoles++;
+    	if (contributor) numRoles++;
     	if (role2) numRoles++;
     	return numRoles;
     }
