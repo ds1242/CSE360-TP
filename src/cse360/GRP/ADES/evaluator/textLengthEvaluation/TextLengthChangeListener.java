@@ -2,7 +2,7 @@ package cse360.GRP.ADES.evaluator.textLengthEvaluation;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 
 /*******
  * <p> Title: TextLengthChangeListener Class. </p>
@@ -21,18 +21,33 @@ import javafx.scene.control.TextField;
 
 public class TextLengthChangeListener implements ChangeListener<String> {
 
-	private TextField textField; //TextField that the listener is watching for.
+	//TextInputControl, rather than TextField, so the same listener can watch the multi-line
+	//TextArea a lesson learned is typed into as well as the single-line fields.
+	private TextInputControl textField; //Text control that the listener is watching for.
 
 	private boolean shouldClearText = false; //Option to clear text upon character count error.
 	private boolean isTextUpdating = false; //Check for if the text field is being adjusted (asynchronous task prevention)
+	private int maxLength = TextLengthEvaluator.MAX_TEXT_LENGTH; //Maximum this control allows.
 
-	public TextLengthChangeListener(TextField textField) {
+	public TextLengthChangeListener(TextInputControl textField) {
 		this(textField, false);
 	}
 
-	public TextLengthChangeListener(TextField textField, boolean shouldClearText) {
+	public TextLengthChangeListener(TextInputControl textField, boolean shouldClearText) {
 		this.textField = textField;
 		this.shouldClearText = shouldClearText;
+	}
+
+	//Use this constructor for a control whose maximum is not the default 32 characters.
+	public TextLengthChangeListener(TextInputControl textField, int maxLength) {
+		this(textField, false, maxLength);
+	}
+
+	public TextLengthChangeListener(TextInputControl textField, boolean shouldClearText,
+			int maxLength) {
+		this.textField = textField;
+		this.shouldClearText = shouldClearText;
+		this.maxLength = maxLength;
 	}
 
 	//Needed method for implement class. Controls text-field text length and shows dialogue
@@ -44,7 +59,7 @@ public class TextLengthChangeListener implements ChangeListener<String> {
 			return;
 		}
 		//Compare length to max allowed length.
-        String errMessage = TextLengthEvaluator.evaluateText(newText);
+        String errMessage = TextLengthEvaluator.evaluateText(newText, maxLength);
 
 		if (errMessage != "") {
 			//Show dialogue box for warning on input length.
@@ -58,7 +73,7 @@ public class TextLengthChangeListener implements ChangeListener<String> {
 					if (this.shouldClearText) {
 						textField.clear();
 					} else {
-						textField.setText(newText.substring(0, TextLengthEvaluator.MAX_TEXT_LENGTH));
+						textField.setText(newText.substring(0, maxLength));
 					}
 				} finally {
 					this.isTextUpdating = false; //Set no longer updating text

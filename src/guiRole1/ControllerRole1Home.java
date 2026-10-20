@@ -3,22 +3,22 @@ package guiRole1;
 
 /*******
  * <p> Title: ControllerRole1Home Class. </p>
- * 
+ *
  * <p> Description: The Java/FX-based Role 1 Home Page.  This class provides the controller
  * actions basic on the user's use of the JavaFX GUI widgets defined by the View class.
- * 
+ *
  * This page is a stub for establish future roles for the application.
- * 
+ *
  * The class has been written assuming that the View or the Model are the only class methods that
  * can invoke these methods.  This is why each has been declared at "protected".  Do not change any
  * of these methods to public.</p>
- * 
+ *
  * <p> Copyright: Lynn Robert Carter © 2025 </p>
- * 
+ *
  * @author Lynn Robert Carter
- * 
+ *
  * @version 1.00		2025-08-17 Initial version
- * @version 1.01		2025-09-16 Update Javadoc documentation *  
+ * @version 1.01		2025-09-16 Update Javadoc documentation *
  */
 
 public class ControllerRole1Home {
@@ -26,11 +26,11 @@ public class ControllerRole1Home {
 	/*-*******************************************************************************************
 
 	User Interface Actions for this page
-	
+
 	This controller is not a class that gets instantiated.  Rather, it is a collection of protected
-	static methods that can be called by the View (which is a singleton instantiated object) and 
+	static methods that can be called by the View (which is a singleton instantiated object) and
 	the Model is often just a stub, or will be a singleton instantiated object.
-	
+
 	 */
 
 	/**
@@ -41,36 +41,84 @@ public class ControllerRole1Home {
 
 	/**********
 	 * <p> Method: performUpdate() </p>
-	 * 
+	 *
 	 * <p> Description: This method directs the user to the User Update Page so the user can change
 	 * the user account attributes. </p>
-	 * 
+	 *
 	 */
 	protected static void performUpdate () {
 		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewRole1Home.theStage, ViewRole1Home.theUser);
-	}	
+	}
 
 	/**********
+	 * <p> Method: performAddLesson() </p>
+	 *
+     *<p> Description: This method directs the user to the Add Lesson page, where a new lesson
+     * learned is composed and added to the system. </p>
+	 *
+	 */
+	protected static void performAddLesson() {
+		guiRole1AddLesson.ViewRole1AddLesson.displayRole1AddLesson(ViewRole1Home.theStage,
+				ViewRole1Home.theUser);
+	}
+
+	/**********
+	 * <p> Method: performListLessons() </p>
+	 *
+     * <p> Description: This method directs the user to the List Lessons page, which shows
+	 * the lessons learned this user has added. </p>
+	 *
+	 */
+	protected static void performListLessons() {
+        guiRole1ListLessons.ViewRole1ListLessons.displayRole1ListLessons(ViewRole1Home.theStage,
+            ViewRole1Home.theUser);
+	}
+
+ 	/**********
+ 	 * <p> Method: performDeleteLesson() </p>
+ 	 *
+	 * <p> Description: This method directs the user to the Delete Lesson page, where one of
+	 * this user's lessons learned is removed. </p>
+ 	 *
+ 	 */
+ 	protected static void performDeleteLesson() {
+		guiRole1DeleteLesson.ViewRole1DeleteLesson.displayRole1DeleteLesson(ViewRole1Home.theStage,
+				ViewRole1Home.theUser);
+ 	}
+
+    /**********
+     * <p> Method: performUpdateLesson() </p>
+     *
+	 * <p> Description: This method directs the user to the Update Lesson page, where one of
+	 * this user's lessons learned is changed. </p>
+     *
+     */
+    protected static void performUpdateLesson() {
+        guiRole1UpdateLesson.ViewRole1UpdateLesson.displayRole1UpdateLesson(ViewRole1Home.theStage,
+            ViewRole1Home.theUser);
+    }
+    /**********
 	 * <p> Method: performLogout() </p>
-	 * 
+	 *
 	 * <p> Description: This method logs out the current user and proceeds to the normal login
 	 * page where existing users can log in or potential new users with a invitation code can
 	 * start the process of setting up an account. </p>
-	 * 
+	 *
 	 */
 	protected static void performLogout() {
 		guiUserLogin.ViewUserLogin.displayUserLogin(ViewRole1Home.theStage);
 	}
-	
+
 	/**********
 	 * <p> Method: performQuit() </p>
-	 * 
+	 *
 	 * <p> Description: This method terminates the execution of the program.  It leaves the
 	 * database in a state where the normal login page will be displayed when the application is
 	 * restarted.</p>
-	 * 
-	 */	
+	 *
+	 */
 	protected static void performQuit() {
 		System.exit(0);
 	}
 }
+

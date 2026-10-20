@@ -39,13 +39,34 @@ public class TextLengthEvaluator {
 		return instance;
 	}
 
-    //Evalulate an input string to see if it is within the maximum length requirement.
+    //Evalulate an input string to see if it is within the default maximum length requirement.
     public static String evaluateText(String newText) {
-        if (newText.length() > MAX_TEXT_LENGTH) {
-            return "Please correct the input to use a maximum of " + MAX_TEXT_LENGTH + " characters!";
-        } else {
-            return "";
+        return evaluateText(newText, MAX_TEXT_LENGTH);
+    }
+
+    //Evalulate an input string against a caller supplied maximum. A lesson learned needs a far
+    //longer body than a username, so the maximum cannot be the same single constant for every
+    //field. The existing one argument version keeps using MAX_TEXT_LENGTH, so every field that
+    //was limited to 32 characters before is limited to 32 characters still.
+    public static String evaluateText(String newText, int maxLength) {
+        return evaluateText(newText, 0, maxLength);
+    }
+
+    //Evalulate an input string against a caller supplied minimum and maximum. A title may not
+    //be left empty, so the field that holds it is checked with a minimum of one. The text is
+    //trimmed before it is measured, so a field holding nothing but spaces counts as the empty
+    //field the user actually left behind.
+    public static String evaluateText(String newText, int minLength, int maxLength) {
+        if (newText == null || newText.trim().length() < minLength) {
+            if (minLength == 1) {
+                return "Please enter a value! This field may not be left empty.";
+            }
+            return "Please enter at least " + minLength + " characters!";
         }
+        if (newText.length() > maxLength) {
+            return "Please correct the input to use a maximum of " + maxLength + " characters!";
+        }
+        return "";
     }
 
 	//Call on alert box to show and wait for the user to click out of the box.

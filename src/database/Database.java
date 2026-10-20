@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import entityClasses.LessonsLearned;
 import entityClasses.User;
 
 /*******
@@ -75,6 +76,26 @@ public class Database {
 	}
 
 
+	/*******
+	 * <p> Method: Database(Connection connection) </p>
+	 *
+	 * <p> Description: A constructor used by the automated tests.  The caller supplies the
+	 *		connection, so a test can run against an in-memory database that is thrown away when
+	 *		the test ends rather than against the user's stored FoundationDatabase.  The tables
+	 *		are created here because a fresh in-memory database has none.</p>
+	 *
+	 * @param connection specifies the already opened connection this Database is to use
+	 *
+	 * @throws SQLException when the tables cannot be created on the supplied connection
+	 *
+	 */
+	public Database (Connection connection) throws SQLException {
+		this.connection = connection;
+		this.statement = connection.createStatement();
+		createTables();
+	}
+
+
 /*******
  * <p> Method: connectToDatabase </p>
  *
@@ -128,6 +149,16 @@ public class Database {
 	    		+ "emailAddress VARCHAR(255), "
 	            + "role VARCHAR(10))";
 	    statement.execute(invitationCodesTable);
+
+		// Create the lessons learned table
+		String lessonsLearnedTable = "CREATE TABLE IF NOT EXISTS lessonsLearnedDB ("
+				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+				+ "contributorUserName VARCHAR(255), "
+				+ "title VARCHAR(255), "
+				+ "coreInformation VARCHAR(4000), "
+				+ "experience VARCHAR(4000), "
+				+ "UNIQUE (contributorUserName, title))";
+		statement.execute(lessonsLearnedTable);
 	}
 
 /*******
@@ -1143,4 +1174,188 @@ public class Database {
 			se.printStackTrace();
 		}
 	}
+
+
+   	/*-*******************************************************************************************
+                                            LESSONS LEARNED
+	**********************************************************************************************/
+
+	/*******
+	 * <p> Method: boolean addLesson(LessonsLearned lesson) </p>
+	 *
+	 * <p> Description: </p>
+	 *
+	 * @param lesson specifies the lesson learned object to be added to the database
+	 *
+	 * @return true if the lesson was added, false if the contributor already has a lesson with
+	 *		that title or the insert failed
+	 *
+	 */
+	public boolean addLesson(LessonsLearned lesson) {
+		// A lesson is identified by its contributor and its title, so a lesson with no title
+		// could never be found again.  The check is made here as well as in the GUI so that no
+		// caller, including the automated tests, can store one.
+		if (isBlank(lesson.getTitle())) return false;
+
+		String query = "INSERT INTO lessonsLearnedDB (contributorUserName, title, "
+				+ "coreInformation, experience) VALUES (?, ?, ?, ?)";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, lesson.getContributorUserName());
+			pstmt.setString(2, lesson.getTitle());
+			pstmt.setString(3, lesson.getCoreInformation());
+			pstmt.setString(4, lesson.getExperience());
+			pstmt.executeUpdate();
+			System.out.println("*** database.addLesson(): " + pstmt.toString());
+			return true;
+		} catch (SQLException e) {
+			return false;
+		}
+	}
+
+	/*******
+	 * <p> Method: LessonsLearned getLesson(String contributorUserName, String title) </p>
+	 *
+	 * <p> Description: </p>
+	 *
+	 * @param contributorUserName is the userName of the contributor who added the lesson
+	 *
+	 * @param title is the title of the lesson
+	 *
+	 * @return the lesson learned, or null if that contributor has no lesson with that title
+	 *
+	 */
+	public LessonsLearned getLesson(String contributorUserName, String title) {
+		String query = "SELECT contributorUserName, title, coreInformation, experience "
+				+ "FROM lessonsLearnedDB WHERE contributorUserName = ? AND title = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, contributorUserName);
+			pstmt.setString(2, title);
+			ResultSet rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				return new LessonsLearned(
+					rs.getString("contributorUserName"),
+					rs.getString("coreInformation"),
+					rs.getString("experience"),
+					rs.getString("title")
+				);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/*******
+	 * <p> Method: boolean updateLesson(String originalTitle, LessonsLearned lesson) </p>
+	 *
+	 * <p> Description: </p>
+	 *
+	 * @param originalTitle is the title the lesson was stored under before this update
+	 *
+	 * @param lesson specifies the contributor and the new values for the lesson
+	 *
+	 * @return true if exactly the intended lesson was updated, false if that contributor has no
+	 *		lesson with the original title or the new title duplicates another of that
+	 *		contributor's lessons
+	 *
+	 */
+	public boolean updateLesson(String originalTitle, LessonsLearned lesson) {
+		// An update may not empty the title for the same reason a new lesson may not be stored
+		// without one
+		if (isBlank(lesson.getTitle())) return false;
+
+		String query = "UPDATE lessonsLearnedDB SET title = ?, coreInformation = ?, "
+				+ "experience = ? WHERE contributorUserName = ? AND title = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, lesson.getTitle());
+			pstmt.setString(2, lesson.getCoreInformation());
+			pstmt.setString(3, lesson.getExperience());
+			pstmt.setString(4, lesson.getContributorUserName());
+			pstmt.setString(5, originalTitle);
+			boolean updated = pstmt.executeUpdate() == 1;
+			System.out.println("*** database.updateLesson(): " + pstmt.toString());
+			return updated;
+		} catch (SQLException e) {
+			return false;
+		}
+	}
+
+	/*******
+	 * <p> Method: boolean deleteLesson(String contributorUserName, String title) </p>
+	 *
+	 * <p> Description: </p>
+	 *
+	 * @param contributorUserName is the userName of the contributor who added the lesson
+	 *
+	 * @param title is the title of the lesson
+	 *
+	 * @return true if the lesson was removed, false if there was no such lesson for that
+	 *		contributor
+	 *
+	 */
+	public boolean deleteLesson(String contributorUserName, String title) {
+		String query = "DELETE FROM lessonsLearnedDB WHERE contributorUserName = ? AND title = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, contributorUserName);
+			pstmt.setString(2, title);
+			boolean removed = pstmt.executeUpdate() == 1;
+			System.out.println("*** database.deleteLesson(): " + pstmt.toString());
+			return removed;
+		} catch (SQLException e) {
+			return false;
+		}
+	}
+
+
+
+	/*******
+	 * <p> Method: List<LessonsLearned> getAllLessons(String contributorUserName) </p>
+	 *
+	 * <p> Description: </p>
+	 *
+	 * @param contributorUserName is the userName of the contributor whose lessons are wanted
+	 *
+	 * @return a list of that contributor's lessons, empty if there are none
+	 *
+	 */
+	/*******
+	 * <p> Method: boolean isBlank(String s) </p>
+	 *
+	 * <p> Description: Report whether a value is missing, empty, or nothing but whitespace.</p>
+	 *
+	 * @param s is the value to be examined
+	 *
+	 * @return true if there is no usable text in the value
+	 *
+	 */
+	private boolean isBlank(String s) {
+		return s == null || s.trim().isEmpty();
+	}
+
+	public List<LessonsLearned> getAllLessons(String contributorUserName) {
+		List<LessonsLearned> lessons = new ArrayList<LessonsLearned>();
+		String query = "SELECT contributorUserName, title, coreInformation, experience "
+				+ "FROM lessonsLearnedDB WHERE contributorUserName = ? ORDER BY title";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, contributorUserName);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				lessons.add(new LessonsLearned(
+					rs.getString("contributorUserName"),
+					rs.getString("coreInformation"),
+					rs.getString("experience"),
+					rs.getString("title")
+				));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lessons;
+	}
+
+
+
 }
