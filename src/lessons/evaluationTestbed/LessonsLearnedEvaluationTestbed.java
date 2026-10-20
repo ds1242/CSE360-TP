@@ -91,7 +91,7 @@ public class LessonsLearnedEvaluationTestbed {
 			+ "broke the build.";
 
 	/** A valid category, used wherever a test case needs only one other field to be wrong. */
-	static final String VALID_CATEGORY = "Implementation";
+	static final String VALID_CATEGORY = "STEM";
 
 	/** A valid number of hours (as text), used wherever a test case needs only one other field to be wrong. */
 	static final String VALID_EFFORT = "2.5";
