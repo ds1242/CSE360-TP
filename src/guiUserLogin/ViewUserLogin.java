@@ -203,8 +203,19 @@ public class ViewUserLogin {
 
 	 *********************************************************************************************/
 
-	/**********
-	 * Private local method to initialize the standard fields for a label
+	/*******
+	 * <p> Title: setupLabelUI </p>
+	 *
+	 * <p> Description: Private helper method that initializes the standard fields for a
+	 * Label. </p>
+	 *
+	 * @param l  the Label object to be initialized
+	 * @param ff the font family to be used
+	 * @param f  the size of the font to be used
+	 * @param w  the minimum width of the Label
+	 * @param p  the alignment (e.g. left, centered, or right)
+	 * @param x  the location from the left edge (x axis)
+	 * @param y  the location from the top (y axis)
 	 */
 
 	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y){
@@ -235,8 +246,20 @@ public class ViewUserLogin {
 		b.setLayoutY(y);		
 	}
 
-	/**********
-	 * Private local method to initialize the standard fields for a text field
+	/*******
+	 * <p> Title: setupTextUI </p>
+	 *
+	 * <p> Description: Private helper method that initializes the standard fields for a
+	 * TextField. </p>
+	 *
+	 * @param t  the TextField object to be initialized
+	 * @param ff the font family to be used
+	 * @param f  the size of the font to be used
+	 * @param w  the width of the TextField (used as both minimum and maximum width)
+	 * @param p  the alignment (e.g. left, centered, or right)
+	 * @param x  the location from the left edge (x axis)
+	 * @param y  the location from the top (y axis)
+	 * @param e  true if the user may edit the field, false if it is read-only
 	 */
 	private void setupTextUI(TextField t, String ff, double f, double w, Pos p, double x, double y, boolean e){
 		t.setFont(Font.font(ff, f));
