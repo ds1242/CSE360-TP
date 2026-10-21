@@ -189,10 +189,20 @@ public class ViewMultipleRoleDispatch {
 
 	 */
 
-	/**********
-	 * Private local method to initialize the standard fields for a label
+	/*******
+	 * <p> Title: setupLabelUI </p>
+	 *
+	 * <p> Description: Private helper method that initializes the standard fields for a
+	 * Label. </p>
+	 *
+	 * @param l  the Label object to be initialized
+	 * @param ff the font family to be used
+	 * @param f  the size of the font to be used
+	 * @param w  the minimum width of the Label
+	 * @param p  the alignment (e.g. left, centered, or right)
+	 * @param x  the location from the left edge (x axis)
+	 * @param y  the location from the top (y axis)
 	 */
-
 	private static void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y){
 		l.setFont(Font.font(ff, f));
 		l.setMinWidth(w);

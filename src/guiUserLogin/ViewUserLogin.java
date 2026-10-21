@@ -217,7 +217,6 @@ public class ViewUserLogin {
 	 * @param x  the location from the left edge (x axis)
 	 * @param y  the location from the top (y axis)
 	 */
-
 	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y){
 		l.setFont(Font.font(ff, f));
 		l.setMinWidth(w);
