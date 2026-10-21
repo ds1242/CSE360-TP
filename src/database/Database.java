@@ -149,7 +149,7 @@ public class Database {
 	    String invitationCodesTable = "CREATE TABLE IF NOT EXISTS InvitationCodes ("
 	            + "code VARCHAR(10) PRIMARY KEY, "
 	    		+ "emailAddress VARCHAR(255), "
-	            + "role VARCHAR(11))";
+	            + "role VARCHAR(15))";
 	    statement.execute(invitationCodesTable);
 
 		// Create the lessons learned table.  The column sizes match the limits in

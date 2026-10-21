@@ -513,27 +513,50 @@ public class LessonsEvaluator {
 
 	 */
 
-	// Append a non-empty message on its own line
+	/**
+	 * Append a non-empty message to a list of errors, on its own line. An empty message
+	 * (meaning "valid") is ignored.
+	 *
+	 * @param errors  the builder collecting the error messages
+	 * @param message the message to add, or "" to add nothing
+	 */
 	private static void addError(StringBuilder errors, String message) {
 		if (message.isEmpty()) return;
 		if (errors.length() > 0) errors.append("\n");
 		errors.append(message);
 	}
 
-	// Trim text that may be null
+	/**
+	 * Trim text that may be null.
+	 *
+	 * @param text the text to trim, or null
+	 * @return the trimmed text, or null if {@code text} is null
+	 */
 	private static String trimmed(String text) {
 		return text == null ? null : text.trim();
 	}
 
-	// True if the trimmed text is between min and max characters long (inclusive)
+	/**
+	 * Check that the trimmed text is between a minimum and maximum length, inclusive.
+	 *
+	 * @param text the text to check, or null
+	 * @param min  the minimum number of characters allowed
+	 * @param max  the maximum number of characters allowed
+	 * @return true if the text is not null and its trimmed length is within the range
+	 */
 	private static boolean isLengthBetween(String text, int min, int max) {
 		if (text == null) return false;
 		int length = text.trim().length();
 		return length >= min && length <= max;
 	}
 
-	// True if the text is a number greater than 0. NaN and Infinity are rejected on purpose,
-	// because Float.parseFloat accepts both as valid input.
+	/**
+	 * Check that the text is a number greater than 0. NaN and Infinity are rejected on purpose,
+	 * because {@code Float.parseFloat} accepts both as valid input.
+	 *
+	 * @param text the text to check, or null
+	 * @return true if the text parses as a finite number greater than 0
+	 */
 	private static boolean isPositiveNumber(String text) {
 		if (text == null || text.trim().isEmpty()) return false;
 		try {
