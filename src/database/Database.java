@@ -129,7 +129,7 @@ public class Database {
  *
  */
 	private void createTables() throws SQLException {
-		// Create the user database
+	
 		String userTable = "CREATE TABLE IF NOT EXISTS userDB ("
 				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "userName VARCHAR(255) UNIQUE, "
@@ -145,15 +145,12 @@ public class Database {
                 + "oneTimePassword BOOL DEFAULT FALSE)";
 		statement.execute(userTable);
 
-		// Create the invitation codes table
 	    String invitationCodesTable = "CREATE TABLE IF NOT EXISTS InvitationCodes ("
 	            + "code VARCHAR(10) PRIMARY KEY, "
 	    		+ "emailAddress VARCHAR(255), "
 	            + "role VARCHAR(15))";
 	    statement.execute(invitationCodesTable);
 
-		// Create the lessons learned table.  The column sizes match the limits in
-		// lessons.LessonsEvaluator, so anything the evaluator accepts is guaranteed to fit.
 		String lessonsTable = "CREATE TABLE IF NOT EXISTS LessonsLearnedDB ("
 				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "title VARCHAR(" + LessonsEvaluator.TITLE_MAX + "), "
@@ -169,9 +166,6 @@ public class Database {
 				+ "lastModifiedBy VARCHAR(255))";
 		statement.execute(lessonsTable);
 
-		// A LessonsLearnedDB table made by the first version of HW2 has one "locked" column
-		// instead of a lock per field.  Adding any missing columns lets that database keep its
-		// lessons instead of failing every lesson query.
 		statement.execute("ALTER TABLE LessonsLearnedDB ADD COLUMN IF NOT EXISTS "
 				+ "titleLocked BOOL DEFAULT FALSE");
 		statement.execute("ALTER TABLE LessonsLearnedDB ADD COLUMN IF NOT EXISTS "
@@ -183,8 +177,6 @@ public class Database {
 		statement.execute("ALTER TABLE LessonsLearnedDB ADD COLUMN IF NOT EXISTS "
 				+ "lastModifiedBy VARCHAR(255)");
 
-		// Create the experience entries table.  ON DELETE CASCADE removes a lesson's experience
-		// entries when the lesson is deleted, so no orphaned entries are left behind.
 		String experienceTable = "CREATE TABLE IF NOT EXISTS LessonExperienceDB ("
 				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "lessonId INT, "
@@ -195,7 +187,6 @@ public class Database {
 				+ "FOREIGN KEY (lessonId) REFERENCES LessonsLearnedDB(id) ON DELETE CASCADE)";
 		statement.execute(experienceTable);
 
-		// Create the teammate effort table: one row per teammate in an experience entry
 		String teammateTable = "CREATE TABLE IF NOT EXISTS TeammateEffortDB ("
 				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "experienceId INT, "
@@ -323,7 +314,21 @@ public class Database {
 		} catch (SQLException e) {
 	        return null;
 	    }
+		
+		
+		
+		
+		
+		
+		
 //		System.out.println(userList);
+		
+		
+		
+		
+		
+		
+		
 		return userList;
 	}
 	
@@ -433,7 +438,6 @@ public class Database {
 	 * @return true if the specified user has been logged in as an Student else false.
 	 *
 	 */
-	// Validates a reviewer user's login credentials.
 	public boolean loginRole2(User user) {
 		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND "
 				+ "newRole2 = TRUE";
@@ -458,7 +462,6 @@ public class Database {
 	 * @return true if the specified user is in the table else false.
 	 *
 	 */
-	// Checks if a user already exists in the database based on their userName.
 	public boolean doesUserExist(String userName) {
 	    String query = "SELECT COUNT(*) FROM userDB WHERE userName = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -486,7 +489,6 @@ public class Database {
 	 * @return the number of roles this user plays (0 - 5).
 	 *
 	 */
-	// Get the number of roles that this user plays
 	public int getNumberOfRoles (User user) {
 		int numberOfRoles = 0;
 		if (user.getAdminRole()) numberOfRoles++;
@@ -510,7 +512,6 @@ public class Database {
 	 * @return the code of six characters so the new user can use it to securely setup an account.
 	 *
 	 */
-	// Generates a new invitation code and inserts it into the database.
 	public String generateInvitationCode(String emailAddress, String role) {
 	    String code = UUID.randomUUID().toString().substring(0, 6); // Generate a random 6-character code
 	    String query = "INSERT INTO InvitationCodes (code, emailaddress, role) VALUES (?, ?, ?)";
@@ -546,7 +547,6 @@ public class Database {
 	 * @return the number of invitations in the table.
 	 *
 	 */
-	// Number of invitations in the database
 	public int getNumberOfInvitations() {
 		String query = "SELECT COUNT(*) AS count FROM InvitationCodes";
 		try {
@@ -570,7 +570,6 @@ public class Database {
 	 * @return true if the email address is in the table, else return false.
 	 *
 	 */
-	// Check to see if an email address is already in the database
 	public boolean emailaddressHasBeenUsed(String emailAddress) {
 	    String query = "SELECT COUNT(*) AS count FROM InvitationCodes WHERE emailAddress = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -598,7 +597,6 @@ public class Database {
 	 * @return the role for the code or an empty string.
 	 *
 	 */
-	// Obtain the roles associated with an invitation code.
 	public String getRoleGivenAnInvitationCode(String code) {
 	    String query = "SELECT * FROM InvitationCodes WHERE code = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -624,7 +622,6 @@ public class Database {
 	 * @return the email address for the code or an empty string.
 	 *
 	 */
-	// For a given invitation code, return the associated email address of an empty string
 	public String getEmailAddressUsingCode (String code ) {
 	    String query = "SELECT emailAddress FROM InvitationCodes WHERE code = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -648,7 +645,6 @@ public class Database {
 	 * @param code is the 6 character String invitation code
 	 *
 	 */
-	// Remove an invitation using an email address once the user account has been setup
 	public void removeInvitationAfterUse(String code) {
 	    String query = "SELECT COUNT(*) AS count FROM InvitationCodes WHERE code = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -742,7 +738,6 @@ public class Database {
 	 * @return the first name of a user given that user's username
 	 *
 	 */
-	// Get the First Name
 	public String getFirstName(String username) {
 		String query = "SELECT firstName FROM userDB WHERE userName = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -771,7 +766,6 @@ public class Database {
 	 * @param firstName is the new first name for the user
 	 *
 	 */
-	// update the first name
 	public void updateFirstName(String username, String firstName) {
 	    String query = "UPDATE userDB SET firstName = ? WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -794,7 +788,6 @@ public class Database {
 	 * @return the middle name of a user given that user's username
 	 *
 	 */
-	// get the middle name
 	public String getMiddleName(String username) {
 		String query = "SELECT MiddleName FROM userDB WHERE userName = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -822,7 +815,6 @@ public class Database {
 	 * @param middleName is the new middle name for the user
 	 *
 	 */
-	// update the middle name
 	public void updateMiddleName(String username, String middleName) {
 	    String query = "UPDATE userDB SET middleName = ? WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -846,7 +838,6 @@ public class Database {
 	 * @return the last name of a user given that user's username
 	 *
 	 */
-	// get he last name
 	public String getLastName(String username) {
 		String query = "SELECT LastName FROM userDB WHERE userName = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -873,7 +864,6 @@ public class Database {
 	 * @param lastName is the new last name for the user
 	 *
 	 */
-	// update the last name
 	public void updateLastName(String username, String lastName) {
 	    String query = "UPDATE userDB SET lastName = ? WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -896,7 +886,6 @@ public class Database {
 	 * @return the preferred first name of a user given that user's username
 	 *
 	 */
-	// get the preferred first name
 	public String getPreferredFirstName(String username) {
 		String query = "SELECT preferredFirstName FROM userDB WHERE userName = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -924,7 +913,6 @@ public class Database {
 	 * @param preferredFirstName is the new preferred first name for the user
 	 *
 	 */
-	// update the preferred first name of the user
 	public void updatePreferredFirstName(String username, String preferredFirstName) {
 	    String query = "UPDATE userDB SET preferredFirstName = ? WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -947,7 +935,6 @@ public class Database {
 	 * @return the email address of a user given that user's username
 	 *
 	 */
-	// get the email address
 	public String getEmailAddress(String username) {
 		String query = "SELECT emailAddress FROM userDB WHERE userName = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -975,7 +962,6 @@ public class Database {
 	 * @param emailAddress is the new preferred first name for the user
 	 *
 	 */
-	// update the email address
 	public void updateEmailAddress(String username, String emailAddress) {
 	    String query = "UPDATE userDB SET emailAddress = ? WHERE username = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -998,7 +984,6 @@ public class Database {
 	 * @return true of the get is successful, else false
 	 *
 	 */
-	// get the attributes for a specified user
 	public boolean getUserAccountDetails(String username) {
 		String query = "SELECT * FROM userDB WHERE username = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1037,7 +1022,6 @@ public class Database {
 	 * @return true if the update was successful, else false
 	 *
 	 */
-	// Update a users role
 	public boolean updateUserRole(String username, String role, String value) {
 		if (role.compareTo("Admin") == 0) {
 			String query = "UPDATE userDB SET adminRole = ? WHERE username = ?";
@@ -1087,7 +1071,13 @@ public class Database {
 		return false;
 	}
 
+	
+	
+	
 	// Attribute getters for the current user
+	
+	
+	
 	/*******
 	 * <p> Method: String getCurrentUsername() </p>
 	 *
@@ -1597,7 +1587,13 @@ public class Database {
 		}
 	}
 
-	// Private helper: run a lesson query and turn every row into a LessonRecord
+	/*******
+	 * Executes a lesson query and converts each result row into a LessonRecord.
+	 *
+	 * @param pstmt the prepared statement containing the lesson query
+	 * @return a manager containing the retrieved lessons
+	 * @throws SQLException if a database access error occurs
+	 */
 	private LessonsLearnedManager readLessons(PreparedStatement pstmt) throws SQLException {
 		LessonsLearnedManager result = new LessonsLearnedManager();
 		try (ResultSet rs = pstmt.executeQuery()) {
@@ -1636,7 +1632,13 @@ public class Database {
 		}
 	}
 
-	// Private helper: get the teammate rows of one experience entry, in the order they were added
+	/*******
+	 * Retrieves the teammates for an experience, ordered by ID.
+	 *
+	 * @param experienceId the ID of the experience entry
+	 * @return a list of teammates associated with the experience
+	 * @throws SQLException if a database access error occurs
+	 */
 	private List<TeammateEffort> getTeammates(int experienceId) throws SQLException {
 		List<TeammateEffort> teammates = new ArrayList<>();
 		String query = "SELECT * FROM TeammateEffortDB WHERE experienceId = ? ORDER BY id";
@@ -1659,7 +1661,6 @@ public class Database {
 	 * @throws SQLException if there is an issues accessing the database.
 	 *
 	 */
-	// Dumps the database.
 	public void dump() throws SQLException {
 		String query = "SELECT * FROM userDB";
 		ResultSet resultSet = statement.executeQuery(query);
@@ -1678,10 +1679,10 @@ public class Database {
 	/*******
 	 * <p> Method: void closeConnection()</p>
 	 *
-	 * <p> Description: Closes the database statement and connection.</p>
+	 * <p> Description: Closes the database statement and connection or outputs error if 
+	 * it fails.</p>
 	 *
 	 */
-	// Closes the database statement and connection.
 	public void closeConnection() {
 		try{
 			if(statement!=null) statement.close();
