@@ -52,15 +52,28 @@ public class ControllerContributorHome {
 		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewContributorHome.theStage, ViewContributorHome.theUser);
 	}
 	
+	/*******
+	 * <p> Method: performCreateLesson() </p>
+	 * 
+	 * <p> Description: This method displays the create lesson page where the current contributor
+	 * can begin the process of creating a new lesson. </p>
+	 * 
+	 */
 	protected static void performCreateLesson() {
 		ViewCreateLesson.displayCreateLesson(ViewContributorHome.theStage, ViewContributorHome.theUser);
 	}
-	
+
+	/*******
+	 * <p> Method: performViewLessons() </p>
+	 * 
+	 * <p> Description: This method displays the lessons page where the current contributor
+	 * can view their lessons. </p>
+	 * 
+	 */
 	protected static void performViewLessons() {
 		ViewContributorLessons.displayContributorLessons(ViewContributorHome.theStage, ViewContributorHome.theUser);
 	}
-
-	/**********
+	/*******
 	 * <p> Method: performLogout() </p>
 	 * 
 	 * <p> Description: This method logs out the current user and proceeds to the normal login

@@ -314,21 +314,7 @@ public class Database {
 		} catch (SQLException e) {
 	        return null;
 	    }
-		
-		
-		
-		
-		
-		
-		
-//		System.out.println(userList);
-		
-		
-		
-		
-		
-		
-		
+				
 		return userList;
 	}
 	
@@ -386,14 +372,14 @@ public class Database {
  *
  */
 	public boolean loginAdmin(User user){
-		// Validates an admin user's login credentials so the user can login in as an Admin.
+		
 		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND "
 				+ "adminRole = TRUE";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setString(1, user.getUserName());
 			pstmt.setString(2, user.getPassword());
 			ResultSet rs = pstmt.executeQuery();
-			return rs.next();	// If a row is returned, rs.next() will return true
+			return rs.next();	
 		} catch  (SQLException e) {
 	        e.printStackTrace();
 	    }
@@ -470,13 +456,12 @@ public class Database {
 	        ResultSet rs = pstmt.executeQuery();
 
 	        if (rs.next()) {
-	            // If the count is greater than 0, the user exists
 	            return rs.getInt(1) > 0;
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
-	    return false; // If an error occurs, assume user doesn't exist
+	    return false; 
 	}
 
 	/*******
@@ -1069,14 +1054,7 @@ public class Database {
 			}
 		}
 		return false;
-	}
-
-	
-	
-	
-	// Attribute getters for the current user
-	
-	
+	}	
 	
 	/*******
 	 * <p> Method: String getCurrentUsername() </p>
@@ -1238,7 +1216,6 @@ public class Database {
 			pstmt.setTimestamp(6, Timestamp.valueOf(now));
 			pstmt.executeUpdate();
 
-			// Read back the id the database generated so the caller can refer to this lesson
 			int id = -1;
 			try (ResultSet keys = pstmt.getGeneratedKeys()) {
 				if (keys.next()) id = keys.getInt(1);
@@ -1395,8 +1372,6 @@ public class Database {
 	 */
 	public boolean setLessonFieldLock(int lessonId, String field, boolean locked)
 			throws SQLException {
-		// The column name cannot be a ? parameter, so it is chosen from a fixed list here rather
-		// than built from the caller's text.  This keeps the query safe from SQL injection.
 		String column;
 		if (field.compareTo(LessonRecord.FIELD_TITLE) == 0) column = "titleLocked";
 		else if (field.compareTo(LessonRecord.FIELD_DESCRIPTION) == 0) column = "descriptionLocked";
@@ -1617,7 +1592,7 @@ public class Database {
 		return result;
 	}
 
-	// Private helper: store the teammate rows of one experience entry
+	/****** Private helper: store the teammate rows of one experience entry */
 	private void insertTeammates(int experienceId, List<TeammateEffort> teammates)
 			throws SQLException {
 		String insertTeammate = "INSERT INTO TeammateEffortDB "
