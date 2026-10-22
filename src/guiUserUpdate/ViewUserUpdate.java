@@ -137,25 +137,22 @@ public class ViewUserUpdate {
 
 
 	/**********
-	 * <p> Method: displayUserUpdate(Stage ps, User user) </p>
+	 * <p> Title: displayUserUpdate </p>
 	 *
 	 * <p> Description: This method is the single entry point from outside this package to cause
-	 * the UserUpdate page to be displayed.
+	 * the UserUpdate page to be displayed. </p>
 	 *
-	 * It first sets up very shared attributes so we don't have to pass parameters.
+	 * <p> It first sets up shared attributes so we don't have to pass parameters. It then checks
+	 * whether the page has been set up. If not, it instantiates the class, which initializes all
+	 * the static aspects of the GUI widgets (e.g., location on the page, font, size, and any
+	 * methods to be performed). </p>
 	 *
-	 * It then checks to see if the page has been setup.  If not, it instantiates the class,
-	 * initializes all the static aspects of the GUI widgets (e.g., location on the page, font,
-	 * size, and any methods to be performed).
+	 * <p> After the instantiation, the code populates the elements that change based on the user
+	 * and the system's current state. It then sets the Scene onto the stage and makes it visible
+	 * to the user. </p>
 	 *
-	 * After the instantiation, the code then populates the elements that change based on the user
-	 * and the system's current state.  It then sets the Scene onto the stage, and makes it visible
-	 * to the user.
-	 *
-	 * @param ps specifies the JavaFX Stage to be used for this GUI and it's methods
-	 *
-	 * @param user specifies the User whose roles will be updated
-	 *
+	 * @param ps   the JavaFX Stage to be used for this GUI and its methods
+	 * @param user the User whose account details will be displayed and updated
 	 */
 	public static void displayUserUpdate(Stage ps, User user) {
 
@@ -221,8 +218,6 @@ public class ViewUserUpdate {
 	 */
 
 	private ViewUserUpdate() {
-
-		
 		
 		// Create the Pane for the list of widgets and the Scene for the window
 		theRootPane = new Pane();
@@ -501,8 +496,10 @@ public class ViewUserUpdate {
 	 */
 
 	/**********
-	 * Private local method to initialize the standard fields for a label
-	 *
+	 * <p> Title: setupLabelUI </p>
+	 * <p> Description: Private helper method that initializes the standard fields for a
+	 * Label. </p>
+	 * 
 	 * @param l		The Label object to be initialized
 	 * @param ff	The font to be used
 	 * @param f		The size of the font to be used
@@ -521,7 +518,8 @@ public class ViewUserUpdate {
 
 
 	/**********
-	 * Private local method to initialize the standard fields for a button
+	 * <p> Title: setupButtonUI </p>
+	 * <p> Description: Private local method to initialize the standard fields for a button </p>
 	 *
 	 * @param b		The Button object to be initialized
 	 * @param ff	The font to be used

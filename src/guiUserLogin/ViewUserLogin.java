@@ -46,11 +46,14 @@ public class ViewUserLogin {
 	private static Label label_OperationalStartTitle = new Label("Log In or Invited User Account Setup ");
 	private static Label label_LogInInsrtuctions = new Label("Enter your user name and password and "+	
 			"then click on the LogIn button");
+	
+	/** Alert used to report an invalid username or password to the user. */
 	protected static Alert alertUsernamePasswordError = new Alert(AlertType.INFORMATION);
 
 
-	//	private User user;
+	/** Text field in which the user enters a username. */
 	protected static TextField text_Username = new TextField();
+	/** Masked text field in which the user enters a password. */
 	protected static PasswordField text_Password = new PasswordField();
 	private static Button button_Login = new Button("Log In");	
 
@@ -63,6 +66,7 @@ public class ViewUserLogin {
 
 	private static Stage theStage;	
 	private static Pane theRootPane;
+	/** The Scene for this page. It is created once and reused on each invocation. */
 	public static Scene theUserLoginScene = null;	
 
 
@@ -74,7 +78,18 @@ public class ViewUserLogin {
 	Constructor
 
 	 *********************************************************************************************/
-
+	
+	/*******
+	 * <p> Title: displayUserLogin </p>
+	 *
+	 * <p> Description: This method is the single entry point from outside this package to cause
+	 * the User Login page to be displayed. If the page has not yet been set up, it instantiates
+	 * the class, which initializes the static aspects of the GUI. It then clears the username,
+	 * password, and invitation code fields left over from any previous use, sets the Scene onto
+	 * the stage, and makes it visible to the user. </p>
+	 *
+	 * @param ps the JavaFX Stage to be used for this GUI and its methods
+	 */
 	public static void displayUserLogin(Stage ps) {
 		
 		// Establish the references to the GUI. There is no current user yet.
@@ -188,10 +203,20 @@ public class ViewUserLogin {
 
 	 *********************************************************************************************/
 
-	/**********
-	 * Private local method to initialize the standard fields for a label
+	/*******
+	 * <p> Title: setupLabelUI </p>
+	 *
+	 * <p> Description: Private helper method that initializes the standard fields for a
+	 * Label. </p>
+	 *
+	 * @param l  the Label object to be initialized
+	 * @param ff the font family to be used
+	 * @param f  the size of the font to be used
+	 * @param w  the minimum width of the Label
+	 * @param p  the alignment (e.g. left, centered, or right)
+	 * @param x  the location from the left edge (x axis)
+	 * @param y  the location from the top (y axis)
 	 */
-
 	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y){
 		l.setFont(Font.font(ff, f));
 		l.setMinWidth(w);
@@ -220,8 +245,20 @@ public class ViewUserLogin {
 		b.setLayoutY(y);		
 	}
 
-	/**********
-	 * Private local method to initialize the standard fields for a text field
+	/*******
+	 * <p> Title: setupTextUI </p>
+	 *
+	 * <p> Description: Private helper method that initializes the standard fields for a
+	 * TextField. </p>
+	 *
+	 * @param t  the TextField object to be initialized
+	 * @param ff the font family to be used
+	 * @param f  the size of the font to be used
+	 * @param w  the width of the TextField (used as both minimum and maximum width)
+	 * @param p  the alignment (e.g. left, centered, or right)
+	 * @param x  the location from the left edge (x axis)
+	 * @param y  the location from the top (y axis)
+	 * @param e  true if the user may edit the field, false if it is read-only
 	 */
 	private void setupTextUI(TextField t, String ff, double f, double w, Pos p, double x, double y, boolean e){
 		t.setFont(Font.font(ff, f));
