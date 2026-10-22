@@ -168,6 +168,9 @@ public class ControllerUserLogin {
 	 *
 	 * <p> Description: This method is called to reset the page and then populate it with new
 	 * content for the new user.</p>
+	 * 
+	 * @param theStage is used to generate a new page to view
+	 * @param invitationCode is used so that a new user can be registered
 	 *
 	 */
 	protected static void doSetupAccount(Stage theStage, String invitationCode) {
