@@ -10,6 +10,10 @@ import javafx.scene.control.ButtonType;
  *
  * <p> Description: The Java/FX-based Set One-time Password Page. </p>
  *
+ * @author Edis Jakupovic
+ *
+ * @version 1.00
+ *
  */
 public class ControllerAdminDeleteUser {
 	/**

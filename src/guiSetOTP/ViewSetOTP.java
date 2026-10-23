@@ -20,6 +20,16 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
+/*******
+ * <p> Title: ViewSetOTP Class. </p>
+ *
+ * <p> Description: The ViewSetOTP Page is used to set a one time password for a user. </p>
+ *
+ * @author Edis Jakupovic
+ *
+ * @version 1.00
+ *
+ */
 public class ViewSetOTP {
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
 	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
@@ -56,20 +66,10 @@ public class ViewSetOTP {
 	protected static String theSelectedUser = "<Select a User>";
 
 	/**********
-	 * <p> Method: displayAddRemoveRoles(Stage ps, User user) </p>
+	 * <p> Method: displaySetOTP(Stage ps, User user) </p>
 	 *
 	 * <p> Description: This method is the single entry point from outside this package to cause
-	 * the AddRevove page to be displayed.
-	 *
-	 * It first sets up very shared attributes so we don't have to pass parameters.
-	 *
-	 * It then checks to see if the page has been setup.  If not, it instantiates the class,
-	 * initializes all the static aspects of the GUI widgets (e.g., location on the page, font,
-	 * size, and any methods to be performed).
-	 *
-	 * After the instantiation, the code then populates the elements that change based on the user
-	 * and the system's current state.  It then sets the Scene onto the stage, and makes it visible
-	 * to the user.
+	 * the SetOTP page to show. </p>
 	 *
 	 * @param ps specifies the JavaFX Stage to be used for this GUI and it's methods
 	 *
@@ -90,14 +90,11 @@ public class ViewSetOTP {
 
 
 	/**********
-	 * <p> Method: ViewSetOTP() </p>
+	 * <p> Constructor: ViewSetOTP() </p>
 	 *
-	 * <p> Description: This method initializes all the elements of the graphical user interface.
-	 * This method determines the location, size, font, color, and change and event handlers for
-	 * each GUI object. </p>
-	 *
-	 * <p>This is a singleton, so this is performed just one.  Subsequent uses fill in the changeable
-	 * fields using the displayAddRempoveRoles method.</p>
+	 * <p> Description: This constructor is called just once, the first time a new
+     * one time password needs to be set. This is a singleton, so this is performed just one.
+     * Subsequent uses fill in the changeable fields using the displaySetOTP method.</p>
 	 *
 	 */
 	public ViewSetOTP() {
