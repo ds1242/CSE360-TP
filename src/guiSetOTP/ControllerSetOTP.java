@@ -13,8 +13,8 @@ import javafx.scene.control.ButtonType;
  * @author Edis Jakupovic
  *
  * @version 1.00        2025-09-15 Initial version
+ *
  */
-
 public class ControllerSetOTP {
 	/**
 	 * Default constructor is not used.

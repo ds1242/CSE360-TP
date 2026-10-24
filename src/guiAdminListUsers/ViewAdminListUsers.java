@@ -17,6 +17,16 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
+/*******
+ * <p> Title: ViewAdminListUsers Class. </p>
+ *
+ * <p> Description: The ViewSetOTP Page is used to set a one time password for a user. </p>
+ *
+ * @author Edis Jakupovic
+ *
+ * @version 1.00
+ *
+ */
 public class ViewAdminListUsers {
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
 	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
@@ -86,14 +96,11 @@ public class ViewAdminListUsers {
 	}
 
 	/**********
-	 * <p> Method: ViewAdminListUsers() </p>
+	 * <p> Constructor: ViewAdminListUsers() </p>
 	 *
-	 * <p> Description: This method initializes all the elements of the graphical user interface.
-	 * This method determines the location, size, font, color, and change and event handlers for
-	 * each GUI object. </p>
-	 *
-	 * <p>This is a singleton, so this is performed just one.  Subsequent uses fill in the changeable
-	 * fields using the displayAddRempoveRoles method.</p>
+	 * <p> Description: This constructor is called just once, the first time a new account needs to
+	 * be created.  It establishes all of the common GUI widgets for the page so they are only
+	 * created once and reused when needed. </p>
 	 *
 	 */
 	public ViewAdminListUsers() {
@@ -148,6 +155,14 @@ public class ViewAdminListUsers {
         button_Quit.setOnAction((_)   -> { ControllerAdminListUsers.performQuit(); });
 	}
 
+	/**********
+	 * <p> Method: populateUsersTable() </p>
+	 *
+	 * <p> Description: This method is used to populate `table_Users` variable.
+     * It retrieves all the user info from the database and sets the table with a
+     * javafx observableArrayList. </p>
+	 *
+	 */
     protected static void populateUsersTable() {
         // NOTE: this is only in a separate function because the table needs to be refreshed
         // as data changes, so Controller will call this
