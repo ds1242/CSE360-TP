@@ -61,6 +61,13 @@ import javafx.scene.control.Alert.AlertType;
 
 public class FoundationsMain extends Application {
 	
+	/******* Default constructor that is used later
+	 */
+	FoundationsMain(){
+		
+	}
+	
+	
 	/*-*******************************************************************************************
 
 	Attributes
@@ -70,6 +77,7 @@ public class FoundationsMain extends Application {
 	/******* These are the application values required by the user interface.  All the other classes 
 	access these constants to provide a uniform window size.	*/
 	public final static double WINDOW_WIDTH = 800;
+	/******* Establishes the window height for pop up windows */
 	public final static double WINDOW_HEIGHT = 600;
 
 	/******* These attributes establish the database and the fixed reference to it for the rest of the

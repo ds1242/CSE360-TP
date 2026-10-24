@@ -18,13 +18,16 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-
 /*******
- * <p> Title: ViewAdminDeleteUser Class. </p>
+ * <p>
+ * Title: ViewAdminDeleteUser Class.
+ * </p>
  *
- * <p> Description: The ViewAdminDeleteUser Page is used by an admin to delete a user.
- * When a user is deleted, all of their info is removed from the database and they
- * are no longer able to log in. </p>
+ * <p>
+ * Description: The ViewAdminDeleteUser Page is used by an admin to delete a
+ * user. When a user is deleted, all of their info is removed from the database
+ * and they are no longer able to log in.
+ * </p>
  *
  * @author Edis Jakupovic
  *
@@ -35,50 +38,72 @@ public class ViewAdminDeleteUser {
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
 	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
+	/******* Label for the page title */
 	protected static Label label_PageTitle = new Label();
+	/******* Label for user details */
 	protected static Label label_UserDetails = new Label();
+	/******* Button for updating the current user */
 	protected static Button button_UpdateThisUser = new Button("Account Update");
-	protected static Line line_Separator1 = new Line(20, 95, width-20, 95);
+	/******* Line separator */
+	protected static Line line_Separator1 = new Line(20, 95, width - 20, 95);
 
+	/******* Label for selecting a user */
 	protected static Label label_SelectUser = new Label("Select a user to be deleted: ");
-	protected static ComboBox <String> combobox_SelectUser = new ComboBox <String>();
+	/******* Combo box for selecting a user */
+	protected static ComboBox<String> combobox_SelectUser = new ComboBox<String>();
 
+	/******* Button for deleting a user */
 	protected static Button button_DeleteUser = new Button("Delete User");
-    protected static Alert alert_DeleteUser = new Alert(AlertType.CONFIRMATION);
+	/******* Alert for when a user is deleted */
+	protected static Alert alert_DeleteUser = new Alert(AlertType.CONFIRMATION);
 
-    protected static Line line_Separator4 = new Line(20, 525, width-20,525);
+	/******* Distinct line separator from the other */
+	protected static Line line_Separator4 = new Line(20, 525, width - 20, 525);
+	/******* Button for return */
 	protected static Button button_Return = new Button("Return");
+	/******* Button for logging out */
 	protected static Button button_Logout = new Button("Logout");
+	/******* Button for quitting the page */
 	protected static Button button_Quit = new Button("Quit");
 
 	private static ViewAdminDeleteUser theView;
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
+	/******* object for setting up the stage */
 	protected static Stage theStage;
+	/******* Object for the rootpane of the current gui */
 	protected static Pane theRootPane;
+	/******* Object for the current user */
 	protected static User theUser;
+	/******* Object for deleting the scene for the current user */
 	public static Scene theDeleteUserScene = null;
 
-    // NOTE: we initialize selected user to this particular value because it's the initial
-    // value of the combo box. If not set to this, the else branch of
+	/*******
+	 * NOTE: we initialize selected user to this particular value because it's the
+	 * initial value of the combo box. If not set to this, the else branch of
+	 */
 	protected static String theSelectedUser = "<Select a User>";
 
 	/**********
-	 * <p> Method: displayDeleteUser(Stage ps, User user) </p>
+	 * <p>
+	 * Method: displayDeleteUser(Stage ps, User user)
+	 * </p>
 	 *
-	 * <p> Description: This method is the single entry point from outside this package to cause
-	 * the AddRevove page to be displayed.
+	 * <p>
+	 * Description: This method is the single entry point from outside this package
+	 * to cause the AddRevove page to be displayed.
 	 *
 	 * It first sets up very shared attributes so we don't have to pass parameters.
 	 *
-	 * It then checks to see if the page has been setup.  If not, it instantiates the class,
-	 * initializes all the static aspects of the GUI widgets (e.g., location on the page, font,
-	 * size, and any methods to be performed).
+	 * It then checks to see if the page has been setup. If not, it instantiates the
+	 * class, initializes all the static aspects of the GUI widgets (e.g., location
+	 * on the page, font, size, and any methods to be performed).
 	 *
-	 * After the instantiation, the code then populates the elements that change based on the user
-	 * and the system's current state.  It then sets the Scene onto the stage, and makes it visible
-	 * to the user.
+	 * After the instantiation, the code then populates the elements that change
+	 * based on the user and the system's current state. It then sets the Scene onto
+	 * the stage, and makes it visible to the user.
 	 *
-	 * @param ps specifies the JavaFX Stage to be used for this GUI and it's methods
+	 * @param ps   specifies the JavaFX Stage to be used for this GUI and it's
+	 *             methods
 	 *
 	 * @param user specifies the current Rser
 	 *
@@ -87,7 +112,8 @@ public class ViewAdminDeleteUser {
 		theStage = ps;
 		theUser = user;
 
-		if (theView == null) theView = new ViewAdminDeleteUser();
+		if (theView == null)
+			theView = new ViewAdminDeleteUser();
 
 		combobox_SelectUser.getSelectionModel().select(0);
 
@@ -96,35 +122,46 @@ public class ViewAdminDeleteUser {
 	}
 
 	/**********
-	 * <p> Method: populateComboBox() </p>
+	 * <p>
+	 * Method: populateComboBox()
+	 * </p>
 	 *
-	 * <p> Description: This method is used to populate `combobox_SelectUser` variable.
-     * It retrieves all the UserList from the database and sets the combobox items with a
-     * javafx observableArrayList. </p>
-     *
-     * <p> IMPORTANT: it also filters out the current user so that they may not delete themselves. </p>
+	 * <p>
+	 * Description: This method is used to populate `combobox_SelectUser` variable.
+	 * It retrieves all the UserList from the database and sets the combobox items
+	 * with a javafx observableArrayList.
+	 * </p>
+	 *
+	 * <p>
+	 * IMPORTANT: it also filters out the current user so that they may not delete
+	 * themselves.
+	 * </p>
 	 *
 	 */
-    protected static void populateComboBox() {
+	protected static void populateComboBox() {
 		List<String> userList = theDatabase.getUserList(
-            // NOTE: here we are filtering for users that are NOT the current user.
-            // this prevents being able to delete yourself
-            (userName) -> !userName.equals(theUser.getUserName())
-        );
+				// NOTE: here we are filtering for users that are NOT the current user.
+				// this prevents being able to delete yourself
+				(userName) -> !userName.equals(theUser.getUserName()));
 		combobox_SelectUser.setItems(FXCollections.observableArrayList(userList));
 		combobox_SelectUser.getSelectionModel().select(0);
-    }
-
+	}
 
 	/**********
-	 * <p> Method: ViewAdminDeleteUser() </p>
+	 * <p>
+	 * Method: ViewAdminDeleteUser()
+	 * </p>
 	 *
-	 * <p> Description: This method initializes all the elements of the graphical user interface.
-	 * This method determines the location, size, font, color, and change and event handlers for
-	 * each GUI object. </p>
+	 * <p>
+	 * Description: This method initializes all the elements of the graphical user
+	 * interface. This method determines the location, size, font, color, and change
+	 * and event handlers for each GUI object.
+	 * </p>
 	 *
-	 * <p>This is a singleton, so this is performed just one.  Subsequent uses fill in the changeable
-	 * fields using the displayAddRempoveRoles method.</p>
+	 * <p>
+	 * This is a singleton, so this is performed just one. Subsequent uses fill in
+	 * the changeable fields using the displayAddRempoveRoles method.
+	 * </p>
 	 *
 	 */
 	public ViewAdminDeleteUser() {
@@ -138,49 +175,55 @@ public class ViewAdminDeleteUser {
 		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);
 
 		setupButtonUI(button_UpdateThisUser, "Dialog", 18, 170, Pos.CENTER, 610, 45);
-		button_UpdateThisUser.setOnAction(
-            (_) -> { guiUserUpdate.ViewUserUpdate.displayUserUpdate(theStage, theUser); }
-        );
+		button_UpdateThisUser.setOnAction((_) -> {
+			guiUserUpdate.ViewUserUpdate.displayUserUpdate(theStage, theUser);
+		});
 
 		setupLabelUI(label_SelectUser, "Arial", 20, 300, Pos.BASELINE_LEFT, 20, 130);
 
 		setupComboBoxUI(combobox_SelectUser, "Dialog", 16, 250, 285, 125);
-        populateComboBox();
-		combobox_SelectUser.getSelectionModel().selectedItemProperty().addListener(
-            (@SuppressWarnings("unused") ObservableValue<? extends String> observable,
-    		 @SuppressWarnings("unused") String oldvalue,
-    		 @SuppressWarnings("unused") String newValue) -> {
-                ControllerAdminDeleteUser.doSelectUser();
-                ControllerAdminDeleteUser.repaintTheWindow();
-            }
-        );
+		populateComboBox();
+		combobox_SelectUser.getSelectionModel().selectedItemProperty()
+				.addListener((@SuppressWarnings("unused") ObservableValue<? extends String> observable,
+						@SuppressWarnings("unused") String oldvalue, @SuppressWarnings("unused") String newValue) -> {
+					ControllerAdminDeleteUser.doSelectUser();
+					ControllerAdminDeleteUser.repaintTheWindow();
+				});
 
-        setupButtonUI(button_DeleteUser, "Dialog", 18, 300, Pos.CENTER, width/2-150, 375);
-        button_DeleteUser.setOnAction((_) -> { ControllerAdminDeleteUser.performChange();});
-        alert_DeleteUser.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-        alert_DeleteUser.setTitle("Delete User Confirmation");
-        alert_DeleteUser.setHeaderText("You are about to permanently change this user!");
-        alert_DeleteUser.setContentText("Are you sure you want to proceed?");
+		setupButtonUI(button_DeleteUser, "Dialog", 18, 300, Pos.CENTER, width / 2 - 150, 375);
+		button_DeleteUser.setOnAction((_) -> {
+			ControllerAdminDeleteUser.performChange();
+		});
+		alert_DeleteUser.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+		alert_DeleteUser.setTitle("Delete User Confirmation");
+		alert_DeleteUser.setHeaderText("You are about to permanently change this user!");
+		alert_DeleteUser.setContentText("Are you sure you want to proceed?");
 
 		// GUI footer buttons
 		setupButtonUI(button_Return, "Dialog", 18, 210, Pos.CENTER, 20, 540);
-        setupButtonUI(button_Logout, "Dialog", 18, 210, Pos.CENTER, 300, 540);
-        setupButtonUI(button_Quit,   "Dialog", 18, 210, Pos.CENTER, 570, 540);
-		button_Return.setOnAction((_) -> { ControllerAdminDeleteUser.performReturn(); });
-        button_Logout.setOnAction((_) -> { ControllerAdminDeleteUser.performLogout(); });
-        button_Quit.setOnAction((_)   -> { ControllerAdminDeleteUser.performQuit(); });
+		setupButtonUI(button_Logout, "Dialog", 18, 210, Pos.CENTER, 300, 540);
+		setupButtonUI(button_Quit, "Dialog", 18, 210, Pos.CENTER, 570, 540);
+		button_Return.setOnAction((_) -> {
+			ControllerAdminDeleteUser.performReturn();
+		});
+		button_Logout.setOnAction((_) -> {
+			ControllerAdminDeleteUser.performLogout();
+		});
+		button_Quit.setOnAction((_) -> {
+			ControllerAdminDeleteUser.performQuit();
+		});
 	}
 
 	/**********
 	 * Private local method to initialize the standard fields for a label
 	 *
-	 * @param l		The Label object to be initialized
-	 * @param ff	The font to be used
-	 * @param f		The size of the font to be used
-	 * @param w		The width of the Button
-	 * @param p		The alignment (e.g. left, centered, or right)
-	 * @param x		The location from the left edge (x axis)
-	 * @param y		The location from the top (y axis)
+	 * @param l  The Label object to be initialized
+	 * @param ff The font to be used
+	 * @param f  The size of the font to be used
+	 * @param w  The width of the Button
+	 * @param p  The alignment (e.g. left, centered, or right)
+	 * @param x  The location from the left edge (x axis)
+	 * @param y  The location from the top (y axis)
 	 */
 	private static void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y) {
 		l.setFont(Font.font(ff, f));
@@ -193,13 +236,13 @@ public class ViewAdminDeleteUser {
 	/**********
 	 * Private local method to initialize the standard fields for a button
 	 *
-	 * @param b		The Button object to be initialized
-	 * @param ff	The font to be used
-	 * @param f		The size of the font to be used
-	 * @param w		The width of the Button
-	 * @param p		The alignment (e.g. left, centered, or right)
-	 * @param x		The location from the left edge (x axis)
-	 * @param y		The location from the top (y axis)
+	 * @param b  The Button object to be initialized
+	 * @param ff The font to be used
+	 * @param f  The size of the font to be used
+	 * @param w  The width of the Button
+	 * @param p  The alignment (e.g. left, centered, or right)
+	 * @param x  The location from the left edge (x axis)
+	 * @param y  The location from the top (y axis)
 	 */
 	protected static void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, double y) {
 		b.setFont(Font.font(ff, f));
@@ -212,14 +255,14 @@ public class ViewAdminDeleteUser {
 	/**********
 	 * Private local method to initialize the standard fields for a ComboBox
 	 *
-	 * @param c		The ComboBox object to be initialized
-	 * @param ff	The font to be used
-	 * @param f		The size of the font to be used
-	 * @param w		The width of the ComboBox
-	 * @param x		The location from the left edge (x axis)
-	 * @param y		The location from the top (y axis)
+	 * @param c  The ComboBox object to be initialized
+	 * @param ff The font to be used
+	 * @param f  The size of the font to be used
+	 * @param w  The width of the ComboBox
+	 * @param x  The location from the left edge (x axis)
+	 * @param y  The location from the top (y axis)
 	 */
-	protected static void setupComboBoxUI(ComboBox <String> c, String ff, double f, double w, double x, double y) {
+	protected static void setupComboBoxUI(ComboBox<String> c, String ff, double f, double w, double x, double y) {
 		c.setStyle("-fx-font: " + f + " " + ff + ";");
 		c.setMinWidth(w);
 		c.setLayoutX(x);

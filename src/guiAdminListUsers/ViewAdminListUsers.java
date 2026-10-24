@@ -28,43 +28,139 @@ import javafx.stage.Stage;
  *
  */
 public class ViewAdminListUsers {
+	/**
+	 * The width of the application window, obtained from the main application class.
+	 */
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
+
+	/**
+	 * The height of the application window, obtained from the main application class.
+	 */
 	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
+	/**
+	 * Label that displays the title of the current page.
+	 */
 	protected static Label label_PageTitle = new Label();
+
+	/**
+	 * Label that displays details about the selected user.
+	 */
 	protected static Label label_UserDetails = new Label();
+
+	/**
+	 * Button that allows the administrator to update the selected user's account.
+	 */
 	protected static Button button_UpdateThisUser = new Button("Account Update");
+
+	/**
+	 * Horizontal line that separates the page title area from the content below it.
+	 */
 	protected static Line line_Separator1 = new Line(20, 95, width-20, 95);
 
+	/**
+	 * Label that identifies the list of users available for selection.
+	 */
 	protected static Label label_SelectUser = new Label("All Users");
+
+	/**
+	 * Combo box that allows the administrator to select a user from the available users.
+	 */
 	protected static ComboBox <String> combobox_SelectUser = new ComboBox <String>();
 
-    protected static TableView<User> table_Users = new TableView<>();
-    protected static TableColumn<User, String> tablecol_Username = new TableColumn<>("Username");
-    protected static TableColumn<User, String> tablecol_Name = new TableColumn<>("Name");
-    protected static TableColumn<User, String> tablecol_Email = new TableColumn<>("Email");
+	/**
+	 * Table that displays information about the users registered in the application.
+	 */
+	protected static TableView<User> table_Users = new TableView<>();
 
-    protected static TableColumn<User, String> tablecol_Roles = new TableColumn<>("Roles");
-    protected static TableColumn<User, String> tablecol_Roles_Admin = new TableColumn<>("Admin");
-    protected static TableColumn<User, String> tablecol_Roles_Role1 = new TableColumn<>("Role1");
-    protected static TableColumn<User, String> tablecol_Roles_Role2 = new TableColumn<>("Role2");
+	/**
+	 * Table column that displays each user's username.
+	 */
+	protected static TableColumn<User, String> tablecol_Username = new TableColumn<>("Username");
 
+	/**
+	 * Table column that displays each user's name.
+	 */
+	protected static TableColumn<User, String> tablecol_Name = new TableColumn<>("Name");
 
+	/**
+	 * Table column that displays each user's email address.
+	 */
+	protected static TableColumn<User, String> tablecol_Email = new TableColumn<>("Email");
 
-    protected static Line line_Separator4 = new Line(20, 525, width-20,525);
+	/**
+	 * Table column that displays the roles assigned to each user.
+	 */
+	protected static TableColumn<User, String> tablecol_Roles = new TableColumn<>("Roles");
+
+	/**
+	 * Table column that indicates whether each user has the administrator role.
+	 */
+	protected static TableColumn<User, String> tablecol_Roles_Admin = new TableColumn<>("Admin");
+
+	/**
+	 * Table column that indicates whether each user has the Role1 role.
+	 */
+	protected static TableColumn<User, String> tablecol_Roles_Role1 = new TableColumn<>("Role1");
+
+	/**
+	 * Table column that indicates whether each user has the Role2 role.
+	 */
+	protected static TableColumn<User, String> tablecol_Roles_Role2 = new TableColumn<>("Role2");
+
+	/**
+	 * Horizontal line that separates the user list area from the navigation controls.
+	 */
+	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
+
+	/**
+	 * Button that allows the administrator to return to the previous page in the
+	 * application's navigation flow.
+	 */
 	protected static Button button_Return = new Button("Return");
+
+	/**
+	 * Button that allows the current user to log out of the application.
+	 */
 	protected static Button button_Logout = new Button("Logout");
+
+	/**
+	 * Button that allows the user to quit the application.
+	 */
 	protected static Button button_Quit = new Button("Quit");
 
+	/**
+	 * Reference to the ViewAdminListUsers instance, used to determine whether
+	 * the view needs to be instantiated.
+	 */
 	private static ViewAdminListUsers theView;
+
+	/**
+	 * Reference to the application's database, used to access stored user information.
+	 */
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
+
+	/**
+	 * JavaFX stage used to display the user list page.
+	 */
 	protected static Stage theStage;
+
+	/**
+	 * Pane that contains and organizes the graphical components of the page.
+	 */
 	protected static Pane theRootPane;
+
+	/**
+	 * User whose information is associated with the current page.
+	 */
 	protected static User theUser;
+
+	/**
+	 * Scene containing the graphical interface for listing application users.
+	 */
 	public static Scene theListUsersScene = null;
 
-    // NOTE: we initialize selected user to this particular value because it's the initial
-    // value of the combo box. If not set to this, the else branch of
+	/******* Select a user notification */
 	protected static String theSelectedUser = "<Select a User>";
 
 	/**********

@@ -2,47 +2,54 @@ package cse360.GRP.ADES.evaluator;
 
 import cse360.GRP.ADES.evaluator.textLengthEvaluation.TextLengthEvaluator;
 
+/**
+ * <p> Title: FSM-translated UserNameRecognizer. </p>
+ * 
+ * <p> Description: A demonstration of the mechanical translation of Finite State Machine 
+ * diagram into an executable Java program using the UserName Recognizer. The code 
+ * detailed design is based on a while loop with a select list</p>
+ * 
+ * <p> Copyright: Lynn Robert Carter © 2024 </p>
+ * 
+ * @author 	Lynn Robert Carter
+ * 			Shane McPhillips
+ * 
+ * @version 1.00  LRC	2024-09-13	Initial baseline derived from the Even Recognizer
+ * @version 1.01  LRC	2024-09-17	Correction to address UNChar coding error, improper error
+ * 									message, and improve internal documentation
+ * @version 1.02  SM	2026-08-31	Addition of ampersand character within username. Added new state
+ * 									and error message handling. Removed debug functionality for
+ * 									production level build.
+ */
 public class UsernameEvaluator {
-	/**
-	 * <p> Title: FSM-translated UserNameRecognizer. </p>
-	 * 
-	 * <p> Description: A demonstration of the mechanical translation of Finite State Machine 
-	 * diagram into an executable Java program using the UserName Recognizer. The code 
-	 * detailed design is based on a while loop with a select list</p>
-	 * 
-	 * <p> Copyright: Lynn Robert Carter © 2024 </p>
-	 * 
-	 * @author 	Lynn Robert Carter
-	 * 			Shane McPhillips
-	 * 
-	 * @version 1.00  LRC	2024-09-13	Initial baseline derived from the Even Recognizer
-	 * @version 1.01  LRC	2024-09-17	Correction to address UNChar coding error, improper error
-	 * 									message, and improve internal documentation
-	 * @version 1.02  SM	2026-08-31	Addition of ampersand character within username. Added new state
-	 * 									and error message handling. Removed debug functionality for
-	 * 									production level build.
+	
+	/*******
+	 * Default constructor is used later
 	 */
-
+	UsernameEvaluator(){
+		
+	}
 	/**********************************************************************************************
 	 * 
 	 * Result attributes to be used for GUI applications where a detailed error message and a 
 	 * pointer to the character of the error will enhance the user experience.
 	 * 
+	 *
 	 */
-
-	public static String userNameRecognizerErrorMessage = "";	// The error message text
-	public static String userNameRecognizerInput = "";			// The input being processed
+	/******* The error message text */
+	public static String userNameRecognizerErrorMessage = "";
+	/******* The input being processed */
+	public static String userNameRecognizerInput = "";
+	/******* The index of error location */
 	public static int userNameRecognizerIndexofError = -1;		// The index of error location
-	private static int state = 0;						// The current state value
-	private static int nextState = 0;					// The next state value
-	//Used for debugging. Removed for production build.
-	//private static boolean finalState = false;			// Is this state a final state?
-	private static String inputLine = "";				// The input line
-	private static char currentChar;					// The current character in the line
-	private static int currentCharNdx;					// The index of the current character
-	private static boolean running;						// The flag that specifies if the FSM is 
-														// running
-	private static int userNameSize = 0;				// A numeric value may not exceed 32 characters
+	private static int state = 0;								// The current state value
+	private static int nextState = 0;							// The next state value
+	private static String inputLine = "";						// The input line
+	private static char currentChar;							// The current character in the line
+	private static int currentCharNdx;							// The index of the current character
+	private static boolean running;								// The flag that specifies if the FSM is 
+																// running
+	private static int userNameSize = 0;						// A numeric value may not exceed 32 characters
 	
 	private static final int MAX_USERNAME_SIZE = TextLengthEvaluator.MAX_TEXT_LENGTH; 	
 														//Constant value placeholder for character length 
@@ -50,7 +57,10 @@ public class UsernameEvaluator {
 	
 	
 	
-	// Private method to move to the next character within the limits of the input line
+	/*******
+	 * <p> Title: moveToNextCharacter() </p>
+	 * <p> Description:  Private method to move to the next character within the limits of the input line </p>
+	 */
 	private static void moveToNextCharacter() {
 		currentCharNdx++;
 		if (currentCharNdx < inputLine.length())

@@ -1,9 +1,18 @@
 package guiNewPassword;
 
 /*******
- * <p> Title: ModelNewPassword Class. </p>
+ * <p>
+ * Title: ModelNewPassword Class.
+ * </p>
  *
- * <p> Description: The NewPassword Page Model. </p>
+ * <p>
+ * Description: The NewPassword Page Model.
+ * </p>
  *
  */
-public class ModelNewPassword {}
+public class ModelNewPassword {
+	/******* Default constructor */
+	ModelNewPassword() {
+
+	}
+}
