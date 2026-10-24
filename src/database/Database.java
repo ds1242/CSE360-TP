@@ -43,21 +43,23 @@ import lessons.TeammateEffort;
  */
 public class Database {
 
-	// JDBC driver name and database URL
+	/******* JDBC driver name and database URL */
 	static final String JDBC_DRIVER = "org.h2.Driver";
+	/******* Specifies the path to the DB and the file created and used by the system */
 	static final String DB_URL = "jdbc:h2:~/FoundationDatabase";
 
-	//  Database credentials
+	/*******  Database credentials */
 	static final String USER = "sa";
+	/****** PASS variable is has an empty string for a passing validation */
 	static final String PASS = "";
 
-	//  Shared variables used within this class
+	/*******  Shared variables used within this class */
 	private String databaseUrl = DB_URL;		// The H2 database this object connects to
 	private Connection connection = null;		// Singleton to access the database
 	private Statement statement = null;			// The H2 Statement is used to construct queries
 
-	// These are the easily accessible attributes of the currently logged-in user
-	// This is only useful for single user applications
+	/******* These are the easily accessible attributes of the currently logged-in user
+	This is only useful for single user applications */
 	private String currentUsername;
 	private String currentPassword;
 	private String currentFirstName;

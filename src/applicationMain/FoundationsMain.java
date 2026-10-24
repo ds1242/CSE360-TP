@@ -67,19 +67,21 @@ public class FoundationsMain extends Application {
 	
 	**********************************************************************************************/
 	
-	// These are the application values required by the user interface.  All the other classes
-	// access these constants to provide a uniform window size.	
+	/******* These are the application values required by the user interface.  All the other classes 
+	access these constants to provide a uniform window size.	*/
 	public final static double WINDOW_WIDTH = 800;
 	public final static double WINDOW_HEIGHT = 600;
 
-	// These attributes establish the database and the fixed reference to it for the rest of the
-	// application so we do not need to keep passing the reference in parameters to the rest of the
-	// system for other methods that need it can access it.
+	/******* These attributes establish the database and the fixed reference to it for the rest of the
+	application so we do not need to keep passing the reference in parameters to the rest of the
+	system for other methods that need it can access it.  */
 	public static Database database = new Database();
     private Alert databaseInUse = new Alert(AlertType.INFORMATION);
 
-	public static int activeHomePage = 0;		// Which role's home page is currently active?
-												// Role 0 is the admin role number
+    /******* Which role's home page is currently active?
+	 Role 0 is the admin role number  */
+	public static int activeHomePage = 0;		
+	
 	@Override
 	public void start(Stage theStage) {
 		
