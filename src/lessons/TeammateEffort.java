@@ -2,7 +2,6 @@ package lessons;
 
 /*******
  * <p> Title: TeammateEffort Class </p>
- *
  * <p> Description: One row of the "description of effort" in an experience entry (Story 6): the
  * name of a teammate and what that teammate contributed. An experience entry may hold several
  * of these, one for each member of the team who worked on the attempt.</p>
@@ -31,9 +30,7 @@ public class TeammateEffort {
 
 	/**********
 	 * <p> Method: TeammateEffort(String, String) </p>
-	 * 
 	 * <p> Description: Constructor of the class. </p>
-	 *
 	 * @param teammateName	the name of the teammate
 	 * @param effortEntry	a description of the effort this teammate put in.
 	 */
@@ -64,9 +61,7 @@ public class TeammateEffort {
 
 	/**********
 	 * <p> Method: toString() </p>
-	 * 
 	 * <p> Description: The text shown for this row is in the teammate list on the Experience page. </p>
-	 *
 	 * @return the teammate's name followed by the effort entry
 	 */
 	@Override
