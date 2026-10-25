@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import entityClasses.LessonExperience;
+import entityClasses.LessonRecord;
 import entityClasses.LessonsLearnedList;
+import entityClasses.TeammateEffort;
 import entityClasses.User;
-import lessons.LessonExperience;
-import lessons.LessonRecord;
 import lessons.LessonsEvaluator;
-import lessons.TeammateEffort;
 
 /*******
  * <p> Title: Database Class. </p>

@@ -1,5 +1,7 @@
 package lessons.guiLessonExperience;
 
+import entityClasses.LessonExperience;
+import entityClasses.TeammateEffort;
 import entityClasses.User;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,8 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import lessons.LessonExperience;
-import lessons.TeammateEffort;
 
 
 /*******

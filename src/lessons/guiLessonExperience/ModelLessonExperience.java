@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import database.Database;
-import lessons.LessonExperience;
-import lessons.LessonRecord;
+import entityClasses.LessonExperience;
+import entityClasses.LessonRecord;
+import entityClasses.TeammateEffort;
 import lessons.LessonsEvaluator;
-import lessons.TeammateEffort;
 
 /*******
  * <p> Title: ModelLessonExperience Class. </p>
