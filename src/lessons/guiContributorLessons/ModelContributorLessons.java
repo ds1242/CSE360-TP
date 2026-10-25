@@ -3,9 +3,9 @@ package lessons.guiContributorLessons;
 import java.sql.SQLException;
 
 import database.Database;
+import entityClasses.LessonsLearnedList;
 import lessons.LessonRecord;
 import lessons.LessonsEvaluator;
-import lessons.LessonsLearnedManager;
 
 /*******
  * <p> Title: ModelContributorLessons Class. </p>
@@ -48,11 +48,11 @@ public class ModelContributorLessons {
 	 * <p> Description: Loads every lesson created by the given contributor, newest first.</p>
 	 *
 	 * @param username	the logged-in contributor
-	 * @return a LessonsLearnedManager holding that contributor's lessons (possibly empty)
+	 * @return a LessonsLearnedList holding that contributor's lessons (possibly empty)
 	 * @throws SQLException if the database cannot be read; the Controller turns this into
 	 * 			the DATABASE_ERROR message
 	 */
-	protected static LessonsLearnedManager loadMyLessons(String username) throws SQLException {
+	protected static LessonsLearnedList loadMyLessons(String username) throws SQLException {
 		return theDatabase.getLessonsByCreator(username);
 	}
 

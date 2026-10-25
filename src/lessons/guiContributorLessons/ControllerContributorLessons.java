@@ -3,10 +3,10 @@ package lessons.guiContributorLessons;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import entityClasses.LessonsLearnedList;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ButtonType;
 import lessons.LessonRecord;
-import lessons.LessonsLearnedManager;
 import lessons.guiCreateLesson.ViewCreateLesson;
 import lessons.guiLessonDetails.ViewLessonDetails;
 import lessons.guiLessonExperience.ViewLessonExperience;
@@ -62,7 +62,7 @@ public class ControllerContributorLessons {
 				+ ViewContributorLessons.theUser.getUserName());
 
 		try {
-			LessonsLearnedManager myLessons = ModelContributorLessons.loadMyLessons(
+			LessonsLearnedList myLessons = ModelContributorLessons.loadMyLessons(
 					ViewContributorLessons.theUser.getUserName());
 
 			ViewContributorLessons.table_Lessons.setItems(

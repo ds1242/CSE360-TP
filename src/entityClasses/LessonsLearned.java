@@ -1,7 +1,4 @@
-package lessons;
-
-import java.util.HashMap;
-import java.util.Map;
+package entityClasses;
 
 /**
  * <p> Title: LessonsLearned Class</p>
@@ -13,7 +10,6 @@ public class LessonsLearned {
 	private String description;
 	private String category;
 	private float durationHours;
-	private Map<String, String> experiences;
 	
 	/**
 	 * <p> Method: LessonsLearned(String, String, String, float)</p>
@@ -28,7 +24,6 @@ public class LessonsLearned {
 		this.description = description;
 		this.category = category;
 		this.durationHours = effort;
-		this.experiences = new HashMap<String, String>();
 	}
 
 	/**
@@ -100,23 +95,5 @@ public class LessonsLearned {
 	 */
 	public void setDurationHours(float durationHours) {
 		this.durationHours = durationHours;
-	}
-	
-	/**
-	 * <p> Method: getExperiences() </p>
-	 * @return the map dataset holding lesson experiences per every person who has shared an experience about this lesson.
-	 */
-	public Map<String, String> getExperiences() {
-		return experiences;
-	}
-	
-	/**
-	 * <p> Method: setEexperiences(Map<String, String>) </p>
-	 * <p> Description: (NOT IN USE) This function takes in a Map dataset and is used to save the current 
-	 * lesson members experiences.</p>
-	 * @param experiences - A dataset pair that holds a persons name and their descriptive experience regarding the lesson.
-	 */
-	public void setExperiences(Map<String, String> experiences) {
-		this.experiences = experiences;
-	}
+	}	
 }
