@@ -109,28 +109,44 @@ public class LessonRecord extends LessonsLearned {
 
 	 */
 
-	/** @return the database id of this lesson */
+	/** 
+	 * <p> Method: getId()</p>
+	 * @return the database id of this lesson */
 	public int getId() { return id; }
 
-	/** @return the username of the contributor who created this lesson */
+	/**  
+	 * <p> Method: getCreatorUsername()</p>
+	 * @return the username of the contributor who created this lesson */
 	public String getCreatorUsername() { return creatorUsername; }
 
-	/** @return the date and time this lesson was created */
+	/**  
+	 * <p> Method: getCreateAt()</p>
+	 * @return the date and time this lesson was created */
 	public LocalDateTime getCreatedAt() { return createdAt; }
 
-	/** @return true if a curator has locked the title */
+	/**  
+	 * <p> Method: isTitleLocked()</p>
+	 * @return true if a curator has locked the title */
 	public boolean isTitleLocked() { return titleLocked; }
 
-	/** @return true if a curator has locked the description */
+	/**  
+	 * <p> Method: isDescriptionLocked()</p>
+	 * @return true if a curator has locked the description */
 	public boolean isDescriptionLocked() { return descriptionLocked; }
 
-	/** @return true if a curator has locked the category */
+	/**  
+	 * <p> Method: isCategoryLocked()</p>
+	 * @return true if a curator has locked the category */
 	public boolean isCategoryLocked() { return categoryLocked; }
 
-	/** @return true if a curator has locked the effort */
+	/**  
+	 * <p> Method: isEffortLocked()</p>
+	 * @return true if a curator has locked the effort */
 	public boolean isEffortLocked() { return effortLocked; }
 
-	/** @return the username of whoever last changed this lesson, or null if never changed */
+	/**  
+	 * <p> Method: getLastModifiedBy()</p>
+	 * @return the username of whoever last changed this lesson, or null if never changed */
 	public String getLastModifiedBy() { return lastModifiedBy; }
 
 	/**********
