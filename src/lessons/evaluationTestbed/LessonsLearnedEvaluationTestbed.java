@@ -3,9 +3,9 @@ package lessons.evaluationTestbed;
 import java.sql.SQLException;
 
 import database.Database;
+import entityClasses.LessonsLearnedList;
 import lessons.LessonRecord;
 import lessons.LessonsEvaluator;
-import lessons.LessonsLearnedManager;
 
 /*******
  * <p> Title: LessonsLearnedEvaluationTestbed Class. </p>
@@ -322,7 +322,7 @@ public class LessonsLearnedEvaluationTestbed {
 
 		String resultText = "";
 		try {
-			LessonsLearnedManager lessons = theDatabase.getLessonsByCreator(TEST_CONTRIBUTOR_3);
+			LessonsLearnedList lessons = theDatabase.getLessonsByCreator(TEST_CONTRIBUTOR_3);
 			if (!lessons.isEmpty())
 				resultText = "The list holds " + lessons.size() + " lesson(s); it should be empty.";
 			else
@@ -349,7 +349,7 @@ public class LessonsLearnedEvaluationTestbed {
 		try {
 			LessonRecord saved = theDatabase.createLesson("Contributor two's lesson",
 					VALID_DESCRIPTION, "Teamwork", 1.5f, TEST_CONTRIBUTOR_2);
-			LessonsLearnedManager list = theDatabase.getLessonsByCreator(TEST_CONTRIBUTOR_2);
+			LessonsLearnedList list = theDatabase.getLessonsByCreator(TEST_CONTRIBUTOR_2);
 
 			if (!isInList(TEST_CONTRIBUTOR_2, saved.getId()))
 				resultText = "Contributor 2's own lesson is missing from their list.";

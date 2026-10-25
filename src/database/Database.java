@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import entityClasses.LessonsLearnedList;
 import entityClasses.User;
 import lessons.LessonExperience;
 import lessons.LessonRecord;
 import lessons.LessonsEvaluator;
-import lessons.LessonsLearnedManager;
 import lessons.TeammateEffort;
 
 /*******
@@ -1226,7 +1226,7 @@ public class Database {
 	}
 
 	/*******
-	 * <p> Method: LessonsLearnedManager getLessonsByCreator(String username) </p>
+	 * <p> Method: LessonsLearnedList getLessonsByCreator(String username) </p>
 	 *
 	 * <p> Description: Gets only the lessons created by one contributor, newest first (Story 2:
 	 * "The lessons shown are only lessons of which the user has defined").  The filtering is
@@ -1239,7 +1239,7 @@ public class Database {
 	 * @throws SQLException when the database cannot be read
 	 *
 	 */
-	public LessonsLearnedManager getLessonsByCreator(String username) throws SQLException {
+	public LessonsLearnedList getLessonsByCreator(String username) throws SQLException {
 		String query = "SELECT * FROM LessonsLearnedDB WHERE creatorUsername = ? "
 				+ "ORDER BY createdAt DESC";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1249,7 +1249,7 @@ public class Database {
 	}
 
 	/*******
-	 * <p> Method: LessonsLearnedManager getAllLessons() </p>
+	 * <p> Method: LessonsLearnedList getAllLessons() </p>
 	 *
 	 * <p> Description: Gets every lesson in the system, newest first.  Not used by the
 	 * Contributor pages (contributors may only see their own lessons), but needed by roles such
@@ -1260,7 +1260,7 @@ public class Database {
 	 * @throws SQLException when the database cannot be read
 	 *
 	 */
-	public LessonsLearnedManager getAllLessons() throws SQLException {
+	public LessonsLearnedList getAllLessons() throws SQLException {
 		String query = "SELECT * FROM LessonsLearnedDB ORDER BY createdAt DESC";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			return readLessons(pstmt);
@@ -1569,8 +1569,8 @@ public class Database {
 	 * @return a manager containing the retrieved lessons
 	 * @throws SQLException if a database access error occurs
 	 */
-	private LessonsLearnedManager readLessons(PreparedStatement pstmt) throws SQLException {
-		LessonsLearnedManager result = new LessonsLearnedManager();
+	private LessonsLearnedList readLessons(PreparedStatement pstmt) throws SQLException {
+		LessonsLearnedList result = new LessonsLearnedList();
 		try (ResultSet rs = pstmt.executeQuery()) {
 			while (rs.next()) {
 				Timestamp created = rs.getTimestamp("createdAt");
