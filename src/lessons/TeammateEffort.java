@@ -2,7 +2,6 @@ package lessons;
 
 /*******
  * <p> Title: TeammateEffort Class </p>
- *
  * <p> Description: One row of the "description of effort" in an experience entry (Story 6): the
  * name of a teammate and what that teammate contributed. An experience entry may hold several
  * of these, one for each member of the team who worked on the attempt.</p>
@@ -31,9 +30,9 @@ public class TeammateEffort {
 
 	/**********
 	 * <p> Method: TeammateEffort(String, String) </p>
-	 *
+	 * <p> Description: Constructor of the class. </p>
 	 * @param teammateName	the name of the teammate
-	 * @param effortEntry	a description of the effort this teammate put in
+	 * @param effortEntry	a description of the effort this teammate put in.
 	 */
 	public TeammateEffort(String teammateName, String effortEntry) {
 		this.teammateName = teammateName;
@@ -47,19 +46,22 @@ public class TeammateEffort {
 
 	 */
 
-	/** @return the name of the teammate */
+	/** 
+	 * <p> Method: getTeammateName() </p>
+	 * <p> Description: Returns the name of the current teammate. Check for null on return variable.</p>
+	 * @return the name of the teammate */
 	public String getTeammateName() { return teammateName; }
 
-	/** @return the description of the effort this teammate put in */
+	/** 
+	 * <p> Method: getEffortEntry() </p>
+	 * <p> Description: Returns the effort description supplied by the teammate. Check for null.</p>
+	 * @return the description of the effort this teammate put in */
 	public String getEffortEntry() { return effortEntry; }
 
 
 	/**********
 	 * <p> Method: toString() </p>
-	 *
-	 * <p> Description: The text shown for this row in the teammate list on the Experience page.
-	 * </p>
-	 *
+	 * <p> Description: The text shown for this row is in the teammate list on the Experience page. </p>
 	 * @return the teammate's name followed by the effort entry
 	 */
 	@Override

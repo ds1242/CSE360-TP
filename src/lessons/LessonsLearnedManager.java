@@ -47,8 +47,7 @@ public class LessonsLearnedManager {
 	 * <p> Description: Creates an empty list of lessons. Use the lesson methods in
 	 * database.Database to get a list filled from the database.</p>
 	 */
-	public LessonsLearnedManager() {
-	}
+	public LessonsLearnedManager() {}
 
 
 	/*-*******************************************************************************************
@@ -83,7 +82,8 @@ public class LessonsLearnedManager {
 
 	/**********
 	 * <p> Method: getLesson(int) </p>
-	 *
+	 * <p> Description: This function will return back a LessonRecord specified by an incoming index for use
+	 * in the array list. If the index does not exist in the array list, the LessonRecord returned will be null.</p>
 	 * @param index	the position of the lesson in this list (0 is the first)
 	 * @return the lesson at that position, or null if the index is out of range
 	 */
@@ -92,10 +92,15 @@ public class LessonsLearnedManager {
 		return lessons.get(index);
 	}
 
-	/** @return the number of lessons in this list */
+	/** 
+	 * <p> Method: size() </p>
+	 * @return the number of lessons in this list */
 	public int size() { return lessons.size(); }
 
-	/** @return true if this list holds no lessons */
+	/** 
+	 * <p> Method: isEmpty()</p>
+	 * <p> Description: A flag for if the array list of lessons is empty or not. </p>
+	 * @return true if this list holds no lessons. */
 	public boolean isEmpty() { return lessons.isEmpty(); }
 
 	/**********

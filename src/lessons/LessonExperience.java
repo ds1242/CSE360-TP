@@ -82,25 +82,39 @@ public class LessonExperience {
 
 	 */
 
-	/** @return the database id of this entry */
+	/**  
+	 * <p> Method: getId()</p>
+	 * @return the database id of this entry */
 	public int getId() { return id; }
 
-	/** @return the database id of the lesson this entry belongs to */
+	/**  
+	 * <p> Method: getLessonId()</p>
+	 * @return the database id of the lesson this entry belongs to */
 	public int getLessonId() { return lessonId; }
 
-	/** @return what was done during the attempt */
+	/**  
+	 * <p> Method: getWhatWasDone()</p>
+	 * @return what was done during the attempt */
 	public String getWhatWasDone() { return whatWasDone; }
 
-	/** @return how it was done */
+	/**  
+	 * <p> Method: getHowItWasDone()</p>
+	 * @return how it was done */
 	public String getHowItWasDone() { return howItWasDone; }
 
-	/** @return how long it took, in hours */
+	/**  
+	 * <p> Method: getDurationHours()</p>
+	 * @return how long it took, in hours */
 	public float getDurationHours() { return durationHours; }
 
-	/** @return when the entry was first recorded */
+	/**  
+	 * <p> Method: getCreatedAt()</p>
+	 * @return when the entry was first recorded */
 	public LocalDateTime getCreatedAt() { return createdAt; }
 
-	/** @return a read-only view of the effort each teammate put in */
+	/**  
+	 * <p> Method: getTeammates()</p>
+	 * @return a read-only view of the effort each teammate put in */
 	public List<TeammateEffort> getTeammates() { return Collections.unmodifiableList(teammates); }
 
 
