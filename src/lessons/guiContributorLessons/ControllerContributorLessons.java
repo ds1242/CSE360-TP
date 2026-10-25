@@ -3,10 +3,10 @@ package lessons.guiContributorLessons;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import entityClasses.LessonRecord;
 import entityClasses.LessonsLearnedList;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ButtonType;
-import lessons.LessonRecord;
 import lessons.guiCreateLesson.ViewCreateLesson;
 import lessons.guiLessonDetails.ViewLessonDetails;
 import lessons.guiLessonExperience.ViewLessonExperience;

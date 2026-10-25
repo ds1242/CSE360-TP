@@ -1,4 +1,4 @@
-package lessons;
+package entityClasses;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

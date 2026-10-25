@@ -4,12 +4,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import entityClasses.LessonExperience;
+import entityClasses.LessonRecord;
+import entityClasses.TeammateEffort;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ButtonType;
-import lessons.LessonExperience;
-import lessons.LessonRecord;
 import lessons.LessonsEvaluator;
-import lessons.TeammateEffort;
 import lessons.guiContributorLessons.ViewContributorLessons;
 
 /*******

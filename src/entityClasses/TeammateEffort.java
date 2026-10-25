@@ -1,4 +1,4 @@
-package lessons;
+package entityClasses;
 
 /*******
  * <p> Title: TeammateEffort Class </p>

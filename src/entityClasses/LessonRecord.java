@@ -1,8 +1,6 @@
-package lessons;
+package entityClasses;
 
 import java.time.LocalDateTime;
-
-import entityClasses.LessonsLearned;
 
 /*******
  * <p> Title: LessonRecord Class </p>

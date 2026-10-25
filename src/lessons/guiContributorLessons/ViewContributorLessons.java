@@ -2,6 +2,7 @@ package lessons.guiContributorLessons;
 
 import java.time.format.DateTimeFormatter;
 
+import entityClasses.LessonRecord;
 import entityClasses.User;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
@@ -18,7 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import lessons.LessonRecord;
 import lessons.LessonsEvaluator;
 
 
