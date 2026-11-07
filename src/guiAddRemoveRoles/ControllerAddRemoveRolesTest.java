@@ -149,7 +149,7 @@ public class ControllerAddRemoveRolesTest {
     
     
     // Checking if a user without Admin permissions can update a user's roles
-    // This will fail as it is currently built.
+    // This SHOULD fail as it is currently built.
     @Test
     void testPerformAddRole_NonAdminRoleUpdate() {
     	User jerry = db.getAllUsers().stream()
@@ -212,7 +212,7 @@ public class ControllerAddRemoveRolesTest {
     }
     
     
-    // boundary test to remove a role by a non-admin
+    // boundary test to remove a role by a non-admin - this test SHOULD fail
     @Test
     void testPerformRemoveRole_Unauthorized() {
     	User barry = db.getAllUsers().stream()
@@ -236,13 +236,13 @@ public class ControllerAddRemoveRolesTest {
 //        	System.out.println("Caught: " + e);
         }
 
-        User jerryAfter = db.getAllUsers().stream()
+        User barryAfter = db.getAllUsers().stream()
                 .filter(u -> u.getUserName().equals("Barry"))
                 .findFirst()
                 .orElse(null);
 
-        assertNotNull(jerryAfter);
-        assertFalse(jerryAfter.getNewRole1(),
+        assertNotNull(barryAfter);
+        assertFalse(barryAfter.getNewRole1(),
                 "A non-admin must not be able to grant roles through the controller");
         System.out.println("testPerformAddRole_NonAdminRoleUpdate: " + PASSED);
     }
