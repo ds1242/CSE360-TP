@@ -19,7 +19,7 @@ public class ControllerAITools {
 	public ControllerAITools() {
 	}
 	/**********
-	 * <p> Method: performSave() </p>
+	 * <p> Method: performAsk() </p>
 	 *
 	 * <p> Description: Called when the contributor presses "Save". The Model validates the input
 	 * and, only if every field is valid, stores the lesson in the database (Story 1).</p>
@@ -28,8 +28,14 @@ public class ControllerAITools {
 	 * another lesson straight away. On failure the form is left exactly as typed and every error
 	 * is shown, so the contributor only needs to fix what is wrong.</p>
 	 */
-	protected static void performSave() {
-		System.out.println("Save");
+	protected static void performAsk() {
+		String selectedCategory = ViewAITools.combobox_ToolSelect.getValue();
+		
+		if (selectedCategory == null || selectedCategory.isEmpty()) {
+			ViewAITools.showError("Please select a tool before asking.");
+			System.out.println("No tool category selected.");
+			return;
+		}
 	}
 
 	/**********
@@ -42,9 +48,6 @@ public class ControllerAITools {
 		clearForm();
 		
 	}
-
-	
-	
 
 	/**********
 	 * <p> Method: performReturn() </p>

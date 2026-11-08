@@ -52,7 +52,7 @@ public class ViewAITools {
 	protected static Label label_Category = new Label("Select which tool to use:");
 	protected static ComboBox <String> combobox_ToolSelect = new ComboBox <String>();
 
-	protected static Button button_Save = new Button("Save");
+	protected static Button button_Ask = new Button("Ask");
 	protected static Button button_Clear = new Button("Clear");
 
 	// The message area shows either the validation errors (red) or a confirmation (green)
@@ -128,9 +128,19 @@ public class ViewAITools {
 		theStage.setScene(AIToolScene);
 		theStage.show();
 	}
+	
+	protected static String promptFor(String category) {
+	    if (category == null) return "Pick a topic from the dropdown...";
+	    return switch (category) {
+	        case "Brainstorm" -> "Enter a topic or idea you want to brainstorm...";
+	        case "Write"      -> "Enter the outline or content you want written or refined...";
+	        case "Search"     -> "Enter keywords, questions, or topics you want to search for...";
+	        default           -> "Pick a topic from the dropdown...";
+	    };
+	}
 
 	/**********
-	 * <p> Method: ViewCreateLesson() </p>
+	 * <p> Method: ViewAITools() </p>
 	 *
 	 * <p> Description: This method initializes all the elements of the graphical user interface.
 	 * This method determines the location, size, font, color, and change and event handlers for
@@ -158,14 +168,22 @@ public class ViewAITools {
 
 		// GUI Area 2: the form. Labels sit in a left column at x = 20 and the inputs in a right
 		// column at x = 270, so every input lines up regardless of label length.
+		
+		setupLabelUI(label_Category, "Arial", 16, 240, Pos.BASELINE_LEFT, 20, 100);
+		combobox_ToolSelect.getItems().setAll(CATEGORIES);
+		combobox_ToolSelect.setPromptText("<Select a Category>");
+		combobox_ToolSelect.setLayoutX(270);
+		combobox_ToolSelect.setLayoutY(100);
+		combobox_ToolSelect.setPrefWidth(250);
+		
+		combobox_ToolSelect.valueProperty().addListener((_, _, c) ->
+        text_Description.setPromptText(promptFor(c)));
 
-		setupLabelUI(label_Description, "Arial", 16, 240, Pos.BASELINE_LEFT, 20, 152);
-		text_Description.setPromptText("What happened, what you learned, and what you would do "
-				+ "differently next time.");
+		setupLabelUI(label_Description, "Arial", 16, 240, Pos.BASELINE_LEFT, 20, 135);
 		text_Description.setWrapText(true);
 		text_Description.setFont(Font.font("Arial", 14));
 		text_Description.setLayoutX(270);
-		text_Description.setLayoutY(148);
+		text_Description.setLayoutY(135);
 		text_Description.setPrefSize(510, 110);
 
 		// A live character count helps the contributor reach the 20-character minimum and stay
@@ -175,15 +193,10 @@ public class ViewAITools {
 			label_DescriptionCount.setText(newValue.trim().length() + " characters");
 		});
 
-		setupLabelUI(label_Category, "Arial", 16, 240, Pos.BASELINE_LEFT, 20, 280);
-		combobox_ToolSelect.getItems().setAll(CATEGORIES);
-		combobox_ToolSelect.setPromptText("<Select a Category>");
-		combobox_ToolSelect.setLayoutX(270);
-		combobox_ToolSelect.setLayoutY(276);
-		combobox_ToolSelect.setPrefWidth(250);
+		
 
-		setupButtonUI(button_Save, "Dialog", 16, 120, Pos.CENTER, 270, 360);
-		button_Save.setOnAction((_) -> {ControllerAITools.performSave(); });
+		setupButtonUI(button_Ask, "Dialog", 16, 120, Pos.CENTER, 270, 360);
+		button_Ask.setOnAction((_) -> {ControllerAITools.performAsk(); });
 
 		setupButtonUI(button_Clear, "Dialog", 16, 120, Pos.CENTER, 400, 360);
 		button_Clear.setOnAction((_) -> {ControllerAITools.performClear(); });
@@ -212,7 +225,7 @@ public class ViewAITools {
 		theRootPane.getChildren().addAll(
 			label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
 			label_Description, text_Description, label_DescriptionCount, label_Category, 
-			combobox_ToolSelect, button_Save, button_Clear, label_Message,
+			combobox_ToolSelect, button_Ask, button_Clear, label_Message,
 			line_Separator4, button_Return, button_Logout, button_Quit);
 	}
 
