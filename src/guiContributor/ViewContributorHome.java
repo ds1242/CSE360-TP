@@ -13,6 +13,7 @@ import database.Database;
 import entityClasses.User;
 
 
+
 /*******
  * <p> Title: ViewRole1Home Class. </p>
  * 
@@ -87,6 +88,7 @@ public class ViewContributorHome {
 	
 	private Button createLesson = new Button("Create Lesson");
 	private Button viewLessons = new Button("View Lessons");
+	private Button viewAITools = new Button("View AI Tools");
 
 	/*-*******************************************************************************************
 
@@ -172,7 +174,7 @@ public class ViewContributorHome {
 		// GUI Area 2
 		
 		buttonDiv = new VBox(100);
-		buttonDiv.getChildren().addAll(createLesson, viewLessons);
+		buttonDiv.getChildren().addAll(createLesson, viewLessons, viewAITools);
 		buttonDiv.setLayoutX(20);
 		buttonDiv.setLayoutY(150);
 		
@@ -181,6 +183,9 @@ public class ViewContributorHome {
 		
 		setupButtonUI(viewLessons, "Dialog", 18, 170, Pos.CENTER);
 		viewLessons.setOnAction((_) -> {ControllerContributorHome.performViewLessons();});
+		
+		setupButtonUI(viewAITools, "Dialog", 18, 170, Pos.CENTER);
+		viewAITools.setOnAction((_) -> {ControllerContributorHome.performViewAITools();});
 		
 		// GUI Area 3
         setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);

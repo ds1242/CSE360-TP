@@ -1,5 +1,6 @@
 package guiContributor;
 
+import guiAITools.ViewAITools;
 import lessons.guiContributorLessons.ViewContributorLessons;
 import lessons.guiCreateLesson.ViewCreateLesson;
 
@@ -73,6 +74,18 @@ public class ControllerContributorHome {
 	protected static void performViewLessons() {
 		ViewContributorLessons.displayContributorLessons(ViewContributorHome.theStage, ViewContributorHome.theUser);
 	}
+	
+	/*******
+	 * <p> Method: performViewAITools() </p>
+	 * 
+	 * <p> Description: This method displays the lessons page where the current contributor
+	 * can view their lessons. </p>
+	 * 
+	 */
+	protected static void performViewAITools() {
+		ViewAITools.displayViewAITools(ViewContributorHome.theStage, ViewContributorHome.theUser);
+	}
+	
 	/*******
 	 * <p> Method: performLogout() </p>
 	 * 

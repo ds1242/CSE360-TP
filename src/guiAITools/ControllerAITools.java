@@ -1,7 +1,6 @@
 package guiAITools;
 
 
-import guiAITools.ViewAITools;
 
 public class ControllerAITools {
 	
@@ -30,21 +29,7 @@ public class ControllerAITools {
 	 * is shown, so the contributor only needs to fix what is wrong.</p>
 	 */
 	protected static void performSave() {
-		String result = ModelAITools.createLesson(
-				ViewAITools.text_Title.getText(),
-				ViewAITools.text_Description.getText(),
-				ViewAITools.combobox_Category.getValue(),
-				ViewAITools.text_Effort.getText(),
-				ViewAITools.theUser.getUserName());
-
-		if (result.isEmpty()) {
-			String savedTitle = ViewAITools.text_Title.getText().trim();
-			clearForm();
-			ViewAITools.showSuccess("Lesson \"" + savedTitle + "\" was saved.");
-		}
-		else {
-			ViewAITools.showError(result);
-		}
+		System.out.println("Save");
 	}
 
 	/**********
@@ -55,30 +40,11 @@ public class ControllerAITools {
 	 */
 	protected static void performClear() {
 		clearForm();
-		ViewAITools.label_Message.setText("");
+		
 	}
 
-	/**********
-	 * <p> Method: performViewLessons() </p>
-	 *
-	 * <p> Description: Takes the contributor to the list of their lessons (Story 2), so a lesson
-	 * that was just saved can be seen in the list right away.</p>
-	 */
-	protected static void performViewLessons() {
-		ViewContributorLessons.displayContributorLessons(
-				ViewAITools.theStage, ViewAITools.theUser);
-	}
-
-	/**********
-	 * <p> Method: performUpdate() </p>
-	 *
-	 * <p> Description: This method directs the user to the User Update Page so the user can change
-	 * the user account attributes. </p>
-	 */
-	protected static void performUpdate () {
-		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewAITools.theStage,
-				ViewAITools.theUser);
-	}
+	
+	
 
 	/**********
 	 * <p> Method: performReturn() </p>
@@ -111,13 +77,21 @@ public class ControllerAITools {
 	protected static void performQuit() {
 		System.exit(0);
 	}
+	
+	/**********
+	 * <p> Method: performUpdate() </p>
+	 * 
+	 * <p> Description: This method directs the user to the User Update Page so the user can change
+	 * the user account attributes. </p>
+	 * 
+	 */
+	protected static void performUpdate () {
+		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewAITools.theStage, ViewAITools.theUser);
+	}
+	
 
 	// Private helper: empty every input field. Shared by Save (after success) and Clear.
 	private static void clearForm() {
-		ViewAITools.text_Title.clear();
-		ViewAITools.text_Description.clear();
-		ViewAITools.combobox_Category.getSelectionModel().clearSelection();
-		ViewAITools.combobox_Category.setValue(null);
-		ViewAITools.text_Effort.clear();
+
 	}
 }
