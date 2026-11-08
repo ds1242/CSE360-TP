@@ -1,5 +1,6 @@
 package guiAITools;
 
+
 import java.util.List;
 
 import entityClasses.User;
@@ -15,9 +16,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import lessons.LessonsEvaluator;
 
-import lessons.guiCreateLesson.ViewCreateLesson;
+
 
 public class ViewAITools {
 	/*-*******************************************************************************************
@@ -45,7 +45,7 @@ public class ViewAITools {
 	
 
 	protected static Label label_Description = new Label("Description ("
-			+ LessonsEvaluator.DESCRIPTION_MIN + "-2,000 characters):");
+			+ ModelAITools.DESCRIPTION_MIN + "-2,000 characters):");
 	protected static TextArea text_Description = new TextArea();
 	protected static Label label_DescriptionCount = new Label();
 
@@ -124,19 +124,29 @@ public class ViewAITools {
 		ControllerAITools.performClear();
 
 		// Set the title for the window, display the page, and wait for the user to do something
-		theStage.setTitle("CSE 360 Foundations: Create a Lesson Learned");
+		theStage.setTitle("CSE 360 Foundations: Interact with an AI");
 		theStage.setScene(AIToolScene);
 		theStage.show();
 	}
 	
 	protected static String promptFor(String category) {
 	    if (category == null) return "Pick a topic from the dropdown...";
-	    return switch (category) {
-	        case "Brainstorm" -> "Enter a topic or idea you want to brainstorm...";
-	        case "Write"      -> "Enter the outline or content you want written or refined...";
-	        case "Search"     -> "Enter keywords, questions, or topics you want to search for...";
-	        default           -> "Pick a topic from the dropdown...";
-	    };
+	    String output = "";
+	    switch (category) {
+	        case "Brainstorm":
+	        	output =  "Enter a topic or idea you want to brainstorm...";
+	        	break;
+	        case "Write":
+	        	output = "Enter the outline or content you want written or refined...";
+	        	break;
+	        case "Search":
+	        	output = "Enter keywords, questions, or topics you want to search for...";
+	        	break;
+	        default:
+	        	output = "Pick a topic from the dropdown...";
+	        	break;
+	    }
+	    return output;
 	}
 
 	/**********
