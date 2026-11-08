@@ -104,7 +104,34 @@ class ModelAIToolsTest {
 		ControllerAITools.performAsk();
 
 		assertNull(ViewAITools.combobox_ToolSelect.getValue());
-		assertEquals("Please select a tool before asking.", ViewAITools.label_Message.getText());
+		assertEquals("Please select a tool category.", ViewAITools.label_Message.getText());
+	}
+	
+	@Test
+	void testDescriptionEntered() {
+		ViewAITools.combobox_ToolSelect.getSelectionModel().select("Write");
+		ViewAITools.text_Description.setText("A test description goes here that is valid in length");
+		ControllerAITools.performAsk();
+		
+		assertNotEquals("Please enter a draft of the lesson you want to write.", ViewAITools.label_Message.getText());
+	}
+	
+	@Test
+	void testDescriptionNull() {
+		ViewAITools.combobox_ToolSelect.getSelectionModel().select("Write");
+		ViewAITools.text_Description.setText(null);
+		ControllerAITools.performAsk();
+		
+		assertEquals("Description must be at least " + ModelAITools.DESCRIPTION_MIN + " characters.", ViewAITools.label_Message.getText());
+	}
+	
+	@Test
+	void testDescriptionEmptyString() {
+		ViewAITools.combobox_ToolSelect.getSelectionModel().select("Write");
+		ViewAITools.text_Description.setText("");
+		ControllerAITools.performAsk();
+		
+		assertEquals("Description must be at least " + ModelAITools.DESCRIPTION_MIN + " characters.", ViewAITools.label_Message.getText());
 	}
 
 	// *******************************************************
