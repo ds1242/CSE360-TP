@@ -106,7 +106,18 @@ class ModelAIToolsTest {
 		assertNull(ViewAITools.combobox_ToolSelect.getValue());
 		assertEquals("Please select a tool category.", ViewAITools.label_Message.getText());
 	}
-	
+
+	/**********
+	 * <p>
+	 * Method: testDescriptionEntered()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Selects Write, enters a description of valid length, calls
+	 * performAsk() and verifies that the message label does not show the draft
+	 * error.
+	 * </p>
+	 */
 	@Test
 	void testDescriptionEntered() {
 		ViewAITools.combobox_ToolSelect.getSelectionModel().select("Write");
@@ -115,7 +126,18 @@ class ModelAIToolsTest {
 		
 		assertNotEquals("Please enter a draft of the lesson you want to write.", ViewAITools.label_Message.getText());
 	}
-	
+
+	/**********
+	 * <p>
+	 * Method: testDescriptionNull()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Selects Write, sets the description to null, calls
+	 * performAsk() and verifies that the message label shows the minimum length
+	 * error.
+	 * </p>
+	 */
 	@Test
 	void testDescriptionNull() {
 		ViewAITools.combobox_ToolSelect.getSelectionModel().select("Write");
@@ -124,7 +146,18 @@ class ModelAIToolsTest {
 		
 		assertEquals("Description must be at least " + ModelAITools.DESCRIPTION_MIN + " characters.", ViewAITools.label_Message.getText());
 	}
-	
+
+	/**********
+	 * <p>
+	 * Method: testDescriptionEmptyString()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Selects Write, sets the description to an empty string, calls
+	 * performAsk() and verifies that the message label shows the minimum length
+	 * error.
+	 * </p>
+	 */
 	@Test
 	void testDescriptionEmptyString() {
 		ViewAITools.combobox_ToolSelect.getSelectionModel().select("Write");
@@ -137,6 +170,17 @@ class ModelAIToolsTest {
 	// *******************************************************
 	// Model Tests
 	// *******************************************************
+
+	/**********
+	 * <p>
+	 * Method: testModelValidateInput()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Calls validateInput() with a valid category and a null
+	 * description and verifies that the message is not the category error.
+	 * </p>
+	 */
 	@Test
 	void testModelValidateInput() {
 		String category = "Write";
@@ -147,6 +191,16 @@ class ModelAIToolsTest {
 		assertNotEquals(msg, "Please select a tool category.");
 	}
 
+	/**********
+	 * <p>
+	 * Method: testModelValidateInputNull()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Calls validateInput() with a null category and verifies that
+	 * the message is the category error.
+	 * </p>
+	 */
 	@Test
 	void testModelValidateInputNull() {
 		String category = null;
@@ -157,6 +211,16 @@ class ModelAIToolsTest {
 		assertEquals(msg, "Please select a tool category.");
 	}
 
+	/**********
+	 * <p>
+	 * Method: testModelValidateInputEmptyString()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Calls validateInput() with an empty category and verifies that
+	 * the message is the category error.
+	 * </p>
+	 */
 	@Test
 	void testModelValidateInputEmptyString() {
 		String category = "";
@@ -167,8 +231,15 @@ class ModelAIToolsTest {
 		assertEquals(msg, "Please select a tool category.");
 	}
 
-	/***
-	 * Boundary Test - Correct length within range Coverage Test - Covers Validating
+	/**********
+	 * <p>
+	 * Method: testModelValidateDescription()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Boundary test for a description within the allowed length.
+	 * Verifies that validateInput() returns an empty message.
+	 * </p>
 	 */
 	@Test
 	void testModelValidateDescription() {
@@ -180,8 +251,15 @@ class ModelAIToolsTest {
 		assertEquals(msg, "");
 	}
 
-	/***
-	 * Boundary test - too long
+	/**********
+	 * <p>
+	 * Method: testModelValidateDescription_TooLong()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Boundary test for a description one character over the
+	 * maximum. Verifies that validateInput() returns the maximum length error.
+	 * </p>
 	 */
 	@Test
 	void testModelValidateDescription_TooLong() {
@@ -193,8 +271,15 @@ class ModelAIToolsTest {
 		assertEquals(msg, "Description cannot exceed " + ModelAITools.DESCRIPTION_MAX + " characters.");
 	}
 
-	/***
-	 * Boundary test - Exact Max
+	/**********
+	 * <p>
+	 * Method: testModelValidateDescription_ExactMax()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Boundary test for a description exactly at the maximum length.
+	 * Verifies that validateInput() returns an empty message.
+	 * </p>
 	 */
 	@Test
 	void testModelValidateDescription_ExactMax() {
@@ -206,8 +291,15 @@ class ModelAIToolsTest {
 		assertEquals(msg, "");
 	}
 
-	/***
-	 * Boundary test - too short
+	/**********
+	 * <p>
+	 * Method: testModelValidateDescription_TooShort()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Boundary test for a description one character under the
+	 * minimum. Verifies that validateInput() returns the minimum length error.
+	 * </p>
 	 */
 	@Test
 	void testModelValidateDescription_TooShort() {
@@ -219,8 +311,15 @@ class ModelAIToolsTest {
 		assertEquals(msg, "Description must be at least " + ModelAITools.DESCRIPTION_MIN + " characters.");
 	}
 
-	/***
-	 * Boundary test - Exact Minimum
+	/**********
+	 * <p>
+	 * Method: testModelValidateDescription_Exact()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Boundary test for a description exactly at the minimum length.
+	 * Verifies that validateInput() returns an empty message.
+	 * </p>
 	 */
 	@Test
 	void testModelValidateDescription_Exact() {
@@ -232,5 +331,4 @@ class ModelAIToolsTest {
 		assertEquals(msg, "");
 	}
 	
-
 }

@@ -9,10 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Helper methods for validating user input and sending it to the Groq chat API.
+ * Title: ModelAITools
+ * Class with several helper methods for validating user input and sending it to the Groq chat API.
  * <p>
  * Currently supports the "Write" category, which proofreads and organizes a
- * user written lesson learned.
+ * user written lesson learned. </p>
  */
 public class ModelAITools {
 	/** Minimum description length. */
@@ -34,9 +35,11 @@ public class ModelAITools {
 			+ "punctuation with the exception of the required response if they ask you to write a lesson outright.";
 
 	/**
-	 * Validates the category and description entered by the user.
-	 * <p>
+	 * Method: validateInput(String category, String description)
+	 * <p>Description: Validates the category and description entered by the user.
+	 *
 	 * Returns an empty string when the input is valid.
+	 * </p>
 	 *
 	 * @param category    the selected tool category
 	 * @param description the user's description text
@@ -60,9 +63,11 @@ public class ModelAITools {
 	}
 
 	/**
+	 * Method: askAI(String category, String description)
+	 * <p>Description: 
 	 * Sends the description to the AI using the prompt for the given category.
-	 * <p>
-	 * Only the "Write" category is supported.
+	 * 
+	 * Only the "Write" category is supported.</p>
 	 *
 	 * @param category    the tool category, must be "Write"
 	 * @param description the user's description text
@@ -87,8 +92,10 @@ public class ModelAITools {
 	// ========================================================================
 
 	/**
-	 * Posts a JSON request body to the Groq API.
-	 *
+	 * Method: postToGroq(String body)
+	 * <p>
+	 * Description: Posts a JSON request body to the Groq API.
+	 * </p>
 	 * @param body the JSON request body
 	 * @return the raw JSON response
 	 * @throws Exception if the request fails or the status code is not 200
@@ -106,8 +113,10 @@ public class ModelAITools {
 	}
 
 	/**
-	 * Shortens a string to a maximum length.
-	 *
+	 * Method: truncate(String s, int n)
+	 * <p>
+	 * Description: Shortens a string to a maximum length.
+	 * </p>
 	 * @param s the string to shorten
 	 * @param n the maximum length before "..." is added
 	 * @return the shortened string, or an empty string if null
@@ -119,7 +128,11 @@ public class ModelAITools {
 	}
 
 	/**
+	 * Method: buildRequestBody(List<ChatMessage> history, String systemPrompt)
+	 * 
+	 * <p>Description:
 	 * Builds the JSON request body with the system prompt and message history.
+	 * </p>
 	 *
 	 * @param history      the list of chat messages
 	 * @param systemPrompt the system prompt text
@@ -148,10 +161,12 @@ public class ModelAITools {
 	}
 
 	/**
-	 * Pulls the assistant's message text out of the JSON response.
+	 * Method: extractAssistantMessage(String json)
 	 * <p>
+	 * Description: Pulls the assistant's message text out of the JSON response.
+	 * 
 	 * Finds the first "content" value after "message" and decodes its escapes.
-	 *
+	 * </p>
 	 * @param json the raw JSON response
 	 * @return the message text, or an empty string if not found
 	 */
@@ -218,7 +233,8 @@ public class ModelAITools {
 	}
 
 	/**
-	 * Escapes a string so it can be placed inside a JSON string value.
+	 * Method: escapeJson(String s)
+	 * <p>Description: Escapes a string so it can be placed inside a JSON string value.</p>
 	 *
 	 * @param s the text to escape
 	 * @return the escaped text, or an empty string if null
@@ -262,7 +278,8 @@ public class ModelAITools {
 	}
 
 	/**
-	 * A single chat message with a role and text.
+	 * Title: ChatMessage
+	 * <p>Description: A single chat message with a role and text.</p>
 	 */
 	public static class ChatMessage {
 		/** The sender role, such as "user", "system" or "model". */
