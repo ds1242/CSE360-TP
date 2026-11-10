@@ -231,5 +231,6 @@ class ModelAIToolsTest {
 		msg = ModelAITools.validateInput(category, description);
 		assertEquals(msg, "");
 	}
+	
 
 }

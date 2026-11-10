@@ -8,6 +8,7 @@ module FoundationsF26 {
 	requires java.sql;
     requires javafx.graphics;
 	requires org.junit.jupiter.api;
+	requires java.net.http;
 
 	opens applicationMain to javafx.graphics, javafx.fxml;
 }

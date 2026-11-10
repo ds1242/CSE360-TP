@@ -20,12 +20,7 @@ public class ControllerAITools {
 	 * <p>
 	 * Method: performAsk()
 	 * </p>
-	 *
-	 * <p>
-	 * Description: Called when the contributor presses "Save". The Model validates
-	 * the input and, only if every field is valid, stores the lesson in the
-	 * database (Story 1).
-	 * </p>
+	 
 	 *
 	 * <p>
 	 * On success the form is cleared and a confirmation is shown, so the
@@ -35,15 +30,24 @@ public class ControllerAITools {
 	 * </p>
 	 */
 	protected static void performAsk() {
-		String selectedCategory = ViewAITools.combobox_ToolSelect.getValue();
-		String descriptionString = ViewAITools.text_Description.getText();
-		String errorMsg = "";
+		String category = ViewAITools.combobox_ToolSelect.getValue();
+		String description = ViewAITools.text_Description.getText();
 
-		errorMsg = ModelAITools.validateInput(selectedCategory, descriptionString);
-
-		if (!errorMsg.isEmpty()) {
-			ViewAITools.showError(errorMsg);
+		String validationError = ModelAITools.validateInput(category, description);
+		if (!validationError.isEmpty()) {
+		    ViewAITools.showError(validationError);
+		    return;
 		}
+
+		try {
+		    String aiResult = ModelAITools.askAI(category, description);
+		    
+		    ViewAITools.setAIResponse(aiResult);
+		    ViewAITools.showSuccess("AI request completed successfully!");
+		} catch (Exception e) {
+		    ViewAITools.showError("Error communicating with AI: " + e.getMessage());
+		}
+		
 	}
 
 	/**********
