@@ -14,7 +14,7 @@ The Controller for ViewUserUpdate
  * 
  * <p> Description: This static class supports the actions initiated by the ViewUserUpdate
  * class. In this case, there is just one method, no constructors, and no attributes.</p>
- * 
+ *
  */
 public class ControllerUserUpdate {
 
@@ -23,18 +23,13 @@ public class ControllerUserUpdate {
 	The User Interface Actions for this page
 	
 	**********************************************************************************************/
-	/**
-     * Default constructor for the ControllerUserUpdate class.
-     */
-    public ControllerUserUpdate() {
-    }
+
 	
 	/**********
 	 * <p> Method: public goToUserHomePage(Stage theStage, User theUser) </p>
 	 * 
 	 * <p> Description: This method is called when the user has clicked on the button to
-	 * proceed to the user's home page. This method has a default implicit constructor.</p>
-	 * 
+	 * proceed to the user's home page.
 	 * 
 	 * @param theStage specifies the JavaFX Stage for next next GUI page and it's methods
 	 * 

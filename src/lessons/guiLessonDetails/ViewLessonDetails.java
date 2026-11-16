@@ -54,193 +54,73 @@ public class ViewLessonDetails {
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
 	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
-
-	/**
-	 * Formatter used to display the lesson creation date and time in the format
-	 * yyyy-MM-dd HH:mm.
-	 */
+	// The date format used for the creation date, matching the My Lessons table
 	protected static final DateTimeFormatter DATE_FORMAT =
-	        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-	
-	/**
-	 * Base label for the lesson title field, including the permitted character limits.
-	 */
+	// The field labels without the "(Locked)" marker, which the Controller adds when needed
 	protected static final String TITLE_LABEL = "Title (" + LessonsEvaluator.TITLE_MIN + "-"
-	        + LessonsEvaluator.TITLE_MAX + " characters):";
-
-	/**
-	 * Base label for the lesson description field, including its character limit.
-	 */
+			+ LessonsEvaluator.TITLE_MAX + " characters):";
 	protected static final String DESCRIPTION_LABEL = "Description ("
-	        + LessonsEvaluator.DESCRIPTION_MIN + "-2,000 characters):";
-
-	/**
-	 * Base label for the lesson category field.
-	 */
+			+ LessonsEvaluator.DESCRIPTION_MIN + "-2,000 characters):";
 	protected static final String CATEGORY_LABEL = "Category:";
-
-	/**
-	 * Base label for the lesson effort field, measured in hours.
-	 */
 	protected static final String EFFORT_LABEL = "Effort (hours):";
 
-	
-	/**
-	 * Label that displays the title of the current page.
-	 */
+
+	// GUI Area 1: It informs the user about the purpose of this page, whose account is being used,
+	// and a button to allow this user to update the account settings
 	protected static Label label_PageTitle = new Label();
-
-	/**
-	 * Label that displays details about the currently logged-in user.
-	 */
 	protected static Label label_UserDetails = new Label();
-
-	/**
-	 * Button that allows the user to navigate to the account update page.
-	 */
 	protected static Button button_UpdateThisUser = new Button("Account Update");
 
-
-	/**
-	 * Horizontal line that separates the page title area from the content below it.
-	 */
+	// This is a separator and it is used to partition the GUI for various tasks
 	protected static Line line_Separator1 = new Line(20, 95, width-20, 95);
 
 	// GUI Area 2: the lesson's creation date, a note explaining locks, and the lesson form
-	/**
-	 * Label that displays the lesson's creation date.
-	 */
 	protected static Label label_Created = new Label();
-
-	/**
-	 * Label that explains which lesson fields are locked and why.
-	 */
 	protected static Label label_LockNote = new Label();
 
-	/**
-	 * Label that identifies the lesson title field.
-	 */
 	protected static Label label_Title = new Label(TITLE_LABEL);
-
-	/**
-	 * Text field that displays or allows editing of the lesson title.
-	 */
 	protected static TextField text_Title = new TextField();
 
-	/**
-	 * Label that identifies the lesson description field.
-	 */
 	protected static Label label_Description = new Label(DESCRIPTION_LABEL);
-
-	/**
-	 * Text area that displays or allows editing of the lesson description.
-	 */
 	protected static TextArea text_Description = new TextArea();
-
-	/**
-	 * Label that displays the current character count for the lesson description.
-	 */
 	protected static Label label_DescriptionCount = new Label();
 
-	/**
-	 * Label that identifies the lesson category field.
-	 */
 	protected static Label label_Category = new Label(CATEGORY_LABEL);
-
-	/**
-	 * Combo box that displays or allows selection of the lesson category.
-	 */
 	protected static ComboBox <String> combobox_Category = new ComboBox <String>();
 
-	/**
-	 * Label that identifies the lesson effort field, measured in hours.
-	 */
 	protected static Label label_Effort = new Label(EFFORT_LABEL);
-
-	/**
-	 * Text field that displays or allows editing of the lesson effort.
-	 */
 	protected static TextField text_Effort = new TextField();
 
-	/**
-	 * Button that saves changes made to the lesson details.
-	 */
 	protected static Button button_Save = new Button("Save Changes");
-
-	/**
-	 * Button that deletes the current lesson.
-	 */
 	protected static Button button_Delete = new Button("Delete Lesson");
-
-	/**
-	 * Button that opens the interface for adding experience to the current lesson.
-	 */
 	protected static Button button_AddExperience = new Button("Add Experience");
-
-	/**
-	 * Confirmation alert displayed when the user attempts to delete the lesson.
-	 */
 	protected static Alert alert_DeleteLesson = new Alert(AlertType.CONFIRMATION);
 
-	
-	/**
-	 * Label that displays error messages or confirmations related to lesson changes.
-	 */
+	// The message area shows either the errors (red) or a confirmation (green)
 	protected static Label label_Message = new Label();
 
-
-	/**
-	 * Horizontal line that separates the main content area from the bottom navigation controls.
-	 */
+	// This is a separator and it is used to partition the GUI for various tasks
 	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
 
-	// GUI Area 3: This is last of the GUI areas. It is used for returning to the My Lessons
+	// GUI Area 3: This is last of the GUI areas.  It is used for returning to the My Lessons
 	// page, quitting the application, and logging out.
-	/**
-	 * Button that returns the user to the My Lessons page.
-	 */
 	protected static Button button_Return = new Button("Return");
-
-	/**
-	 * Button that allows the user to log out of the application.
-	 */
 	protected static Button button_Logout = new Button("Logout");
-
-	/**
-	 * Button that allows the user to quit the application.
-	 */
 	protected static Button button_Quit = new Button("Quit");
 
 	// This is the end of the GUI objects for the page.
 
 	// These attributes are used to configure the page and populate it with this user's information
 	private static ViewLessonDetails theView;		// Used to determine if instantiation of the
-	                                                // class is needed
+													// class is needed
 
-	/**
-	 * JavaFX stage used to display the lesson details page.
-	 */
-	protected static Stage theStage;
+	protected static Stage theStage;			// The Stage that JavaFX has established for us
+	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets
+	protected static User theUser;				// The current logged in User
+	protected static int theLessonId;			// The database id of the lesson being shown
 
-	/**
-	 * Pane that contains and organizes all GUI widgets on the page.
-	 */
-	protected static Pane theRootPane;
-
-	/**
-	 * The currently logged-in user.
-	 */
-	protected static User theUser;
-
-	/**
-	 * Database ID of the lesson being displayed.
-	 */
-	protected static int theLessonId;
-
-	/**
-	 * Scene containing the graphical interface for viewing and editing lesson details.
-	 */
 	protected static Scene theLessonDetailsScene;	// The shared Scene each invocation populates
 
 
