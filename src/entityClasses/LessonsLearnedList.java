@@ -1,4 +1,4 @@
-package lessons;
+package entityClasses;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,16 +6,16 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /*******
- * <p> Title: LessonsLearnedManager Class </p>
+ * <p> Title: LessonsLearnedList Class </p>
  *
- * <p> Description: Manages a list of lessons learned. Each LessonsLearnedManager object holds a
+ * <p> Description: Manages a list of lessons learned. Each LessonsLearnedList object holds a
  * list of LessonRecords. The list may hold every lesson in the system or any subset of them (for
  * example, one contributor's lessons, or the result of a search). It may be empty, hold one
  * lesson, or hold any number of lessons; there is no fixed upper limit.</p>
  *
  * <p> Storing and loading lessons is done by database.Database (see createLesson,
  * getLessonsByCreator, getAllLessons, getLesson, updateLesson, and deleteLesson), which returns
- * its results as a LessonsLearnedManager. Keeping all of the SQL in Database means the
+ * its results as a LessonsLearnedList. Keeping all of the SQL in Database means the
  * application has a single connection to the H2 database and one place to look for every query,
  * the same as for users and invitation codes.</p>
  *
@@ -24,7 +24,7 @@ import java.util.function.Predicate;
  * @version 1.00	2026-10-07 Initial version for HW2
  * @version 1.01	2026-10-07 Database operations moved into database.Database
  */
-public class LessonsLearnedManager {
+public class LessonsLearnedList {
 
 	/*-*******************************************************************************************
 
@@ -42,13 +42,12 @@ public class LessonsLearnedManager {
 	 */
 
 	/**********
-	 * <p> Method: LessonsLearnedManager() </p>
+	 * <p> Method: LessonsLearnedList() </p>
 	 *
 	 * <p> Description: Creates an empty list of lessons. Use the lesson methods in
 	 * database.Database to get a list filled from the database.</p>
 	 */
-	public LessonsLearnedManager() {
-	}
+	public LessonsLearnedList() {}
 
 
 	/*-*******************************************************************************************
@@ -83,7 +82,8 @@ public class LessonsLearnedManager {
 
 	/**********
 	 * <p> Method: getLesson(int) </p>
-	 *
+	 * <p> Description: This function will return back a LessonRecord specified by an incoming index for use
+	 * in the array list. If the index does not exist in the array list, the LessonRecord returned will be null.</p>
 	 * @param index	the position of the lesson in this list (0 is the first)
 	 * @return the lesson at that position, or null if the index is out of range
 	 */
@@ -92,10 +92,15 @@ public class LessonsLearnedManager {
 		return lessons.get(index);
 	}
 
-	/** @return the number of lessons in this list */
+	/** 
+	 * <p> Method: size() </p>
+	 * @return the number of lessons in this list */
 	public int size() { return lessons.size(); }
 
-	/** @return true if this list holds no lessons */
+	/** 
+	 * <p> Method: isEmpty()</p>
+	 * <p> Description: A flag for if the array list of lessons is empty or not. </p>
+	 * @return true if this list holds no lessons. */
 	public boolean isEmpty() { return lessons.isEmpty(); }
 
 	/**********
@@ -108,8 +113,8 @@ public class LessonsLearnedManager {
 	 * @param filter	the test each lesson must pass to be included
 	 * @return a new manager holding the matching lessons (possibly empty)
 	 */
-	public LessonsLearnedManager getSubset(Predicate<LessonRecord> filter) {
-		LessonsLearnedManager subset = new LessonsLearnedManager();
+	public LessonsLearnedList getSubset(Predicate<LessonRecord> filter) {
+		LessonsLearnedList subset = new LessonsLearnedList();
 		for (LessonRecord lesson : lessons)
 			if (filter.test(lesson)) subset.addLesson(lesson);
 		return subset;

@@ -14,6 +14,10 @@ import javafx.stage.Stage;
  * The controller deals with the user pressing the "Change Password" button widget being click.  If also
  * supports the user click on the "Quit" button widget.
  *
+ * @author Edis Jakupovic
+ *
+ * @version 1.00
+ *
  */
 public class ControllerNewPassword {
 	/**

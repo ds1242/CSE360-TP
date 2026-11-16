@@ -184,9 +184,14 @@ public class ViewContributorHome {
 	 * and event handlers for each GUI object.
 	 * </p>
 	 * 
+<<<<<<< HEAD
 	 * This is a singleton and is only performed once. Subsequent uses fill in the
 	 * changeable fields using the displayRole2Home method.
 	 * </p>
+=======
+	 * <p> This is a singleton and is only performed once.  Subsequent uses fill in the changeable
+	 * fields using the displayRole2Home method.</p>
+>>>>>>> 30a43fab6807c3db494bf0aaa097fa037785b7e9
 	 * 
 	 */
 	private ViewContributorHome() {

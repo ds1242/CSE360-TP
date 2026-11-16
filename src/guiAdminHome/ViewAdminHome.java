@@ -466,6 +466,7 @@ public class ViewAdminHome {
 	/**********
 	 * Private local method to initialize the standard fields for a text input field
 	 * 
+<<<<<<< HEAD
 	 * @param b  The TextField object to be initialized
 	 * @param ff The font to be used
 	 * @param f  The size of the font to be used
@@ -474,6 +475,16 @@ public class ViewAdminHome {
 	 * @param x  The location from the left edge (x axis)
 	 * @param y  The location from the top (y axis)
 	 * @param e  Is this TextField user editable?
+=======
+	 * @param t		The TextField object to be initialized
+	 * @param ff	The font to be used
+	 * @param f		The size of the font to be used
+	 * @param w		The width of the Button
+	 * @param p		The alignment (e.g. left, centered, or right)
+	 * @param x		The location from the left edge (x axis)
+	 * @param y		The location from the top (y axis)
+	 * @param e		Is this TextField user editable?
+>>>>>>> 30a43fab6807c3db494bf0aaa097fa037785b7e9
 	 */
 	private void setupTextUI(TextField t, String ff, double f, double w, Pos p, double x, double y, boolean e) {
 		t.setFont(Font.font(ff, f));

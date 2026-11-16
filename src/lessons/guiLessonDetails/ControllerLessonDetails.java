@@ -3,8 +3,8 @@ package lessons.guiLessonDetails;
 import java.sql.SQLException;
 import java.util.Optional;
 
+import entityClasses.LessonRecord;
 import javafx.scene.control.ButtonType;
-import lessons.LessonRecord;
 import lessons.LessonsEvaluator;
 import lessons.guiContributorLessons.ViewContributorLessons;
 import lessons.guiLessonExperience.ViewLessonExperience;
