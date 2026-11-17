@@ -8,6 +8,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import applicationMain.FoundationsMain;
+
 /**
  * Title: ModelAITools
  * Class with several helper methods for validating user input and sending it to the Groq chat API.
@@ -24,7 +26,7 @@ public class ModelAITools {
 
 	private static final String GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 	private static final String GROQ_MODEL = "openai/gpt-oss-120b";
-	private static final String GROQ_KEY = "";
+	
 
 	private static final String WRITE_SYSTEM_PROMPT = "You are a friendly writer helping a user document a high-quality lesson "
 			+ "learned from a real project experience. Your goal is to format and organize entries provided by users that are "
@@ -101,7 +103,7 @@ public class ModelAITools {
 	public static String postToGroq(String body) throws Exception {
 		HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(15)).build();
 		HttpRequest req = HttpRequest.newBuilder().uri(URI.create(GROQ_URL)).timeout(Duration.ofSeconds(60))
-				.header("Content-Type", "application/json").header("Authorization", "Bearer " + GROQ_KEY)
+				.header("Content-Type", "application/json").header("Authorization", "Bearer " + FoundationsMain.llmApiKey)
 				.POST(HttpRequest.BodyPublishers.ofString(body)).build();
 		HttpResponse<String> resp = client.send(req, HttpResponse.BodyHandlers.ofString());
 		if (resp.statusCode() != 200) {
@@ -273,6 +275,10 @@ public class ModelAITools {
 			}
 		}
 		return sb.toString();
+	}
+	
+	public static void getKey() {
+		System.out.println(FoundationsMain.llmApiKey);
 	}
 
 	/**

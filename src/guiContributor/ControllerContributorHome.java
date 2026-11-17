@@ -1,5 +1,6 @@
 package guiContributor;
 
+import guiAITools.ModelAITools;
 import guiAITools.ViewAITools;
 import lessons.guiContributorLessons.ViewContributorLessons;
 import lessons.guiCreateLesson.ViewCreateLesson;
@@ -83,6 +84,7 @@ public class ControllerContributorHome {
 	 * 
 	 */
 	protected static void performViewAITools() {
+		ModelAITools.getKey();
 		ViewAITools.displayViewAITools(ViewContributorHome.theStage, ViewContributorHome.theUser);
 	}
 	
