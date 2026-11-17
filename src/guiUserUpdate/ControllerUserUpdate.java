@@ -3,20 +3,20 @@ package guiUserUpdate;
 import entityClasses.User;
 import javafx.stage.Stage;
 
+/*-********************************************************************************************
+
+The Controller for ViewUserUpdate 
+
+**********************************************************************************************/
+
+/**********
+ * <p> Title: ControllerUserUpdate Class</p>
+ * 
+ * <p> Description: This static class supports the actions initiated by the ViewUserUpdate
+ * class. In this case, there is just one method, no constructors, and no attributes.</p>
+ *
+ */
 public class ControllerUserUpdate {
-	/*-********************************************************************************************
-
-	The Controller for ViewUserUpdate 
-	
-	**********************************************************************************************/
-
-	/**********
-	 * <p> Title: ControllerUserUpdate Class</p>
-	 * 
-	 * <p> Description: This static class supports the actions initiated by the ViewUserUpdate
-	 * class. In this case, there is just one method, no constructors, and no attributes.</p>
-	 *
-	 */
 
 	/*-********************************************************************************************
 
@@ -46,7 +46,7 @@ public class ControllerUserUpdate {
 			guiAdminHome.ViewAdminHome.displayAdminHome(theStage, theUser);
 			break;
 		case 2:
-			guiRole1.ViewRole1Home.displayRole1Home(theStage, theUser);
+			guiContributor.ViewContributorHome.displayContributorHome(theStage, theUser);
 			break;
 		case 3:
 			guiRole2.ViewRole2Home.displayRole2Home(theStage, theUser);

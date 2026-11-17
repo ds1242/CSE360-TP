@@ -19,6 +19,18 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
+/*******
+ * <p> Title: ViewAdminDeleteUser Class. </p>
+ *
+ * <p> Description: The ViewAdminDeleteUser Page is used by an admin to delete a user.
+ * When a user is deleted, all of their info is removed from the database and they
+ * are no longer able to log in. </p>
+ *
+ * @author Edis Jakupovic
+ *
+ * @version 1.00
+ *
+ */
 public class ViewAdminDeleteUser {
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
 	private static double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
@@ -51,7 +63,7 @@ public class ViewAdminDeleteUser {
 	protected static String theSelectedUser = "<Select a User>";
 
 	/**********
-	 * <p> Method: displayAddRemoveRoles(Stage ps, User user) </p>
+	 * <p> Method: displayDeleteUser(Stage ps, User user) </p>
 	 *
 	 * <p> Description: This method is the single entry point from outside this package to cause
 	 * the AddRevove page to be displayed.
@@ -68,7 +80,7 @@ public class ViewAdminDeleteUser {
 	 *
 	 * @param ps specifies the JavaFX Stage to be used for this GUI and it's methods
 	 *
-	 * @param user specifies the User whose roles will be updated
+	 * @param user specifies the current Rser
 	 *
 	 */
 	public static void displayDeleteUser(Stage ps, User user) {
@@ -79,10 +91,20 @@ public class ViewAdminDeleteUser {
 
 		combobox_SelectUser.getSelectionModel().select(0);
 
-		ControllerAdminDeleteUser.repaintTheWindow();
 		ControllerAdminDeleteUser.doSelectUser();
+		ControllerAdminDeleteUser.repaintTheWindow();
 	}
 
+	/**********
+	 * <p> Method: populateComboBox() </p>
+	 *
+	 * <p> Description: This method is used to populate `combobox_SelectUser` variable.
+     * It retrieves all the UserList from the database and sets the combobox items with a
+     * javafx observableArrayList. </p>
+     *
+     * <p> IMPORTANT: it also filters out the current user so that they may not delete themselves. </p>
+	 *
+	 */
     protected static void populateComboBox() {
 		List<String> userList = theDatabase.getUserList(
             // NOTE: here we are filtering for users that are NOT the current user.
@@ -101,7 +123,7 @@ public class ViewAdminDeleteUser {
 	 * This method determines the location, size, font, color, and change and event handlers for
 	 * each GUI object. </p>
 	 *
-	 * This is a singleton, so this is performed just one.  Subsequent uses fill in the changeable
+	 * <p>This is a singleton, so this is performed just one.  Subsequent uses fill in the changeable
 	 * fields using the displayAddRempoveRoles method.</p>
 	 *
 	 */

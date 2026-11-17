@@ -66,10 +66,6 @@ public class GUISingleRoleDispatch {
 	 * 
 	 * @param ps specifies the JavaFX Stage to be used for this GUI and it's methods
 	 * 
-	 * @param theRoot specifies the JavaFX Pane to be used for this GUI and it's methods
-	 * 
-	 * @param database specifies the Database to be used by this GUI and it's methods
-	 * 
 	 * @param user specifies the User for this GUI and it's methods
 	 * 
 	 */
@@ -79,7 +75,7 @@ public class GUISingleRoleDispatch {
 		if (user.getAdminRole()) {
 			guiAdminHome.ViewAdminHome.displayAdminHome(ps, user);
 		} else if (user.getNewRole1()) {
-			guiRole1.ViewRole1Home.displayRole1Home(ps, user);
+			guiContributor.ViewContributorHome.displayContributorHome(ps, user);
 		} else if (user.getNewRole2()) {
 			guiRole2.ViewRole2Home.displayRole2Home(ps, user);
 		} else {

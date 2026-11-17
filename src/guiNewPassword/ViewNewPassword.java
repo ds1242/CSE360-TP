@@ -62,6 +62,8 @@ public class ViewNewPassword {
 	 * to the user.
 	 *
 	 * @param ps specifies the JavaFX Stage to be used for this GUI and it's methods
+     *
+	 * @param user specifies the User whose roles will be updated
 	 *
 	 */
 	public static void displayNewPassword(Stage ps, User user) {
@@ -94,8 +96,7 @@ public class ViewNewPassword {
 	 *
 	 * <p> Description: This constructor is called just once, the first time a new account needs to
 	 * be created.  It establishes all of the common GUI widgets for the page so they are only
-	 * created once and reused when needed.
-	 *
+	 * created once and reused when needed. </p>
 	 *
 	 */
 	private ViewNewPassword() {

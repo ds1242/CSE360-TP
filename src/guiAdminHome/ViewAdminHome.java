@@ -88,7 +88,7 @@ public class ViewAdminHome {
 	protected static Label label_InvitationEmailAddress = new Label("Email Address");
 	protected static TextField text_InvitationEmailAddress = new TextField();
 	protected static ComboBox <String> combobox_SelectRole = new ComboBox <String>();
-	protected static String [] roles = {"Admin", "Role1", "Role2"};
+	protected static String [] roles = {"Admin", "Contributor", "Role2"};
 	protected static Button button_SendInvitation = new Button("Send Invitation");
 	protected static Alert alertEmailError = new Alert(AlertType.INFORMATION);
 	protected static Alert alertEmailSent = new Alert(AlertType.INFORMATION);
@@ -344,7 +344,7 @@ public class ViewAdminHome {
 	/**********
 	 * Private local method to initialize the standard fields for a text input field
 	 * 
-	 * @param b		The TextField object to be initialized
+	 * @param t		The TextField object to be initialized
 	 * @param ff	The font to be used
 	 * @param f		The size of the font to be used
 	 * @param w		The width of the Button
