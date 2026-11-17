@@ -2,8 +2,6 @@ package lessons;
 
 import java.util.List;
 
-import entityClasses.LessonRecord;
-
 /*******
  * <p> Title: LessonsEvaluator Class </p>
  *

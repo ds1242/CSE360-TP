@@ -1,5 +1,5 @@
 package database;
-
+ 
 import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
-
-import entityClasses.LessonExperience;
-import entityClasses.LessonRecord;
+ 
 import entityClasses.LessonsLearnedList;
-import entityClasses.TeammateEffort;
 import entityClasses.User;
+import lessons.LessonExperience;
+import lessons.LessonRecord;
 import lessons.LessonsEvaluator;
-
+import lessons.TeammateEffort;
+ 
 /*******
  * <p> Title: Database Class. </p>
  *
@@ -35,27 +35,27 @@ import lessons.LessonsEvaluator;
  * 							Mukkiri and Ishwarya Hidkimath Basavaraj
  * @version 2.01		2025-12-17 Minor updates for Spring 2026
  */
-
+ 
 /*
  * The Database class is responsible for establishing and managing the connection to the database,
  * and performing operations such as user registration, login validation, handling invitation
  * codes, and numerous other database related functions.
  */
 public class Database {
-
+ 
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "org.h2.Driver";
 	static final String DB_URL = "jdbc:h2:~/FoundationDatabase";
-
+ 
 	//  Database credentials
 	static final String USER = "sa";
 	static final String PASS = "";
-
+ 
 	//  Shared variables used within this class
 	private String databaseUrl = DB_URL;		// The H2 database this object connects to
 	private Connection connection = null;		// Singleton to access the database
 	private Statement statement = null;			// The H2 Statement is used to construct queries
-
+ 
 	// These are the easily accessible attributes of the currently logged-in user
 	// This is only useful for single user applications
 	private String currentUsername;
@@ -69,18 +69,18 @@ public class Database {
 	private boolean currentNewContributor;
 	private boolean currentNewRole2;
 	private boolean currentOneTimePassword;
-
+ 
 	/*******
 	 * <p> Method: Database </p>
 	 *
 	 * <p> Description: The default constructor used to establish this singleton object.</p>
 	 *
 	 */
-
+ 
 	public Database () {
-
+ 
 	}
-
+ 
 	/*******
 	 * <p> Method: Database(String databaseUrl) </p>
 	 *
@@ -95,8 +95,8 @@ public class Database {
 	public Database (String databaseUrl) {
 		this.databaseUrl = databaseUrl;
 	}
-
-
+ 
+ 
 /*******
  * <p> Method: connectToDatabase </p>
  *
@@ -113,14 +113,112 @@ public class Database {
 			statement = connection.createStatement();
 			// You can use this command to clear the database and restart from fresh.
 			//statement.execute("DROP ALL OBJECTS");
-
+ 
 			createTables();  // Create the necessary tables if they don't exist
 		} catch (ClassNotFoundException e) {
 			System.err.println("JDBC Driver not found: " + e.getMessage());
 		}
 	}
-
-
+	
+	/*******
+	 * <p> Method: setContributorCanViewExperienceStats(String userName, boolean enabled) </p>
+	 *
+	 * <p> Description: Sets whether one contributor is permitted to view the total and average
+	 * experience hours for their lessons. The setting is stored per contributor in the
+	 * ContributorStatsVisibility table, so changing it for one contributor never affects
+	 * another, and it persists between application restarts. The change is written
+	 * immediately (auto-commit is on).</p>
+	 *
+	 * @param userName the contributor the setting applies to
+	 * @param enabled true if this contributor may view experience statistics, false otherwise
+	 *
+	 * @throws SQLException when the setting cannot be saved
+	 *
+	 */
+	public void setContributorCanViewExperienceStats(String userName, boolean enabled)
+			throws SQLException {
+		String query = "MERGE INTO ContributorStatsVisibility "
+				+ "(userName, statsVisible) KEY(userName) VALUES (?, ?)";
+ 
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, userName);
+			pstmt.setBoolean(2, enabled);
+			pstmt.executeUpdate();
+		}
+	}
+ 
+	/*******
+	 * <p> Method: getContributorCanViewExperienceStats(String userName) </p>
+	 *
+	 * <p> Description: Retrieves whether one contributor is permitted to view the total and
+	 * average experience hours for their lessons. A contributor with no stored setting is OFF.
+	 * Callers must treat a thrown SQLException as "hidden", never as "visible".</p>
+	 *
+	 * @param userName the contributor to check
+	 *
+	 * @return true if this contributor may view experience statistics, false otherwise
+	 *
+	 * @throws SQLException when the setting cannot be read
+	 *
+	 */
+	public boolean getContributorCanViewExperienceStats(String userName) throws SQLException {
+		String query = "SELECT statsVisible FROM ContributorStatsVisibility "
+				+ "WHERE userName = ?";
+ 
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, userName);
+ 
+			try (ResultSet rs = pstmt.executeQuery()) {
+				return rs.next() && rs.getBoolean(1);	// no stored row means OFF
+			}
+		}
+	}
+	
+	/**
+	 * <p> Method: getLessonDurationSum </p>
+	 * <p> Description: Calculates the total experience duration for a lesson. </p>
+	 *
+	 * @param lessonId the lesson database ID
+	 * @return the sum of all experience durations
+	 * @throws SQLException if a database error occurs
+	 */
+	public double getLessonDurationSum(int lessonId) throws SQLException {
+	    String query = "SELECT COALESCE(SUM(durationHours), 0) "
+	            + "FROM LessonExperienceDB WHERE lessonId = ?";
+ 
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, lessonId);
+ 
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            rs.next();
+	            return rs.getDouble(1);
+	        }
+	    }
+	}
+ 
+	/**
+	 * <p> Method: getLessonDurationAverage </p>
+	 * <p> Description: Calculates the average experience duration for a lesson. </p>
+	 *
+	 * @param lessonId the lesson database ID
+	 * @return the average experience duration
+	 * @throws SQLException if a database error occurs
+	 */
+	public double getLessonDurationAverage(int lessonId) throws SQLException {
+	    String query = "SELECT COALESCE(AVG(durationHours), 0) "
+	            + "FROM LessonExperienceDB WHERE lessonId = ?";
+ 
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, lessonId);
+ 
+	        try (ResultSet rs = pstmt.executeQuery()) {
+	            rs.next();
+	            return rs.getDouble(1);
+	        }
+	    }
+	}
+ 
+ 
 /*******
  * <p> Method: createTables </p>
  *
@@ -144,13 +242,13 @@ public class Database {
 				+ "newRole2 BOOL DEFAULT FALSE, "
                 + "oneTimePassword BOOL DEFAULT FALSE)";
 		statement.execute(userTable);
-
+ 
 	    String invitationCodesTable = "CREATE TABLE IF NOT EXISTS InvitationCodes ("
 	            + "code VARCHAR(10) PRIMARY KEY, "
 	    		+ "emailAddress VARCHAR(255), "
 	            + "role VARCHAR(15))";
 	    statement.execute(invitationCodesTable);
-
+ 
 		String lessonsTable = "CREATE TABLE IF NOT EXISTS LessonsLearnedDB ("
 				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "title VARCHAR(" + LessonsEvaluator.TITLE_MAX + "), "
@@ -165,7 +263,7 @@ public class Database {
 				+ "effortLocked BOOL DEFAULT FALSE, "
 				+ "lastModifiedBy VARCHAR(255))";
 		statement.execute(lessonsTable);
-
+ 
 		statement.execute("ALTER TABLE LessonsLearnedDB ADD COLUMN IF NOT EXISTS "
 				+ "titleLocked BOOL DEFAULT FALSE");
 		statement.execute("ALTER TABLE LessonsLearnedDB ADD COLUMN IF NOT EXISTS "
@@ -176,7 +274,7 @@ public class Database {
 				+ "effortLocked BOOL DEFAULT FALSE");
 		statement.execute("ALTER TABLE LessonsLearnedDB ADD COLUMN IF NOT EXISTS "
 				+ "lastModifiedBy VARCHAR(255)");
-
+ 
 		String experienceTable = "CREATE TABLE IF NOT EXISTS LessonExperienceDB ("
 				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "lessonId INT, "
@@ -186,7 +284,7 @@ public class Database {
 				+ "createdAt TIMESTAMP, "
 				+ "FOREIGN KEY (lessonId) REFERENCES LessonsLearnedDB(id) ON DELETE CASCADE)";
 		statement.execute(experienceTable);
-
+ 
 		String teammateTable = "CREATE TABLE IF NOT EXISTS TeammateEffortDB ("
 				+ "id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "experienceId INT, "
@@ -194,8 +292,20 @@ public class Database {
 				+ "effortEntry VARCHAR(" + LessonsEvaluator.EXPERIENCE_TEXT_MAX + "), "
 				+ "FOREIGN KEY (experienceId) REFERENCES LessonExperienceDB(id) ON DELETE CASCADE)";
 		statement.execute(teammateTable);
+		
+		String settingsTable = "CREATE TABLE IF NOT EXISTS ApplicationSettings ("
+		        + "settingName VARCHAR(255) PRIMARY KEY, "
+		        + "settingValue BOOL)";
+		statement.execute(settingsTable);
+ 
+		// One row per contributor: may that contributor see the Avg and Sum columns?
+		// A contributor with no row is treated as OFF.
+		String visibilityTable = "CREATE TABLE IF NOT EXISTS ContributorStatsVisibility ("
+		        + "userName VARCHAR(255) PRIMARY KEY, "
+		        + "statsVisible BOOL DEFAULT FALSE)";
+		statement.execute(visibilityTable);
 	}
-
+ 
 /*******
  * <p> Method: isDatabaseEmpty </p>
  *
@@ -216,7 +326,7 @@ public class Database {
 	    }
 		return true;
 	}
-
+ 
 /*******
  * <p> Method: getNumberOfUsers </p>
  *
@@ -237,7 +347,7 @@ public class Database {
 	    }
 		return 0;
 	}
-
+ 
 /*******
  * <p> Method: register(User user) </p>
  *
@@ -255,42 +365,42 @@ public class Database {
 		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
 			currentUsername = user.getUserName();
 			pstmt.setString(1, currentUsername);
-
+ 
 			currentPassword = user.getPassword();
 			pstmt.setString(2, currentPassword);
-
+ 
 			currentFirstName = user.getFirstName();
 			pstmt.setString(3, currentFirstName);
-
+ 
 			currentMiddleName = user.getMiddleName();
 			pstmt.setString(4, currentMiddleName);
-
+ 
 			currentLastName = user.getLastName();
 			pstmt.setString(5, currentLastName);
-
+ 
 			currentPreferredFirstName = user.getPreferredFirstName();
 			pstmt.setString(6, currentPreferredFirstName);
-
+ 
 			currentEmailAddress = user.getEmailAddress();
 			pstmt.setString(7, currentEmailAddress);
-
+ 
 			currentAdminRole = user.getAdminRole();
 			pstmt.setBoolean(8, currentAdminRole);
-
+ 
 			currentNewContributor = user.getNewRole1();
 			pstmt.setBoolean(9, currentNewContributor);
-
+ 
 			currentNewRole2 = user.getNewRole2();
 			pstmt.setBoolean(10, currentNewRole2);
-
+ 
 			currentOneTimePassword = user.getOneTimePassword();
 			pstmt.setBoolean(11, currentOneTimePassword);
-
+ 
 			pstmt.executeUpdate();
 		}
-
+ 
 	}
-
+ 
     /*******
      *  <p> Method: List getUserList() </p>
      *
@@ -326,7 +436,7 @@ public class Database {
     public List<String> getUserList() {
         return getUserList(userName -> true);
     }
-
+ 
     /*******
      *  <p> Method: List getAllUsers() </p>
      *
@@ -359,7 +469,7 @@ public class Database {
         }
         return users;
     }
-
+ 
 /*******
  * <p> Method: boolean loginAdmin(User user) </p>
  *
@@ -385,8 +495,8 @@ public class Database {
 	    }
 		return false;
 	}
-
-
+ 
+ 
 /*******
  * <p> Method: boolean loginRole1(User user) </p>
  *
@@ -412,7 +522,7 @@ public class Database {
 		}
 		return false;
 	}
-
+ 
 	/*******
 	 * <p> Method: boolean loginRole2(User user) </p>
 	 *
@@ -437,7 +547,7 @@ public class Database {
 		}
 		return false;
 	}
-
+ 
 	/*******
 	 * <p> Method: boolean doesUserExist(User user) </p>
 	 *
@@ -451,10 +561,10 @@ public class Database {
 	public boolean doesUserExist(String userName) {
 	    String query = "SELECT COUNT(*) FROM userDB WHERE userName = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-
+ 
 	        pstmt.setString(1, userName);
 	        ResultSet rs = pstmt.executeQuery();
-
+ 
 	        if (rs.next()) {
 	            return rs.getInt(1) > 0;
 	        }
@@ -463,7 +573,7 @@ public class Database {
 	    }
 	    return false; 
 	}
-
+ 
 	/*******
 	 * <p> Method: int getNumberOfRoles(User user) </p>
 	 *
@@ -481,7 +591,7 @@ public class Database {
 		if (user.getNewRole2()) numberOfRoles++;
 		return numberOfRoles;
 	}
-
+ 
 	/*******
 	 * <p> Method: String generateInvitationCode(String emailAddress, String role) </p>
 	 *
@@ -500,7 +610,7 @@ public class Database {
 	public String generateInvitationCode(String emailAddress, String role) {
 	    String code = UUID.randomUUID().toString().substring(0, 6); // Generate a random 6-character code
 	    String query = "INSERT INTO InvitationCodes (code, emailaddress, role) VALUES (?, ?, ?)";
-
+ 
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	        pstmt.setString(1, code);
 	        pstmt.setString(2, emailAddress);
@@ -511,7 +621,7 @@ public class Database {
 	    }
 	    return code;
 	}
-
+ 
 	/**
 	 * <p> Method: String generateOneTimePassword() </p>
 	 * 
@@ -523,7 +633,7 @@ public class Database {
     public String generateOneTimePassword() {
 	    return UUID.randomUUID().toString().substring(0, 6);
     }
-
+ 
 	/*******
 	 * <p> Method: int getNumberOfInvitations() </p>
 	 *
@@ -544,7 +654,7 @@ public class Database {
 	    }
 		return 0;
 	}
-
+ 
 	/*******
 	 * <p> Method: boolean emailaddressHasBeenUsed(String emailAddress) </p>
 	 *
@@ -570,8 +680,8 @@ public class Database {
 	    }
 		return false;
 	}
-
-
+ 
+ 
 	/*******
 	 * <p> Method: String getRoleGivenAnInvitationCode(String code) </p>
 	 *
@@ -595,8 +705,8 @@ public class Database {
 	    }
 	    return "";
 	}
-
-
+ 
+ 
 	/*******
 	 * <p> Method: String getEmailAddressUsingCode (String code ) </p>
 	 *
@@ -620,8 +730,8 @@ public class Database {
 	    }
 		return "";
 	}
-
-
+ 
+ 
 	/*******
 	 * <p> Method: void removeInvitationAfterUse(String code) </p>
 	 *
@@ -653,7 +763,7 @@ public class Database {
 	    }
 		return;
 	}
-
+ 
 	/*******
 	 * <p> Method: void updatePassword(String username, String firstName) </p>
 	 *
@@ -693,11 +803,13 @@ public class Database {
 	public void updatePassword(String username, String password) {
         updatePassword(username, password, false);
 	}
-
+ 
 	/*******
 	 * <p> Method: void deleteUser(String username) </p>
 	 *
-	 * <p> Description: Delete a user from the database given that user's username </p>
+	 * <p> Description: Delete a user from the database given that user's username. The user's
+	 * Avg/Sum visibility setting is removed too, so a user later created with the same name
+	 * starts with the default (OFF).</p>
 	 *
 	 * @param username is the username of the user
 	 *
@@ -711,8 +823,16 @@ public class Database {
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
+ 
+	    try (PreparedStatement pstmt2 = connection.prepareStatement(
+	    		"DELETE FROM ContributorStatsVisibility WHERE userName = ?")) {
+	        pstmt2.setString(1, username);
+	        pstmt2.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
-
+ 
 	/*******
 	 * <p> Method: String getFirstName(String username) </p>
 	 *
@@ -728,18 +848,18 @@ public class Database {
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setString(1, username);
 	        ResultSet rs = pstmt.executeQuery();
-
+ 
 	        if (rs.next()) {
 	            return rs.getString("firstName"); // Return the first name if user exists
 	        }
-
+ 
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 		return null;
 	}
-
-
+ 
+ 
 	/*******
 	 * <p> Method: void updateFirstName(String username, String firstName) </p>
 	 *
@@ -762,7 +882,7 @@ public class Database {
 	        e.printStackTrace();
 	    }
 	}
-
+ 
 	/*******
 	 * <p> Method: String getMiddleName(String username) </p>
 	 *
@@ -778,7 +898,7 @@ public class Database {
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setString(1, username);
 	        ResultSet rs = pstmt.executeQuery();
-
+ 
 	        if (rs.next()) {
 	            return rs.getString("middleName"); // Return the middle name if user exists
 	        }
@@ -787,8 +907,8 @@ public class Database {
 	    }
 		return null;
 	}
-
-
+ 
+ 
 	/*******
 	 * <p> Method: void updateMiddleName(String username, String middleName) </p>
 	 *
@@ -811,8 +931,8 @@ public class Database {
 	        e.printStackTrace();
 	    }
 	}
-
-
+ 
+ 
 	/*******
 	 * <p> Method: String getLastName(String username) </p>
 	 *
@@ -828,7 +948,7 @@ public class Database {
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setString(1, username);
 	        ResultSet rs = pstmt.executeQuery();
-
+ 
 	        if (rs.next()) {
 	            return rs.getString("lastName"); // Return last name role if user exists
 	        }
@@ -837,7 +957,7 @@ public class Database {
 	    }
 		return null;
 	}
-
+ 
 	/*******
 	 * <p> Method: void updateLastName(String username, String lastName) </p>
 	 *
@@ -860,7 +980,7 @@ public class Database {
 	        e.printStackTrace();
 	    }
 	}
-
+ 
 	/*******
 	 * <p> Method: String getPreferredFirstName(String username) </p>
 	 *
@@ -876,17 +996,17 @@ public class Database {
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setString(1, username);
 	        ResultSet rs = pstmt.executeQuery();
-
+ 
 	        if (rs.next()) {
 	            return rs.getString("firstName"); // Return the preferred first name if user exists
 	        }
-
+ 
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 		return null;
 	}
-
+ 
 	/*******
 	 * <p> Method: void updatePreferredFirstName(String username, String preferredFirstName) </p>
 	 *
@@ -909,7 +1029,7 @@ public class Database {
 	        e.printStackTrace();
 	    }
 	}
-
+ 
 	/*******
 	 * <p> Method: String getEmailAddress(String username) </p>
 	 *
@@ -925,17 +1045,17 @@ public class Database {
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setString(1, username);
 	        ResultSet rs = pstmt.executeQuery();
-
+ 
 	        if (rs.next()) {
 	            return rs.getString("emailAddress"); // Return the email address if user exists
 	        }
-
+ 
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 		return null;
 	}
-
+ 
 	/*******
 	 * <p> Method: void updateEmailAddress(String username, String emailAddress) </p>
 	 *
@@ -958,7 +1078,7 @@ public class Database {
 	        e.printStackTrace();
 	    }
 	}
-
+ 
 	/*******
 	 * <p> Method: boolean getUserAccountDetails(String username) </p>
 	 *
@@ -991,7 +1111,7 @@ public class Database {
 			return false;
 	    }
 	}
-
+ 
 	/*******
 	 * <p> Method: boolean updateUserRole(String username, String role, String value) </p>
 	 *
@@ -1065,7 +1185,7 @@ public class Database {
 	 *
 	 */
 	public String getCurrentUsername() { return currentUsername; };
-
+ 
 	/*******
 	 * <p> Method: String getCurrentPassword() </p>
 	 *
@@ -1075,7 +1195,7 @@ public class Database {
 	 *
 	 */
 	public String getCurrentPassword() { return currentPassword; };
-
+ 
 	/*******
 	 * <p> Method: String getCurrentFirstName() </p>
 	 *
@@ -1085,7 +1205,7 @@ public class Database {
 	 *
 	 */
 	public String getCurrentFirstName() { return currentFirstName; };
-
+ 
 	/*******
 	 * <p> Method: String getCurrentMiddleName() </p>
 	 *
@@ -1095,7 +1215,7 @@ public class Database {
 	 *
 	 */
 	public String getCurrentMiddleName() { return currentMiddleName; };
-
+ 
 	/*******
 	 * <p> Method: String getCurrentLastName() </p>
 	 *
@@ -1105,7 +1225,7 @@ public class Database {
 	 *
 	 */
 	public String getCurrentLastName() { return currentLastName; };
-
+ 
 	/*******
 	 * <p> Method: String getCurrentPreferredFirstName( </p>
 	 *
@@ -1115,7 +1235,7 @@ public class Database {
 	 *
 	 */
 	public String getCurrentPreferredFirstName() { return currentPreferredFirstName; };
-
+ 
 	/*******
 	 * <p> Method: String getCurrentEmailAddress() </p>
 	 *
@@ -1125,7 +1245,7 @@ public class Database {
 	 *
 	 */
 	public String getCurrentEmailAddress() { return currentEmailAddress; };
-
+ 
 	/*******
 	 * <p> Method: boolean getCurrentAdminRole() </p>
 	 *
@@ -1135,7 +1255,7 @@ public class Database {
 	 *
 	 */
 	public boolean getCurrentAdminRole() { return currentAdminRole; };
-
+ 
 	/*******
 	 * <p> Method: boolean getCurrentNewRole1() </p>
 	 *
@@ -1145,7 +1265,7 @@ public class Database {
 	 *
 	 */
 	public boolean getCurrentNewRole1() { return currentNewContributor; };
-
+ 
 	/*******
 	 * <p> Method: boolean getCurrentNewRole2() </p>
 	 *
@@ -1155,7 +1275,7 @@ public class Database {
 	 *
 	 */
 	public boolean getCurrentNewRole2() { return currentNewRole2; };
-
+ 
 	/*******
 	 * <p> Method: boolean getCurrentOneTimePassword() </p>
 	 *
@@ -1165,18 +1285,18 @@ public class Database {
 	 *
 	 */
 	public boolean getOneTimePassword() { return currentOneTimePassword; };
-
+ 
 	/*-*******************************************************************************************
-
+ 
 	Lessons Learned (HW2)
-
+ 
 	Unlike most methods in this class, the lesson methods throw SQLException instead of catching
 	it.  The Contributor pages must tell the user "Unable to connect to database at this time..."
 	(Story 2) rather than show an empty list as if it were correct, and they can only do that if
 	the failure reaches them.
-
+ 
 	 */
-
+ 
 	/*******
 	 * <p> Method: LessonRecord createLesson(String title, String description, String category,
 	 * 		float effort, String creatorUsername) </p>
@@ -1215,7 +1335,7 @@ public class Database {
 			pstmt.setString(5, creatorUsername);
 			pstmt.setTimestamp(6, Timestamp.valueOf(now));
 			pstmt.executeUpdate();
-
+ 
 			int id = -1;
 			try (ResultSet keys = pstmt.getGeneratedKeys()) {
 				if (keys.next()) id = keys.getInt(1);
@@ -1224,7 +1344,7 @@ public class Database {
 					now, false, false, false, false, null);
 		}
 	}
-
+ 
 	/*******
 	 * <p> Method: LessonsLearnedList getLessonsByCreator(String username) </p>
 	 *
@@ -1247,7 +1367,7 @@ public class Database {
 			return readLessons(pstmt);
 		}
 	}
-
+ 
 	/*******
 	 * <p> Method: LessonsLearnedList getAllLessons() </p>
 	 *
@@ -1266,7 +1386,7 @@ public class Database {
 			return readLessons(pstmt);
 		}
 	}
-
+ 
 	/*******
 	 * <p> Method: LessonRecord getLesson(int lessonId) </p>
 	 *
@@ -1288,7 +1408,7 @@ public class Database {
 			return readLessons(pstmt).getLesson(0);
 		}
 	}
-
+ 
 	/*******
 	 * <p> Method: boolean updateLesson(int lessonId, String title, String description,
 	 * 		String category, float effort, String modifiedBy) </p>
@@ -1328,7 +1448,7 @@ public class Database {
 			return pstmt.executeUpdate() > 0;
 		}
 	}
-
+ 
 	/*******
 	 * <p> Method: boolean deleteLesson(int lessonId) </p>
 	 *
@@ -1350,7 +1470,7 @@ public class Database {
 			return pstmt.executeUpdate() > 0;
 		}
 	}
-
+ 
 	/*******
 	 * <p> Method: boolean setLessonFieldLock(int lessonId, String field, boolean locked) </p>
 	 *
@@ -1378,7 +1498,7 @@ public class Database {
 		else if (field.compareTo(LessonRecord.FIELD_CATEGORY) == 0) column = "categoryLocked";
 		else if (field.compareTo(LessonRecord.FIELD_EFFORT) == 0) column = "effortLocked";
 		else return false;
-
+ 
 		String query = "UPDATE LessonsLearnedDB SET " + column + " = ? WHERE id = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setBoolean(1, locked);
@@ -1386,7 +1506,7 @@ public class Database {
 			return pstmt.executeUpdate() > 0;
 		}
 	}
-
+ 
 	/*******
 	 * <p> Method: LessonExperience createExperience(int lessonId, String whatWasDone,
 	 * 		String howItWasDone, float durationHours, List teammates) </p>
@@ -1426,7 +1546,7 @@ public class Database {
 			pstmt.setFloat(4, durationHours);
 			pstmt.setTimestamp(5, Timestamp.valueOf(now));
 			pstmt.executeUpdate();
-
+ 
 			int id = -1;
 			try (ResultSet keys = pstmt.getGeneratedKeys()) {
 				if (keys.next()) id = keys.getInt(1);
@@ -1442,7 +1562,7 @@ public class Database {
 			connection.setAutoCommit(true);
 		}
 	}
-
+ 
 	/*******
 	 * <p> Method: List getExperiences(int lessonId) </p>
 	 *
@@ -1478,7 +1598,7 @@ public class Database {
 		}
 		return experiences;
 	}
-
+ 
 	/*******
 	 * <p> Method: boolean updateExperience(int lessonId, int experienceId, String whatWasDone,
 	 * 		String howItWasDone, float durationHours, List teammates) </p>
@@ -1520,7 +1640,7 @@ public class Database {
 				connection.rollback();
 				return false;
 			}
-
+ 
 			// Replace the teammate rows rather than matching old rows to new ones
 			try (PreparedStatement pstmt2 = connection.prepareStatement(
 					"DELETE FROM TeammateEffortDB WHERE experienceId = ?")) {
@@ -1537,7 +1657,7 @@ public class Database {
 			connection.setAutoCommit(true);
 		}
 	}
-
+ 
 	/*******
 	 * <p> Method: boolean deleteExperience(int lessonId, int experienceId) </p>
 	 *
@@ -1561,7 +1681,7 @@ public class Database {
 			return pstmt.executeUpdate() > 0;
 		}
 	}
-
+ 
 	/*******
 	 * Executes a lesson query and converts each result row into a LessonRecord.
 	 *
@@ -1591,7 +1711,7 @@ public class Database {
 		}
 		return result;
 	}
-
+ 
 	/****** Private helper: store the teammate rows of one experience entry */
 	private void insertTeammates(int experienceId, List<TeammateEffort> teammates)
 			throws SQLException {
@@ -1606,7 +1726,7 @@ public class Database {
 			}
 		}
 	}
-
+ 
 	/*******
 	 * Retrieves the teammates for an experience, ordered by ID.
 	 *
@@ -1627,7 +1747,7 @@ public class Database {
 		}
 		return teammates;
 	}
-
+ 
 	/*******
 	 * <p> Debugging method</p>
 	 *
@@ -1650,7 +1770,7 @@ public class Database {
 		}
 		resultSet.close();
 	}
-
+ 
 	/*******
 	 * <p> Method: void closeConnection()</p>
 	 *
@@ -1671,3 +1791,4 @@ public class Database {
 		}
 	}
 }
+ 
