@@ -24,7 +24,7 @@ public class ModelAITools {
 
 	private static final String GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 	private static final String GROQ_MODEL = "openai/gpt-oss-120b";
-	private static final String GROQ_KEY = "YOUR_KEY_HERE";
+	private static final String GROQ_KEY = "";
 
 	private static final String WRITE_SYSTEM_PROMPT = "You are a friendly writer helping a user document a high-quality lesson "
 			+ "learned from a real project experience. Your goal is to format and organize entries provided by users that are "
@@ -88,8 +88,6 @@ public class ModelAITools {
 		return extractAssistantMessage(response);
 	}
 
-	// === HTTP plumbing
-	// ========================================================================
 
 	/**
 	 * Method: postToGroq(String body)

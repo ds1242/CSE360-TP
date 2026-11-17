@@ -10,7 +10,7 @@ public class ControllerAITools {
 	static methods that can be called by the View (which is a singleton instantiated object).
 	
 	 */
-
+ 
 	/**
 	 * Default constructor is not used.
 	 */
