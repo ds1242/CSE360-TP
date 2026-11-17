@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import database.Database;
 import entityClasses.LessonsLearnedList;
-import lessons.LessonRecord;
+import entityClasses.LessonRecord;
 import lessons.LessonsEvaluator;
 
 /*******

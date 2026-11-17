@@ -7,7 +7,7 @@ import java.util.List;
 import database.Database;
 import entityClasses.LessonsLearnedList;
 import entityClasses.User;
-import lessons.LessonRecord;
+import entityClasses.LessonRecord;
 
 /*******
  * <p> Title: ModelCurator Class. </p>

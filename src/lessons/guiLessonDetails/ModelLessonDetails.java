@@ -3,7 +3,7 @@ package lessons.guiLessonDetails;
 import java.sql.SQLException;
 
 import database.Database;
-import lessons.LessonRecord;
+import entityClasses.LessonRecord;
 import lessons.LessonsEvaluator;
 
 /*******

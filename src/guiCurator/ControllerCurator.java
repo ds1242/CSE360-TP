@@ -6,7 +6,7 @@ import java.util.List;
  
 import entityClasses.LessonsLearnedList;
 import javafx.collections.FXCollections;
-import lessons.LessonRecord;
+import entityClasses.LessonRecord;
  
 /*******
  * <p> Title: ControllerCurator Class. </p>
