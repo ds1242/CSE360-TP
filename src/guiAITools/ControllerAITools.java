@@ -20,13 +20,14 @@ public class ControllerAITools {
 	 * <p>
 	 * Method: performAsk()
 	 * </p>
-	 
 	 *
 	 * <p>
-	 * On success the form is cleared and a confirmation is shown, so the
-	 * contributor can add another lesson straight away. On failure the form is left
-	 * exactly as typed and every error is shown, so the contributor only needs to
-	 * fix what is wrong.
+	 * Description: Called when the user presses "Ask". Validates the selected category and
+	 * description, then sends the description to the AI tool that matches the category: Write
+	 * proof reads and organizes a lesson, Brainstorm returns coaching feedback, and Search finds
+	 * matching saved lessons. On success the AI's response is shown in the response area along
+	 * with a confirmation. On failure, the form is left as typed and the error is shown so the
+	 * user can correct it and try again.
 	 * </p>
 	 */
 	protected static void performAsk() {
@@ -72,8 +73,13 @@ public class ControllerAITools {
 	 * </p>
 	 */
 	protected static void performClear() {
-		clearForm();
-
+		ViewAITools.combobox_ToolSelect.getSelectionModel().clearSelection();
+		ViewAITools.combobox_ToolSelect.setValue(null);
+		ViewAITools.text_Description.clear();
+		ViewAITools.text_Description.setPromptText(ViewAITools.promptFor(null));
+		ViewAITools.label_DescriptionCount.setText("0 characters");
+		ViewAITools.text_AIResponse.clear();
+		ViewAITools.label_Message.setText("");
 	}
 
 	/**********
