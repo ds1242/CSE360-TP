@@ -10,9 +10,6 @@ module FoundationsF26 {
 	requires org.junit.jupiter.api;
 	requires java.net.http;
 
-	opens applicationMain to javafx.graphics, javafx.fxml;
-    requires org.junit.jupiter.api;
-    
+	opens applicationMain to javafx.graphics, javafx.fxml; 
     opens database to org.junit.platform.commons;
-    opens applicationMain to javafx.graphics, javafx.fxml;
 }
