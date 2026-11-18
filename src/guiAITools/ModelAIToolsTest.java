@@ -331,4 +331,127 @@ class ModelAIToolsTest {
 		assertEquals(msg, "");
 	}
 	
+	/**********
+	 * <p>
+	 * Method: testAskAIUnsupportedCategory()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Calls askAI() with a category other than Write and verifies
+	 * that a RuntimeException naming the unsupported category is thrown before
+	 * any request is sent.
+	 * </p>
+	 */
+	@Test
+	void testAskAIUnsupportedCategory() throws Exception {
+		try {
+			ModelAITools.askAI("Brainstorm", "A valid description of a lesson learned");
+			fail("Expected a RuntimeException for an unsupported category");
+		} catch (RuntimeException e) {
+			assertTrue(e.getMessage().contains("Unsupported or null category: Brainstorm"));
+		}
+	}
+
+	/**********
+	 * <p>
+	 * Method: testAskAINullCategory()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Calls askAI() with a null category and verifies that a
+	 * RuntimeException is thrown.
+	 * </p>
+	 */
+	@Test
+	void testAskAINullCategory() throws Exception {
+		try {
+			ModelAITools.askAI(null, "A valid description of a lesson learned");
+			fail("Expected a RuntimeException for a null category");
+		} catch (RuntimeException e) {
+			assertNotNull(e);
+		}
+	}
+
+	/**********
+	 * <p>
+	 * Method: testBrainstormLessonUnsupportedCategory()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Calls brainstormLesson() with a category other than Brainstorm
+	 * and verifies that a RuntimeException naming the unsupported category is
+	 * thrown before any request is sent.
+	 * </p>
+	 */
+	@Test
+	void testBrainstormLessonUnsupportedCategory() throws Exception {
+		try {
+			ModelAITools.brainstormLesson("Write", "A valid description of a lesson learned");
+			fail("Expected a RuntimeException for an unsupported category");
+		} catch (RuntimeException e) {
+			assertTrue(e.getMessage().contains("Unsupported or null category: Write"));
+		}
+	}
+
+	/**********
+	 * <p>
+	 * Method: testBrainstormLessonNullCategory()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Calls brainstormLesson() with a null category and verifies that
+	 * a RuntimeException is thrown.
+	 * </p>
+	 */
+	@Test
+	void testBrainstormLessonNullCategory() throws Exception {
+		try {
+			ModelAITools.brainstormLesson(null, "A valid description of a lesson learned");
+			fail("Expected a RuntimeException for a null category");
+		} catch (RuntimeException e) {
+			assertNotNull(e);
+		}
+	}
+
+	/**********
+	 * <p>
+	 * Method: testSearchLessonsUnsupportedCategory()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Calls searchLessons() with a category other than Search and
+	 * verifies that a RuntimeException naming the unsupported category is thrown
+	 * before the lessons are loaded or any request is sent.
+	 * </p>
+	 */
+	@Test
+	void testSearchLessonsUnsupportedCategory() throws Exception {
+		try {
+			ModelAITools.searchLessons("Write", "database backups");
+			fail("Expected a RuntimeException for an unsupported category");
+		} catch (RuntimeException e) {
+			assertTrue(e.getMessage().contains("Unsupported or null category: Write"));
+		}
+	}
+
+	/**********
+	 * <p>
+	 * Method: testSearchLessonsNullCategory()
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Calls searchLessons() with a null category and verifies that a
+	 * RuntimeException is thrown.
+	 * </p>
+	 */
+	@Test
+	void testSearchLessonsNullCategory() throws Exception {
+		try {
+			ModelAITools.searchLessons(null, "database backups");
+			fail("Expected a RuntimeException for a null category");
+		} catch (RuntimeException e) {
+			assertNotNull(e);
+		}
+	}
+	
 }
