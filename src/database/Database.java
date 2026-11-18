@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import entityClasses.LessonsLearnedList;
+import entityClasses.User;
 import entityClasses.LessonExperience;
 import entityClasses.LessonRecord;
-import entityClasses.LessonsLearnedList;
-import entityClasses.TeammateEffort;
-import entityClasses.User;
 import lessons.LessonsEvaluator;
+import entityClasses.TeammateEffort;
 
 /*******
  * <p>
@@ -156,6 +156,120 @@ public class Database {
 
 	/*******
 	 * <p>
+	 * Method: setContributorCanViewExperienceStats(String userName, boolean
+	 * enabled)
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Sets whether one contributor is permitted to view the total and
+	 * average experience hours for their lessons. The setting is stored per
+	 * contributor in the ContributorStatsVisibility table, so changing it for one
+	 * contributor never affects another, and it persists between application
+	 * restarts. The change is written immediately (auto-commit is on).
+	 * </p>
+	 *
+	 * @param userName the contributor the setting applies to
+	 * @param enabled  true if this contributor may view experience statistics,
+	 *                 false otherwise
+	 *
+	 * @throws SQLException when the setting cannot be saved
+	 *
+	 */
+	public void setContributorCanViewExperienceStats(String userName, boolean enabled) throws SQLException {
+		String query = "MERGE INTO ContributorStatsVisibility "
+				+ "(userName, statsVisible) KEY(userName) VALUES (?, ?)";
+
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, userName);
+			pstmt.setBoolean(2, enabled);
+			pstmt.executeUpdate();
+		}
+	}
+
+	/*******
+	 * <p>
+	 * Method: getContributorCanViewExperienceStats(String userName)
+	 * </p>
+	 *
+	 * <p>
+	 * Description: Retrieves whether one contributor is permitted to view the total
+	 * and average experience hours for their lessons. A contributor with no stored
+	 * setting is OFF. Callers must treat a thrown SQLException as "hidden", never
+	 * as "visible".
+	 * </p>
+	 *
+	 * @param userName the contributor to check
+	 *
+	 * @return true if this contributor may view experience statistics, false
+	 *         otherwise
+	 *
+	 * @throws SQLException when the setting cannot be read
+	 *
+	 */
+	public boolean getContributorCanViewExperienceStats(String userName) throws SQLException {
+		String query = "SELECT statsVisible FROM ContributorStatsVisibility " + "WHERE userName = ?";
+
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, userName);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				return rs.next() && rs.getBoolean(1); // no stored row means OFF
+			}
+		}
+	}
+
+	/**
+	 * <p>
+	 * Method: getLessonDurationSum
+	 * </p>
+	 * <p>
+	 * Description: Calculates the total experience duration for a lesson.
+	 * </p>
+	 *
+	 * @param lessonId the lesson database ID
+	 * @return the sum of all experience durations
+	 * @throws SQLException if a database error occurs
+	 */
+	public double getLessonDurationSum(int lessonId) throws SQLException {
+		String query = "SELECT COALESCE(SUM(durationHours), 0) " + "FROM LessonExperienceDB WHERE lessonId = ?";
+
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, lessonId);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				rs.next();
+				return rs.getDouble(1);
+			}
+		}
+	}
+
+	/**
+	 * <p>
+	 * Method: getLessonDurationAverage
+	 * </p>
+	 * <p>
+	 * Description: Calculates the average experience duration for a lesson.
+	 * </p>
+	 *
+	 * @param lessonId the lesson database ID
+	 * @return the average experience duration
+	 * @throws SQLException if a database error occurs
+	 */
+	public double getLessonDurationAverage(int lessonId) throws SQLException {
+		String query = "SELECT COALESCE(AVG(durationHours), 0) " + "FROM LessonExperienceDB WHERE lessonId = ?";
+
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, lessonId);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				rs.next();
+				return rs.getDouble(1);
+			}
+		}
+	}
+
+	/*******
+	 * <p>
 	 * Method: createTables
 	 * </p>
 	 *
@@ -207,6 +321,16 @@ public class Database {
 				+ "effortEntry VARCHAR(" + LessonsEvaluator.EXPERIENCE_TEXT_MAX + "), "
 				+ "FOREIGN KEY (experienceId) REFERENCES LessonExperienceDB(id) ON DELETE CASCADE)";
 		statement.execute(teammateTable);
+
+		String settingsTable = "CREATE TABLE IF NOT EXISTS ApplicationSettings ("
+				+ "settingName VARCHAR(255) PRIMARY KEY, " + "settingValue BOOL)";
+		statement.execute(settingsTable);
+
+		// One row per contributor: may that contributor see the Avg and Sum columns?
+		// A contributor with no row is treated as OFF.
+		String visibilityTable = "CREATE TABLE IF NOT EXISTS ContributorStatsVisibility ("
+				+ "userName VARCHAR(255) PRIMARY KEY, " + "statsVisible BOOL DEFAULT FALSE)";
+		statement.execute(visibilityTable);
 	}
 
 	/*******
@@ -799,6 +923,9 @@ public class Database {
 	 *
 	 * <p>
 	 * Description: Delete a user from the database given that user's username
+	 * Description: Delete a user from the database given that user's username. The
+	 * user's Avg/Sum visibility setting is removed too, so a user later created
+	 * with the same name starts with the default (OFF).
 	 * </p>
 	 *
 	 * @param username is the username of the user
@@ -810,6 +937,14 @@ public class Database {
 			pstmt.setString(1, username);
 			pstmt.executeUpdate();
 			System.out.println("*** database.deleteUser(): " + pstmt.toString());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		try (PreparedStatement pstmt2 = connection
+				.prepareStatement("DELETE FROM ContributorStatsVisibility WHERE userName = ?")) {
+			pstmt2.setString(1, username);
+			pstmt2.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
