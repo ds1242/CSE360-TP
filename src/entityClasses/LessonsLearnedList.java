@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
-import lessons.LessonRecord;
+import entityClasses.LessonRecord;
 
 /*******
  * <p> Title: LessonsLearnedList Class </p>

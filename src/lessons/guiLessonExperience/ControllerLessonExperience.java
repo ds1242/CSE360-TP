@@ -6,10 +6,10 @@ import java.util.Optional;
 
 import javafx.collections.FXCollections;
 import javafx.scene.control.ButtonType;
-import lessons.LessonExperience;
-import lessons.LessonRecord;
+import entityClasses.LessonExperience;
+import entityClasses.LessonRecord;
 import lessons.LessonsEvaluator;
-import lessons.TeammateEffort;
+import entityClasses.TeammateEffort;
 import lessons.guiContributorLessons.ViewContributorLessons;
 
 /*******

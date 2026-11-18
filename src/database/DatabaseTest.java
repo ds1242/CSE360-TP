@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import entityClasses.User;
-import lessons.LessonRecord;
+import entityClasses.LessonRecord;
 
 class DatabaseTest {
 

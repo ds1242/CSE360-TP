@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import javafx.scene.control.ButtonType;
-import lessons.LessonRecord;
+import entityClasses.LessonRecord;
 import lessons.LessonsEvaluator;
 import lessons.guiContributorLessons.ViewContributorLessons;
 import lessons.guiLessonExperience.ViewLessonExperience;

@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import lessons.LessonRecord;
+import entityClasses.LessonRecord;
 
 /*******
  * <p> Title: ViewCurator Class. </p>
