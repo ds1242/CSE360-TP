@@ -3,8 +3,8 @@ package lessons.evaluationTestbed;
 import java.sql.SQLException;
 
 import database.Database;
-import entityClasses.LessonRecord;
 import entityClasses.LessonsLearnedList;
+import entityClasses.LessonRecord;
 import lessons.LessonsEvaluator;
 
 /*******

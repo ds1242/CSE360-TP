@@ -7,8 +7,8 @@ import java.util.List;
 import database.Database;
 import entityClasses.LessonExperience;
 import entityClasses.LessonRecord;
-import entityClasses.TeammateEffort;
 import lessons.LessonsEvaluator;
+import entityClasses.TeammateEffort;
 
 /*******
  * <p> Title: ModelLessonExperience Class. </p>

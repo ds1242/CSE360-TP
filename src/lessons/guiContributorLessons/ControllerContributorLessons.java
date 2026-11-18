@@ -3,10 +3,10 @@ package lessons.guiContributorLessons;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import entityClasses.LessonRecord;
 import entityClasses.LessonsLearnedList;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ButtonType;
+import entityClasses.LessonRecord;
 import lessons.guiCreateLesson.ViewCreateLesson;
 import lessons.guiLessonDetails.ViewLessonDetails;
 import lessons.guiLessonExperience.ViewLessonExperience;
@@ -60,6 +60,11 @@ public class ControllerContributorLessons {
 	protected static void repaintTheWindow() {
 		ViewContributorLessons.label_UserDetails.setText("User: "
 				+ ViewContributorLessons.theUser.getUserName());
+		boolean show = ModelContributorLessons.canViewExperienceStats(
+		        ViewContributorLessons.theUser.getUserName());
+		ViewContributorLessons.statsVisible = show;
+		ViewContributorLessons.tablecol_Avg.setVisible(show);
+		ViewContributorLessons.tablecol_Sum.setVisible(show);
 
 		try {
 			LessonsLearnedList myLessons = ModelContributorLessons.loadMyLessons(

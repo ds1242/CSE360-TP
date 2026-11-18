@@ -4,9 +4,11 @@
  * <p> Description: provides project module insight into binding libraries. </p>
  */
 module FoundationsF26 {
-	requires javafx.controls;
-	requires java.sql;
+    requires javafx.controls;
+    requires java.sql;
     requires javafx.graphics;
-
-	opens applicationMain to javafx.graphics, javafx.fxml;
+    requires org.junit.jupiter.api;
+    
+    opens database to org.junit.platform.commons;
+    opens applicationMain to javafx.graphics, javafx.fxml;
 }

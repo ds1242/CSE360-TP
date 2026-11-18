@@ -3,8 +3,8 @@ package lessons.guiContributorLessons;
 import java.sql.SQLException;
 
 import database.Database;
-import entityClasses.LessonRecord;
 import entityClasses.LessonsLearnedList;
+import entityClasses.LessonRecord;
 import lessons.LessonsEvaluator;
 
 /*******
@@ -137,5 +137,40 @@ public class ModelContributorLessons {
 			return DATABASE_ERROR;
 		}
 		return "";
+	}
+	
+	/**********
+	 * <p> Method: canViewExperienceStats() </p>
+	 *
+	 * <p> Description: Checks whether the Curator has enabled contributors to view
+	 * the total and average experience hours for their lessons.</p>
+	 *
+	 * @return true if contributors are allowed to view experience statistics,
+	 *         false otherwise
+	 */
+	protected static boolean canViewExperienceStats(String username) {
+	    try {
+	        return theDatabase.getContributorCanViewExperienceStats(username);
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;   // on error, hide
+	    }
+	}
+	/**********
+	 * <p> Method: getExperienceStats(int) </p>
+	 *
+	 * <p> Description: Retrieves the total and average experience hours for a lesson.
+	 * These values are intended to be displayed only when the Curator has enabled
+	 * experience statistics visibility.</p>
+	 *
+	 * @param lessonId the database ID of the lesson
+	 * @return an array containing the total hours at index 0 and average hours at index 1
+	 * @throws SQLException if the database cannot be read
+	 */
+	protected static double[] getExperienceStats(int lessonId) throws SQLException {
+		double total = theDatabase.getLessonDurationSum(lessonId);
+		double average = theDatabase.getLessonDurationAverage(lessonId);
+
+		return new double[] { total, average };
 	}
 }
