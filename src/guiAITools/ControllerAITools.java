@@ -40,7 +40,18 @@ public class ControllerAITools {
 		}
 
 		try {
-		    String aiResult = ModelAITools.askAI(category, description);
+		    String aiResult = "";
+		    if(category.equals("Write")) {
+		    	aiResult = ModelAITools.askAI(category, description);
+		    } else if (category.equals("Brainstorm")) {
+		    	aiResult = ModelAITools.brainstormLesson(category, description);
+		    } else if (category.equals("Search")) {
+		    	aiResult = ModelAITools.searchLessons(category, description);
+		    } else {
+		    	ViewAITools.showError("Invalid Category - Please select one");
+		    	return;
+		    }
+
 		    
 		    ViewAITools.setAIResponse(aiResult);
 		    ViewAITools.showSuccess("AI request completed successfully!");

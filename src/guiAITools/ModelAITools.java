@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import applicationMain.FoundationsMain;
+import entityClasses.LessonRecord;
+import entityClasses.LessonsLearnedList;
+
 
 /**
  * Title: ModelAITools
@@ -35,6 +38,14 @@ public class ModelAITools {
 			+ "a mostly complete lesson. If they ask you to write it you must respond with: 'What have you tried? Steps you took? "
 			+ "and what will you try next?' Return only the newly written lesson. Do not add any advice, preamble, or extra "
 			+ "punctuation with the exception of the required response if they ask you to write a lesson outright.";
+	
+	
+	private static final String COACH_PROMPT = "You are a helpful writing coach reviewing a 'lesson learned' post. "
+			+ "Provide 3 specific actionable items of feedback. Focus on clarity and what would make it valuable to"
+			+ "readers. Start each bullet point with a +.  Do not add any other advice, preamble, or extra punctuation. ";
+	
+	private static final String SEARCH_PROMPT = "A user is attempting to search for a 'lesson learned' post using plain "
+			+ "language.  A list of lesson titles and their";
 
 	/**
 	 * Method: validateInput(String category, String description)
@@ -81,12 +92,79 @@ public class ModelAITools {
 			throw new RuntimeException("Unsupported or null category: " + category);
 		}
 
-		// Properly separate system prompt from user message history
 		List<ChatMessage> history = new ArrayList<>();
 		history.add(new ChatMessage("user", description));
 
 		String body = buildRequestBody(history, WRITE_SYSTEM_PROMPT);
 		String response = postToGroq(body);
+		return extractAssistantMessage(response);
+	}
+	
+	/**
+	 * Method: brainstormLesson(String category, String body)
+	 * <p>Description:
+	 * Sends the user's draft lesson to the AI using the writing coach prompt,
+	 * which returns three actionable feedback items.
+	 *
+	 * Only the "Brainstorm" category is supported.</p>
+	 *
+	 * @param category the tool category, must be "Brainstorm"
+	 * @param body     the user's draft lesson text
+	 * @return the AI's feedback text
+	 * @throws Exception if the category is unsupported or the request fails
+	 */
+	public static String brainstormLesson(String category, String body) throws Exception {
+		if(!category.equals("Brainstorm")) {
+			throw new RuntimeException("Unsupported or null category: " + category);
+		}
+		List<ChatMessage> msgs = new ArrayList<>();
+		msgs.add(new ChatMessage("user", body));
+		String requestBody = buildRequestBody(msgs, COACH_PROMPT);
+		String response = postToGroq(requestBody);
+		return extractAssistantMessage(response);
+	}
+	
+	/**
+	 * Method: searchLessons(String category, String body)
+	 * <p>Description:
+	 * Loads the saved lessons learned, appends them to the user's plain language
+	 * search request, and sends the combined text to the AI so it can identify
+	 * the best matches.
+	 *
+	 * Only the "Search" category is supported.</p>
+	 *
+	 * @param category the tool category, must be "Search"
+	 * @param body     the user's plain language search text
+	 * @return the AI's response text
+	 * @throws Exception if the category is unsupported or the request fails
+	 */
+	public static String searchLessons(String category, String body) throws Exception {
+		if(!category.equals("Search")) {
+			throw new RuntimeException("Unsupported or null category: " + category);
+		}
+		List<LessonRecord> lessons = new ArrayList<>();
+		try {
+			LessonsLearnedList lessonList = new LessonsLearnedList();
+			lessons = lessonList.getLessons();
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		StringBuilder stringBuilder = new StringBuilder();
+	    stringBuilder.append("User search: ").append(body).append("\n\n");
+	    stringBuilder.append("Available lessons:\n");
+	    for (LessonRecord lesson : lessons) {
+	    	stringBuilder.append("- ").append(lesson.getTitle())
+//	          .append(": ").append(lesson.getDescription())
+	          .append("\n");
+	    }
+		
+		List<ChatMessage> history = new ArrayList<>();
+		history.add(new ChatMessage("user", body));
+
+		String requestBody = buildRequestBody(history, SEARCH_PROMPT);
+		String response = postToGroq(requestBody);
 		return extractAssistantMessage(response);
 	}
 
@@ -278,7 +356,7 @@ public class ModelAITools {
 	}
 	
 	public static void getKey() {
-		System.out.println(FoundationsMain.llmApiKey);
+		System.out.println("Key = " + FoundationsMain.llmApiKey);
 	}
 
 	/**
