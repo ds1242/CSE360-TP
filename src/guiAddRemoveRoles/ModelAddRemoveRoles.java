@@ -30,8 +30,8 @@ public class ModelAddRemoveRoles {
 		return theDatabase.getCurrentAdminRole();
 	}
 	
-	protected static boolean hasRole1() {
-		return theDatabase.getCurrentNewRole1();
+	protected static boolean hasContributorRole() {
+		return theDatabase.getCurrentContributorRole();
 	}
 	
 	protected static boolean hasRole2() {

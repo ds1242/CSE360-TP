@@ -101,7 +101,7 @@ public class ControllerUserLogin {
     		theDatabase.getCurrentPreferredFirstName(),
             theDatabase.getCurrentEmailAddress(),
     		theDatabase.getCurrentAdminRole(),
-    		theDatabase.getCurrentNewRole1(),
+    		theDatabase.getCurrentContributorRole(),
             theDatabase.getCurrentNewRole2(),
             theDatabase.getOneTimePassword()
         );
@@ -140,8 +140,8 @@ public class ControllerUserLogin {
 				if (loginResult) {
 					guiAdminHome.ViewAdminHome.displayAdminHome(theStage, user);
 				}
-			} else if (user.getNewRole1()) {
-				loginResult = theDatabase.loginRole1(user);
+			} else if (user.getContributorRole()) {
+				loginResult = theDatabase.loginContributor(user);
 				if (loginResult) {
 					guiContributor.ViewContributorHome.displayContributorHome(theStage, user);
 				}

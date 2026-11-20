@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
+import applicationMain.Logger;
 import entityClasses.LessonExperience;
 import entityClasses.LessonRecord;
 import entityClasses.LessonsLearnedList;
@@ -79,6 +80,9 @@ public class Database {
 	private boolean currentNewContributor;
 	private boolean currentNewRole2;
 	private boolean currentOneTimePassword;
+	
+	private User currentUserDetais;
+	private boolean userUpToDate;
 
 	/*******
 	 * <p>
@@ -92,7 +96,8 @@ public class Database {
 	 */
 
 	public Database() {
-
+		this.currentUserDetais = null;
+		this.userUpToDate = false;
 	}
 
 	/*******
@@ -288,7 +293,7 @@ public class Database {
 		String userTable = "CREATE TABLE IF NOT EXISTS userDB (" + "id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "userName VARCHAR(255) UNIQUE, " + "password VARCHAR(255), " + "firstName VARCHAR(255), "
 				+ "middleName VARCHAR(255), " + "lastName VARCHAR (255), " + "preferredFirstName VARCHAR(255), "
-				+ "emailAddress VARCHAR(255), " + "adminRole BOOL DEFAULT FALSE, " + "newRole1 BOOL DEFAULT FALSE, "
+				+ "emailAddress VARCHAR(255), " + "adminRole BOOL DEFAULT FALSE, " + "contributorRole BOOL DEFAULT FALSE, "
 				+ "newRole2 BOOL DEFAULT FALSE, " + "oneTimePassword BOOL DEFAULT FALSE)";
 		statement.execute(userTable);
 
@@ -360,6 +365,10 @@ public class Database {
 		}
 		return true;
 	}
+	
+	public boolean isCurrentUserUpToDate() {
+		return (this.currentUserDetais != null && this.userUpToDate);
+	}
 
 	/*******
 	 * <p>
@@ -404,7 +413,7 @@ public class Database {
 	 */
 	public void register(User user) throws SQLException {
 		String insertUser = "INSERT INTO userDB (userName, password, firstName, middleName, "
-				+ "lastName, preferredFirstName, emailAddress, adminRole, newRole1, newRole2, oneTimePassword) "
+				+ "lastName, preferredFirstName, emailAddress, adminRole, contributorRole, newRole2, oneTimePassword) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
 			currentUsername = user.getUserName();
@@ -431,7 +440,7 @@ public class Database {
 			currentAdminRole = user.getAdminRole();
 			pstmt.setBoolean(8, currentAdminRole);
 
-			currentNewContributor = user.getNewRole1();
+			currentNewContributor = user.getContributorRole();
 			pstmt.setBoolean(9, currentNewContributor);
 
 			currentNewRole2 = user.getNewRole2();
@@ -510,7 +519,7 @@ public class Database {
 			while (rs.next()) {
 				users.add(new User(rs.getString("userName"), rs.getString("password"), rs.getString("firstName"),
 						rs.getString("middleName"), rs.getString("lastName"), rs.getString("preferredFirstName"),
-						rs.getString("emailAddress"), rs.getBoolean("adminRole"), rs.getBoolean("newRole1"),
+						rs.getString("emailAddress"), rs.getBoolean("adminRole"), rs.getBoolean("contributorRole"),
 						rs.getBoolean("newRole2"), rs.getBoolean("oneTimePassword")));
 			}
 		} catch (SQLException e) {
@@ -568,9 +577,9 @@ public class Database {
 	 *         false.
 	 *
 	 */
-	public boolean loginRole1(User user) {
+	public boolean loginContributor(User user) {
 		// Validates a student user's login credentials.
-		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND " + "newRole1 = TRUE";
+		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND " + "contributorRole = TRUE";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setString(1, user.getUserName());
 			pstmt.setString(2, user.getPassword());
@@ -661,14 +670,7 @@ public class Database {
 	 *
 	 */
 	public int getNumberOfRoles(User user) {
-		int numberOfRoles = 0;
-		if (user.getAdminRole())
-			numberOfRoles++;
-		if (user.getNewRole1())
-			numberOfRoles++;
-		if (user.getNewRole2())
-			numberOfRoles++;
-		return numberOfRoles;
+		return user.getNumRoles();
 	}
 
 	/*******
@@ -1144,7 +1146,7 @@ public class Database {
 			ResultSet rs = pstmt.executeQuery();
 
 			if (rs.next()) {
-				return rs.getString("firstName"); // Return the preferred first name if user exists
+				return rs.getString("preferredFirstName"); // Return the preferred first name if user exists
 			}
 
 		} catch (SQLException e) {
@@ -1274,6 +1276,33 @@ public class Database {
 			return false;
 		}
 	}
+	
+	public User getCurrentUserAccountDetails(String username) {
+		String query = "SELECT * FROM userDB WHERE username = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, username);
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			String c_Username = rs.getString(2);
+			String c_Password = rs.getString(3);
+			String c_FirstName = rs.getString(4);
+			String c_MiddleName = rs.getString(5);
+			String c_LastName = rs.getString(6);
+			String c_PreferredFirstName = rs.getString(7);
+			String c_EmailAddress = rs.getString(8);
+			boolean c_AdminRole = rs.getBoolean(9);
+			boolean c_ContributorRole = rs.getBoolean(10);
+			boolean c_NewRole2 = rs.getBoolean(11);
+			boolean c_OneTimePassword = rs.getBoolean(12);
+			
+			return new User(c_Username, c_Password, c_FirstName, c_MiddleName, c_LastName, 
+					c_PreferredFirstName, c_EmailAddress,
+					c_AdminRole, c_ContributorRole, c_NewRole2, c_OneTimePassword);
+		} catch (SQLException e) {
+			Logger.getLogger().logWarning("SQL error interrupted current user account building...");
+			return null;
+		}
+	}
 
 	/*******
 	 * <p>
@@ -1311,7 +1340,7 @@ public class Database {
 			}
 		}
 		if (role.compareTo("Role1") == 0) {
-			String query = "UPDATE userDB SET newRole1 = ? WHERE username = ?";
+			String query = "UPDATE userDB SET contributorRole = ? WHERE username = ?";
 			try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 				pstmt.setString(1, value);
 				pstmt.setString(2, username);
@@ -1473,7 +1502,7 @@ public class Database {
 
 	/*******
 	 * <p>
-	 * Method: boolean getCurrentNewRole1()
+	 * Method: boolean getCurrentcontributorRole()
 	 * </p>
 	 *
 	 * <p>
@@ -1483,7 +1512,7 @@ public class Database {
 	 * @return true if this user plays a Student role, else false
 	 *
 	 */
-	public boolean getCurrentNewRole1() {
+	public boolean getCurrentContributorRole() {
 		return currentNewContributor;
 	};
 

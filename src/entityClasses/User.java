@@ -25,10 +25,27 @@ public class User {
     private String lastName;
     private String preferredFirstName;
     private String emailAddress;
-    private boolean adminRole;
-    private boolean contributor;
-    private boolean role2;
     private boolean otp;
+    
+    private boolean[] roles;
+    
+    public enum Role {
+    	
+    	ADMIN(0),
+    	CONTRIBUTOR(1),
+    	ROLE2(2);
+    	
+    	private int roleIndex;
+    	
+    	private Role(int roleIndex) {
+    		this.roleIndex = roleIndex;
+    	}
+    	
+    	public int getRoleIndex() {
+    		return this.roleIndex;
+    	}
+    	
+    }
 
 
     /*****
@@ -68,10 +85,12 @@ public class User {
         this.lastName = ln;
         this.preferredFirstName = pfn;
         this.emailAddress = ea;
-        this.adminRole = r1;
-        this.contributor = r2;
-        this.role2 = r3;
         this.otp = otp;
+        
+        roles = new boolean[Role.values().length];
+        roles[Role.ADMIN.roleIndex] = r1;
+        roles[Role.CONTRIBUTOR.roleIndex] = r2;
+        roles[Role.ROLE2.roleIndex] = r3;
     }
 
     /*****
@@ -84,7 +103,7 @@ public class User {
      */
     // Sets the role of the Admin user.
     public void setAdminRole(boolean role) {
-    	this.adminRole=role;
+    	this.roles[Role.ADMIN.roleIndex] = role;
     }
 
     /*****
@@ -97,7 +116,7 @@ public class User {
      */
     // Sets the role1 user.
     public void setContributorUser(boolean role) {
-    	this.contributor=role;
+    	this.roles[Role.CONTRIBUTOR.roleIndex] = role;
     }
 
     /*****
@@ -110,7 +129,7 @@ public class User {
      */
     // Sets the role2 user.
     public void setRole2User(boolean role) {
-    	this.role2=role;
+    	this.roles[Role.ROLE2.roleIndex] = role;
     }
 
     /*****
@@ -208,7 +227,7 @@ public class User {
 	 *
      */
     // Gets the current value of the Admin role attribute.
-    public boolean getAdminRole() { return adminRole; }
+    public boolean getAdminRole() { return this.roles[Role.ADMIN.roleIndex]; }
 
     /*****
      * <p> Method: String getRole1() </p>
@@ -219,7 +238,7 @@ public class User {
 	 *
      */
     // Gets the current value of the role1 attribute.
-	public boolean getNewRole1() { return contributor; }
+	public boolean getContributorRole() { return this.roles[Role.CONTRIBUTOR.roleIndex]; }
 
     /*****
      * <p> Method: String getRole2() </p>
@@ -230,7 +249,7 @@ public class User {
 	 *
      */
     // Gets the current value of the role2 attribute.
-    public boolean getNewRole2() { return role2; }
+    public boolean getNewRole2() { return this.roles[Role.ROLE2.roleIndex]; }
 
     /*****
      * <p> Method: String getOneTimePassword() </p>
@@ -253,9 +272,10 @@ public class User {
     // Gets the current value of the Staff role attribute.
     public int getNumRoles() {
     	int numRoles = 0;
-    	if (adminRole) numRoles++;
-    	if (contributor) numRoles++;
-    	if (role2) numRoles++;
+    	for (boolean role : this.roles) {
+    		if (role)
+    			numRoles++;
+    	}
     	return numRoles;
     }
 }
