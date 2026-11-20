@@ -1,6 +1,9 @@
 package applicationMain;
 	
+import java.io.FileInputStream;
 import java.sql.SQLException;
+import java.util.Properties;
+
 import database.Database;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -80,6 +83,10 @@ public class FoundationsMain extends Application {
 
 	public static int activeHomePage = 0;		// Which role's home page is currently active?
 												// Role 0 is the admin role number
+	
+	public static String llmApiKey = "";
+	
+	
 	@Override
 	public void start(Stage theStage) {
 		
@@ -94,6 +101,14 @@ public class FoundationsMain extends Application {
 			databaseInUse.setContentText("Please stop the other instance and try again!");
 			databaseInUse.showAndWait();
 			System.exit(0);
+		}
+		
+		try {
+			Properties props = new Properties();
+			props.load(new FileInputStream("config.properties"));
+			llmApiKey = props.getProperty("api_key", "").trim();
+		} catch (Exception ignore) {
+			llmApiKey = "";
 		}
 		
 		// If the database is empty, no users have been established, so this user must be an admin
