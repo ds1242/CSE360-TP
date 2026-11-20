@@ -1,6 +1,5 @@
 package guiAddRemoveRoles;
 
-import database.Database;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
@@ -43,10 +42,7 @@ public class ControllerAddRemoveRoles {
 	 * Default constructor is not used.
 	 */
 	public ControllerAddRemoveRoles() {
-	}
-	
-	// Reference for the in-memory database so this package has access
-	private static Database theDatabase = applicationMain.FoundationsMain.database;		
+	}	
 
 	/**********
 	 * <p> Method: doSelectUser() </p>
@@ -59,8 +55,11 @@ public class ControllerAddRemoveRoles {
 	protected static void doSelectUser() {
 		ViewAddRemoveRoles.theSelectedUser = 
 				(String) ViewAddRemoveRoles.combobox_SelectUser.getValue();
-		theDatabase.getUserAccountDetails(ViewAddRemoveRoles.theSelectedUser);
-		setupSelectedUser();
+		if (ModelAddRemoveRoles.hasUserAccountDetails(ViewAddRemoveRoles.theSelectedUser)) {
+			setupSelectedUser();
+		} else {
+			System.out.println("[Error] SQL error found when accessing user account details...");
+		}
 	}
 	
 	
@@ -75,7 +74,7 @@ public class ControllerAddRemoveRoles {
 		// Clear what had been displayed
 		ViewAddRemoveRoles.theRootPane.getChildren().clear();
 		
-		// Defermine which of the two views to show to the user
+		// Determine which of the two views to show to the user
 		if (ViewAddRemoveRoles.theSelectedUser.compareTo("<Select a User>") == 0) {
 			// Only show the request to select a user to be updated and the ComboBox
 			ViewAddRemoveRoles.theRootPane.getChildren().addAll(
@@ -128,22 +127,22 @@ public class ControllerAddRemoveRoles {
 		// not show a role to add that the user already has!)
 		ViewAddRemoveRoles.addList.clear();
 		ViewAddRemoveRoles.addList.add("<Select a role>");
-		if (!theDatabase.getCurrentAdminRole())
+		if (!ModelAddRemoveRoles.hasAdminRole())
 			ViewAddRemoveRoles.addList.add("Admin");
-		if (!theDatabase.getCurrentNewRole1())
+		if (!ModelAddRemoveRoles.hasRole1())
 			ViewAddRemoveRoles.addList.add("Role1");
-		if (!theDatabase.getCurrentNewRole2())
+		if (!ModelAddRemoveRoles.hasRole2())
 			ViewAddRemoveRoles.addList.add("Role2");
 
 		// Create the list of roles that could be removed for the currently selected user (e.g., Do
 		// not show a role to remove that the user does not have!)
 		ViewAddRemoveRoles.removeList.clear();
 		ViewAddRemoveRoles.removeList.add("<Select a role>");
-		if (theDatabase.getCurrentAdminRole())
+		if (ModelAddRemoveRoles.hasAdminRole())
 			ViewAddRemoveRoles.removeList.add("Admin");
-		if (theDatabase.getCurrentNewRole1())
+		if (ModelAddRemoveRoles.hasRole1())
 			ViewAddRemoveRoles.removeList.add("Role1");
-		if (theDatabase.getCurrentNewRole2())
+		if (ModelAddRemoveRoles.hasRole2())
 			ViewAddRemoveRoles.removeList.add("Role2");
 		
 		// Create the list or roles that the user currently has with proper use of a comma between
@@ -152,13 +151,13 @@ public class ControllerAddRemoveRoles {
 		String theCurrentRoles = "";
 		
 		// Admin role - It can only be at the head of a list
-		if (theDatabase.getCurrentAdminRole()) {
+		if (ModelAddRemoveRoles.hasAdminRole()) {
 			theCurrentRoles += "Admin";
 			notTheFirst = true;
 		}
 		
 		// Roles 1 - It could be at the head of the list or later in the list
-		if (theDatabase.getCurrentNewRole1()) {
+		if (ModelAddRemoveRoles.hasRole1()) {
 			if (notTheFirst)
 				theCurrentRoles += ", Role1"; 
 			else {
@@ -168,7 +167,7 @@ public class ControllerAddRemoveRoles {
 		}
 
 		// Roles 2 - It could be at the head of the list or later in the list
-		if (theDatabase.getCurrentNewRole2()) {
+		if (ModelAddRemoveRoles.hasRole2()) {
 			if (notTheFirst)
 				theCurrentRoles += ", Role2"; 
 			else {
@@ -216,8 +215,8 @@ public class ControllerAddRemoveRoles {
 		if (ViewAddRemoveRoles.theAddRole.compareTo("<Select a role>") != 0) {
 			
 			// If an actual role was selected, update the database entry for that user for the role
-			if (theDatabase.updateUserRole(ViewAddRemoveRoles.theSelectedUser,
-					ViewAddRemoveRoles.theAddRole, "true") ) {
+			if (ModelAddRemoveRoles.hasUpdateUser(ViewAddRemoveRoles.theSelectedUser, 
+					ViewAddRemoveRoles.theAddRole, true)) {
 				ViewAddRemoveRoles.combobox_SelectRoleToAdd = new ComboBox <String>();
 				ViewAddRemoveRoles.combobox_SelectRoleToAdd.setItems(FXCollections.
 					observableArrayList(ViewAddRemoveRoles.addList));
@@ -245,8 +244,8 @@ public class ControllerAddRemoveRoles {
 		if (ViewAddRemoveRoles.theRemoveRole.compareTo("<Select a role>") != 0) {
 			
 			// If an actual role was selected, update the database entry for that user for the role
-			if (theDatabase.updateUserRole(ViewAddRemoveRoles.theSelectedUser, 
-					ViewAddRemoveRoles.theRemoveRole, "false") ) {
+			if (ModelAddRemoveRoles.hasUpdateUser(ViewAddRemoveRoles.theSelectedUser, 
+					ViewAddRemoveRoles.theRemoveRole, false)) {
 				ViewAddRemoveRoles.combobox_SelectRoleToRemove = new ComboBox <String>();
 				ViewAddRemoveRoles.combobox_SelectRoleToRemove.setItems(FXCollections.
 					observableArrayList(ViewAddRemoveRoles.addList));

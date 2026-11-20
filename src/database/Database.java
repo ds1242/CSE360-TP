@@ -1,22 +1,25 @@
 package database;
 
-import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Predicate;
 
-import entityClasses.LessonsLearnedList;
-import entityClasses.User;
 import entityClasses.LessonExperience;
 import entityClasses.LessonRecord;
-import lessons.LessonsEvaluator;
+import entityClasses.LessonsLearnedList;
 import entityClasses.TeammateEffort;
+import entityClasses.User;
+import lessons.LessonsEvaluator;
 
 /*******
  * <p>
