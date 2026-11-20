@@ -111,6 +111,20 @@ public class Database {
 	public Database(String databaseUrl) {
 		this.databaseUrl = databaseUrl;
 	}
+	
+	
+	/***
+	 * <p> Method: Database(Connection connection) </p>
+	 * <p>Description: Established a fake database for use with JUnit </p>
+	 * @param connection
+	 * @throws SQLException
+	 */
+
+	public Database(Connection connection) throws SQLException {
+		this.connection = connection;
+		this.statement = connection.createStatement();
+		createTables();
+	}
 
 	/*******
 	 * <p>
@@ -908,6 +922,7 @@ public class Database {
 	 * </p>
 	 *
 	 * <p>
+	 * Description: Delete a user from the database given that user's username
 	 * Description: Delete a user from the database given that user's username. The
 	 * user's Avg/Sum visibility setting is removed too, so a user later created
 	 * with the same name starts with the default (OFF).
@@ -1792,8 +1807,7 @@ public class Database {
 			List<TeammateEffort> teammates) throws SQLException {
 		LocalDateTime now = LocalDateTime.now();
 		String insertExperience = "INSERT INTO LessonExperienceDB "
-				+ "(lessonId, whatWasDone, howItWasDone, durationHours, createdAt) " 
-				+ "VALUES (?, ?, ?, ?, ?)";
+				+ "(lessonId, whatWasDone, howItWasDone, durationHours, createdAt) " + "VALUES (?, ?, ?, ?, ?)";
 		connection.setAutoCommit(false);
 		try (PreparedStatement pstmt = connection.prepareStatement(insertExperience, Statement.RETURN_GENERATED_KEYS)) {
 			pstmt.setInt(1, lessonId);
