@@ -1,5 +1,6 @@
 package guiAddRemoveRoles;
 
+import applicationMain.Logger;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
@@ -58,7 +59,7 @@ public class ControllerAddRemoveRoles {
 		if (ModelAddRemoveRoles.hasUserAccountDetails(ViewAddRemoveRoles.theSelectedUser)) {
 			setupSelectedUser();
 		} else {
-			System.out.println("[Error] SQL error found when accessing user account details...");
+			Logger.getLogger().logWarning("SQL error when selecting user to role from combo box...");
 		}
 	}
 	
