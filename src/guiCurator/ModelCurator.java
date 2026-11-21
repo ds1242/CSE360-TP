@@ -96,7 +96,7 @@ public class ModelCurator {
         for (User u : db().getAllUsers()) {
 
             // Only users with the Contributor role are included in the list.
-            if (u.getNewRole1())
+            if (u.getContributorRole())
                 names.add(u.getUserName());
         }
         return names;

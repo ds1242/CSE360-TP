@@ -1,5 +1,7 @@
 package guiAddRemoveRoles;
 
+import database.Database;
+
 /*******
  * <p> Title: ModelAddRemoveRoles Class. </p>
  * 
@@ -16,5 +18,28 @@ package guiAddRemoveRoles;
  */
 
 public class ModelAddRemoveRoles {
+	
+	// Reference for the in-memory database so this package has access
+	private static Database theDatabase = applicationMain.FoundationsMain.database;
+	
+	protected static boolean hasUserAccountDetails(String username) {
+		return theDatabase.getUserAccountDetails(username);
+	}
+	
+	protected static boolean hasAdminRole() {
+		return theDatabase.getCurrentAdminRole();
+	}
+	
+	protected static boolean hasContributorRole() {
+		return theDatabase.getCurrentContributorRole();
+	}
+	
+	protected static boolean hasRole2() {
+		return theDatabase.getCurrentNewRole2();
+	}
+	
+	protected static boolean hasUpdateUser(String username, String role, boolean value) {
+		return theDatabase.updateUserRole(username, role, Boolean.toString(value));
+	}
 
 }

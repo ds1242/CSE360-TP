@@ -331,7 +331,7 @@ public class ControllerAddRemoveRolesTest {
 				.orElse(null);
 
 		assertFalse(barry.getAdminRole(), "Precondition: Barry must not start as admin");
-		assertTrue(barry.getNewRole1(), "Precondition: Barry must have role 1");
+		assertTrue(barry.getContributorRole(), "Precondition: Barry must have role 1");
 
 		ViewAddRemoveRoles.theUser = barry;
 		ViewAddRemoveRoles.theSelectedUser = "Barry";
@@ -352,7 +352,7 @@ public class ControllerAddRemoveRolesTest {
 				.orElse(null);
 
 		assertNotNull(barryAfter);
-		assertFalse(barryAfter.getNewRole1(),
+		assertFalse(barryAfter.getContributorRole(),
 				"A non-admin must not be able to grant roles through the controller");
 		System.out.println("testPerformAddRole_NonAdminRoleUpdate: " + PASSED);
 	}

@@ -2,7 +2,7 @@ package guiAdminDeleteUser;
 
 import java.util.Optional;
 
-import database.Database;
+import applicationMain.Logger;
 import javafx.scene.control.ButtonType;
 
 /*******
@@ -21,8 +21,6 @@ public class ControllerAdminDeleteUser {
 	 */
 	public ControllerAdminDeleteUser() {}
 
-	private static Database theDatabase = applicationMain.FoundationsMain.database;
-
 	/**********
 	 * <p> Method: doSelectUser() </p>
 	 *
@@ -33,7 +31,9 @@ public class ControllerAdminDeleteUser {
 	 */
 	protected static void doSelectUser() {
 		ViewAdminDeleteUser.theSelectedUser = (String)ViewAdminDeleteUser.combobox_SelectUser.getValue();
-		theDatabase.getUserAccountDetails(ViewAdminDeleteUser.theSelectedUser);
+		if (!ModelAdminDeleteUser.hasSelectedUserAccountDetails()) {
+			Logger.getLogger().logWarning("SQL error when selecting user to delete from combo box...");
+		}
 	}
 
 	/**********
@@ -92,7 +92,7 @@ public class ControllerAdminDeleteUser {
 
         if (result.isPresent() && result.get() == ButtonType.YES) {
             String selectedUser = ViewAdminDeleteUser.theSelectedUser;
-            theDatabase.deleteUser(selectedUser);
+            ModelAdminDeleteUser.deleteSelectedUser();
             System.out.println("*** ControllerAdminDeleteUser.performChange(): deleted user: " + selectedUser);
             // NOTE: need to refresh combobox entries after deleting a user
             ViewAdminDeleteUser.populateComboBox();

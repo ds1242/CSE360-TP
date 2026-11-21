@@ -1,5 +1,7 @@
 package guiAdminDeleteUser;
 
+import database.Database;
+
 /*******
  * <p> Title: ModelAdminDeleteUser Class. </p>
  *
@@ -12,4 +14,16 @@ package guiAdminDeleteUser;
  * @version 1.00        2025-09-17 Initial version
  *
  */
-public class ModelAdminDeleteUser {}
+public class ModelAdminDeleteUser {
+	
+	private static Database theDatabase = applicationMain.FoundationsMain.database;
+	
+	protected static boolean hasSelectedUserAccountDetails() {
+		return theDatabase.getUserAccountDetails(ViewAdminDeleteUser.theSelectedUser);
+	}
+	
+	protected static void deleteSelectedUser() {
+		theDatabase.deleteUser(ViewAdminDeleteUser.theSelectedUser);
+	}
+	
+}
