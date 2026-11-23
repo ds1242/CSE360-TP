@@ -111,7 +111,7 @@ public class ControllerNewAccount {
 			} else if (ViewNewAccount.theRole.compareTo("Contributor") == 0) {
 				roleCode = 2;
 				user = new User(username, password, "", "", "", "", "", false, true, false, false);
-			} else if (ViewNewAccount.theRole.compareTo("Role2") == 0) {
+			} else if (ViewNewAccount.theRole.compareTo("Curator") == 0) {
 				roleCode = 3;
 				user = new User(username, password, "", "", "", "", "", false, false, true, false);
 			} else {

@@ -12,7 +12,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import entityClasses.User;
+<<<<<<< HEAD
 import entityClasses.LessonRecord;
+=======
+import lessons.LessonRecord;
+>>>>>>> cc7abf7 (changes)
 
 class DatabaseTest {
 

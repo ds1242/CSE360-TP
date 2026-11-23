@@ -1,5 +1,6 @@
 package guiCurator;
 
+<<<<<<< HEAD
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +9,13 @@ import database.Database;
 import entityClasses.LessonsLearnedList;
 import entityClasses.User;
 import entityClasses.LessonRecord;
+=======
+>>>>>>> cc7abf7 (changes)
 
 /*******
  * <p> Title: ModelCurator Class. </p>
  *
+<<<<<<< HEAD
  * <p> Description: Provides the data management functionality for the Curator page.
  * Retrieves lessons and contributor information from the database and manages
  * the visibility of experience statistics (Avg and Sum) for individual
@@ -149,4 +153,20 @@ public class ModelCurator {
     public static LessonRecord getLesson(int lessonId) throws SQLException {
         return db().getLesson(lessonId);
     }
+=======
+ * 
+ * <p> Description: This class is a stub for future expansion.
+ * 
+ * This class is not used as there is no unique data manipulation for this GUI page.</p>
+ * 
+ * <p> Copyright: Anderew kannas © 202 </p>
+ * 
+ * @author Andrew Kannas
+ * 
+ *  
+ */
+public class ModelCurator {
+
+    
+>>>>>>> cc7abf7 (changes)
 }

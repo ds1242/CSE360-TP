@@ -46,8 +46,8 @@ public class ViewAdminListUsers {
 
     protected static TableColumn<User, String> tablecol_Roles = new TableColumn<>("Roles");
     protected static TableColumn<User, String> tablecol_Roles_Admin = new TableColumn<>("Admin");
-    protected static TableColumn<User, String> tablecol_Roles_Role1 = new TableColumn<>("Role1");
-    protected static TableColumn<User, String> tablecol_Roles_Role2 = new TableColumn<>("Role2");
+    protected static TableColumn<User, String> tablecol_Roles_Role1 = new TableColumn<>("Contributor");
+    protected static TableColumn<User, String> tablecol_Roles_Role2 = new TableColumn<>("Curator");
 
 
 

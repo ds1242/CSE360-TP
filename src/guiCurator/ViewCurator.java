@@ -17,13 +17,22 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+<<<<<<< HEAD
 import entityClasses.LessonRecord;
+=======
+import lessons.LessonRecord;
+>>>>>>> cc7abf7 (changes)
 
 /*******
  * <p> Title: ViewCurator Class. </p>
  *
+<<<<<<< HEAD
  * <p> Description: The JavaFX-based Curator page, built the same way as the My
  * Lessons page (a singleton View with static widgets, driven by
+=======
+ * <p> Description: The JavaFX-based Curator page, built the same way as the 
+ * lessons page (a singleton View with static widgets, driven by
+>>>>>>> cc7abf7 (changes)
  * ControllerCurator). It lists every lesson and lets the Curator choose a
  * contributor and turn Avg/Sum visibility on or off for that contributor with a
  * single check box. The default for every contributor is OFF.</p>
@@ -68,6 +77,10 @@ public class ViewCurator {
     protected static Pane theRootPane;
     protected static User theUser;
     protected static Scene theCuratorScene;
+<<<<<<< HEAD
+=======
+    protected static final int theRole = 3;		// Admin: 1; Contributor: 2; Curator: 3
+>>>>>>> cc7abf7 (changes)
 
     /**********
      * <p> Method: displayCurator(Stage ps, User user) </p>

@@ -27,7 +27,7 @@ public class User {
     private String emailAddress;
     private boolean adminRole;
     private boolean contributor;
-    private boolean role2;
+    private boolean curator;
     private boolean otp;
 
 
@@ -70,7 +70,7 @@ public class User {
         this.emailAddress = ea;
         this.adminRole = r1;
         this.contributor = r2;
-        this.role2 = r3;
+        this.curator = r3;
         this.otp = otp;
     }
 
@@ -110,7 +110,7 @@ public class User {
      */
     // Sets the role2 user.
     public void setRole2User(boolean role) {
-    	this.role2=role;
+    	this.curator=role;
     }
 
     /*****
@@ -230,7 +230,7 @@ public class User {
 	 *
      */
     // Gets the current value of the role2 attribute.
-    public boolean getNewRole2() { return role2; }
+    public boolean getNewRole2() { return curator; }
 
     /*****
      * <p> Method: String getOneTimePassword() </p>
@@ -255,7 +255,7 @@ public class User {
     	int numRoles = 0;
     	if (adminRole) numRoles++;
     	if (contributor) numRoles++;
-    	if (role2) numRoles++;
+    	if (curator) numRoles++;
     	return numRoles;
     }
 }

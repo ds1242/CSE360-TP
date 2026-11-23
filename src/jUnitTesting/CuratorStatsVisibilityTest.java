@@ -38,7 +38,11 @@ class CuratorStatsVisibilityTest {
     static void setUp() throws SQLException {
         db = new Database("jdbc:h2:mem:curatorTest");
         db.connectToDatabase();
+<<<<<<< HEAD
         ModelCurator.setDatabase(db);
+=======
+        ControllerCurator.setDatabase(db);
+>>>>>>> cc7abf7 (changes)
     }
 
     /**
@@ -64,6 +68,7 @@ class CuratorStatsVisibilityTest {
     @Test
     void avgSumVisibilityIsPerContributorAndDefaultsOff() throws SQLException {
         
+<<<<<<< HEAD
         assertFalse(ModelCurator.getContributorCanViewExperienceStats("alice"));
 
         
@@ -71,5 +76,14 @@ class CuratorStatsVisibilityTest {
 
         assertTrue(ModelCurator.getContributorCanViewExperienceStats("alice"));
         assertFalse(ModelCurator.getContributorCanViewExperienceStats("bob"));
+=======
+        assertFalse(ControllerCurator.getContributorCanViewExperienceStats("alice"));
+
+        
+        ControllerCurator.setContributorCanViewExperienceStats("alice", true);
+
+        assertTrue(ControllerCurator.getContributorCanViewExperienceStats("alice"));
+        assertFalse(ControllerCurator.getContributorCanViewExperienceStats("bob"));
+>>>>>>> cc7abf7 (changes)
     }
 }

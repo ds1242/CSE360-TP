@@ -1,7 +1,18 @@
 package guiContributor;
 
+<<<<<<< HEAD
 import guiAITools.ModelAITools;
 import guiAITools.ViewAITools;
+=======
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import database.Database;
+import entityClasses.LessonsLearnedList;
+import entityClasses.User;
+import lessons.LessonRecord;
+>>>>>>> cc7abf7 (changes)
 import lessons.guiContributorLessons.ViewContributorLessons;
 import lessons.guiCreateLesson.ViewCreateLesson;
 
@@ -110,5 +121,5 @@ public class ControllerContributorHome {
 	 */	
 	protected static void performQuit() {
 		System.exit(0);
-	}
+	}	
 }
