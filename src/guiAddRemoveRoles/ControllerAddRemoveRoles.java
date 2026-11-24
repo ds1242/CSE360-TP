@@ -1,6 +1,7 @@
 package guiAddRemoveRoles;
 
 import applicationMain.Logger;
+import entityClasses.User.Role;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
@@ -129,22 +130,22 @@ public class ControllerAddRemoveRoles {
 		ViewAddRemoveRoles.addList.clear();
 		ViewAddRemoveRoles.addList.add("<Select a role>");
 		if (!ModelAddRemoveRoles.hasAdminRole())
-			ViewAddRemoveRoles.addList.add("Admin");
+			ViewAddRemoveRoles.addList.add(Role.ADMIN.name());
 		if (!ModelAddRemoveRoles.hasContributorRole())
-			ViewAddRemoveRoles.addList.add("Role1");
+			ViewAddRemoveRoles.addList.add(Role.CONTRIBUTOR.name());
 		if (!ModelAddRemoveRoles.hasRole2())
-			ViewAddRemoveRoles.addList.add("Role2");
+			ViewAddRemoveRoles.addList.add(Role.ROLE2.name());
 
 		// Create the list of roles that could be removed for the currently selected user (e.g., Do
 		// not show a role to remove that the user does not have!)
 		ViewAddRemoveRoles.removeList.clear();
 		ViewAddRemoveRoles.removeList.add("<Select a role>");
 		if (ModelAddRemoveRoles.hasAdminRole())
-			ViewAddRemoveRoles.removeList.add("Admin");
+			ViewAddRemoveRoles.removeList.add(Role.ADMIN.name());
 		if (ModelAddRemoveRoles.hasContributorRole())
-			ViewAddRemoveRoles.removeList.add("Role1");
+			ViewAddRemoveRoles.removeList.add(Role.CONTRIBUTOR.name());
 		if (ModelAddRemoveRoles.hasRole2())
-			ViewAddRemoveRoles.removeList.add("Role2");
+			ViewAddRemoveRoles.removeList.add(Role.ROLE2.name());
 		
 		// Create the list or roles that the user currently has with proper use of a comma between
 		// items
@@ -217,7 +218,7 @@ public class ControllerAddRemoveRoles {
 			
 			// If an actual role was selected, update the database entry for that user for the role
 			if (ModelAddRemoveRoles.hasUpdateUser(ViewAddRemoveRoles.theSelectedUser, 
-					ViewAddRemoveRoles.theAddRole, true)) {
+					Role.valueOf(ViewAddRemoveRoles.theAddRole), true)) {
 				ViewAddRemoveRoles.combobox_SelectRoleToAdd = new ComboBox <String>();
 				ViewAddRemoveRoles.combobox_SelectRoleToAdd.setItems(FXCollections.
 					observableArrayList(ViewAddRemoveRoles.addList));
@@ -235,6 +236,7 @@ public class ControllerAddRemoveRoles {
 	 * select list. </p>
 	 * 
 	 */
+	
 	protected static void performRemoveRole() {
 		
 		// Determine which item in the ComboBox list was selected
@@ -246,7 +248,7 @@ public class ControllerAddRemoveRoles {
 			
 			// If an actual role was selected, update the database entry for that user for the role
 			if (ModelAddRemoveRoles.hasUpdateUser(ViewAddRemoveRoles.theSelectedUser, 
-					ViewAddRemoveRoles.theRemoveRole, false)) {
+					Role.valueOf(ViewAddRemoveRoles.theAddRole), false)) {
 				ViewAddRemoveRoles.combobox_SelectRoleToRemove = new ComboBox <String>();
 				ViewAddRemoveRoles.combobox_SelectRoleToRemove.setItems(FXCollections.
 					observableArrayList(ViewAddRemoveRoles.addList));
