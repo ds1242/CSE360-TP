@@ -20,6 +20,7 @@ import entityClasses.LessonRecord;
 import entityClasses.LessonsLearnedList;
 import entityClasses.TeammateEffort;
 import entityClasses.User;
+import entityClasses.User.Role;
 import lessons.LessonsEvaluator;
 
 /*******
@@ -293,8 +294,14 @@ public class Database {
 		String userTable = "CREATE TABLE IF NOT EXISTS userDB (" + "id INT AUTO_INCREMENT PRIMARY KEY, "
 				+ "userName VARCHAR(255) UNIQUE, " + "password VARCHAR(255), " + "firstName VARCHAR(255), "
 				+ "middleName VARCHAR(255), " + "lastName VARCHAR (255), " + "preferredFirstName VARCHAR(255), "
-				+ "emailAddress VARCHAR(255), " + "adminRole BOOL DEFAULT FALSE, " + "contributorRole BOOL DEFAULT FALSE, "
-				+ "newRole2 BOOL DEFAULT FALSE, " + "oneTimePassword BOOL DEFAULT FALSE)";
+				+ "emailAddress VARCHAR(255), ";
+		
+		//Retrieve the database insert string for the user table by looping through the enumeration role value string.
+		for (Role role : User.Role.values()) {
+			userTable += role.getDatabaseRoleString() + " BOOL DEFAULT FALSE,";
+		}
+		
+		userTable += "oneTimePassword BOOL DEFAULT FALSE)";
 		statement.execute(userTable);
 
 		String invitationCodesTable = "CREATE TABLE IF NOT EXISTS InvitationCodes (" + "code VARCHAR(10) PRIMARY KEY, "
@@ -446,8 +453,14 @@ public class Database {
 	 */
 	public void register(User user) throws SQLException {
 		String insertUser = "INSERT INTO userDB (userName, password, firstName, middleName, "
-				+ "lastName, preferredFirstName, emailAddress, adminRole, contributorRole, newRole2, oneTimePassword) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "lastName, preferredFirstName, emailAddress, ";
+				
+				for (Role role : User.Role.values()) {
+					insertUser += role.getDatabaseRoleString() + ",";
+				}
+				
+				insertUser += " oneTimePassword) ";
+				insertUser += "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
 			currentUsername = user.getUserName();
 			pstmt.setString(1, currentUsername);
@@ -550,10 +563,16 @@ public class Database {
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
+				
+				boolean[] roleValues = new boolean[User.Role.values().length];
+				
+				for (Role role : User.Role.values()) {
+					roleValues[role.getRoleIndex()] = rs.getBoolean(role.getDatabaseRoleString());
+				}
+				
 				users.add(new User(rs.getString("userName"), rs.getString("password"), rs.getString("firstName"),
 						rs.getString("middleName"), rs.getString("lastName"), rs.getString("preferredFirstName"),
-						rs.getString("emailAddress"), rs.getBoolean("adminRole"), rs.getBoolean("contributorRole"),
-						rs.getBoolean("newRole2"), rs.getBoolean("oneTimePassword")));
+						rs.getString("emailAddress"), roleValues, rs.getBoolean("oneTimePassword")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -580,7 +599,7 @@ public class Database {
 	 */
 	public boolean loginAdmin(User user) {
 
-		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND " + "adminRole = TRUE";
+		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND " + Role.ADMIN.getDatabaseRoleString() + " = TRUE";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setString(1, user.getUserName());
 			pstmt.setString(2, user.getPassword());
@@ -612,7 +631,7 @@ public class Database {
 	 */
 	public boolean loginContributor(User user) {
 		// Validates a student user's login credentials.
-		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND " + "contributorRole = TRUE";
+		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND " + Role.CONTRIBUTOR.getDatabaseRoleString() + " = TRUE";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setString(1, user.getUserName());
 			pstmt.setString(2, user.getPassword());
@@ -643,7 +662,7 @@ public class Database {
 	 *
 	 */
 	public boolean loginRole2(User user) {
-		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND " + "newRole2 = TRUE";
+		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND " + Role.ROLE2.getDatabaseRoleString() + " = TRUE";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setString(1, user.getUserName());
 			pstmt.setString(2, user.getPassword());
@@ -1356,10 +1375,26 @@ public class Database {
 	 * @return true if the update was successful, else false
 	 *
 	 */
-	public boolean updateUserRole(String username, String role, String value) {
+	public boolean updateUserRole(String username, Role role, String value) {
+		String query = "UPDATE userDB SET ? = ? WHERE username = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, role.getDatabaseRoleString());
+			pstmt.setString(2, value);
+			pstmt.setString(3, username);
+			pstmt.executeUpdate();
+			if (value.compareTo("true") == 0)
+				currentAdminRole = true;
+			else
+				currentAdminRole = false;
+			return true;
+		} catch (SQLException e) {
+			return false;
+		}
+		/**
 		if (role.compareTo("Admin") == 0) {
-			String query = "UPDATE userDB SET adminRole = ? WHERE username = ?";
+			String query = "UPDATE userDB SET ? = ? WHERE username = ?";
 			try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+				pstmt.setString(1, Role.ADMIN.getDatabaseRoleString());
 				pstmt.setString(1, value);
 				pstmt.setString(2, username);
 				pstmt.executeUpdate();
@@ -1402,7 +1437,7 @@ public class Database {
 				return false;
 			}
 		}
-		return false;
+		return false;*/
 	}
 
 	/*******
