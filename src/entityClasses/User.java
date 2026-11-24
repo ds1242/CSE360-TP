@@ -31,18 +31,24 @@ public class User {
     
     public enum Role {
     	
-    	ADMIN(0),
-    	CONTRIBUTOR(1),
-    	ROLE2(2);
+    	ADMIN(0, "adminRole"),
+    	CONTRIBUTOR(1, "contributorRole"),
+    	ROLE2(2, "newRole2");
     	
     	private int roleIndex;
+    	private String databaseRoleString;
     	
-    	private Role(int roleIndex) {
+    	private Role(int roleIndex, String databaseRoleString) {
     		this.roleIndex = roleIndex;
+    		this.databaseRoleString = databaseRoleString;
     	}
     	
     	public int getRoleIndex() {
     		return this.roleIndex;
+    	}
+    	
+    	public String getDatabaseRoleString() {
+    		return this.databaseRoleString;
     	}
     	
     }
@@ -91,6 +97,32 @@ public class User {
         roles[Role.ADMIN.roleIndex] = r1;
         roles[Role.CONTRIBUTOR.roleIndex] = r2;
         roles[Role.ROLE2.roleIndex] = r3;
+    }
+    
+    /**
+     * 
+     * @param userName
+     * @param password
+     * @param fn
+     * @param mn
+     * @param ln
+     * @param pfn
+     * @param ea
+     * @param roleValues
+     * @param otp
+     */
+    public User(String userName, String password, String fn, String mn, String ln, String pfn,
+    		String ea, boolean[] roleValues, boolean otp) {
+        this.userName = userName;
+        this.password = password;
+        this.firstName = fn;
+        this.middleName = mn;
+        this.lastName = ln;
+        this.preferredFirstName = pfn;
+        this.emailAddress = ea;
+        this.otp = otp;
+        
+        roles = roleValues;
     }
 
     /*****

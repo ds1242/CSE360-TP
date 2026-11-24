@@ -1,6 +1,7 @@
 package guiAddRemoveRoles;
 
 import database.Database;
+import entityClasses.User.Role;
 
 /*******
  * <p> Title: ModelAddRemoveRoles Class. </p>
@@ -38,7 +39,7 @@ public class ModelAddRemoveRoles {
 		return theDatabase.getCurrentNewRole2();
 	}
 	
-	protected static boolean hasUpdateUser(String username, String role, boolean value) {
+	protected static boolean hasUpdateUser(String username, Role role, boolean value) {
 		return theDatabase.updateUserRole(username, role, Boolean.toString(value));
 	}
 
