@@ -81,7 +81,7 @@ public class Database {
 	private boolean currentNewRole2;
 	private boolean currentOneTimePassword;
 	
-	private User currentUserDetais;
+	private User currentUserDetails;
 	private boolean userUpToDate;
 
 	/*******
@@ -96,7 +96,7 @@ public class Database {
 	 */
 
 	public Database() {
-		this.currentUserDetais = null;
+		this.currentUserDetails = null;
 		this.userUpToDate = false;
 	}
 
@@ -366,8 +366,41 @@ public class Database {
 		return true;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean isCurrentUserUpToDate() {
-		return (this.currentUserDetais != null && this.userUpToDate);
+		return (this.currentUserDetails != null && this.userUpToDate);
+	}
+	
+	
+	/**
+	 * 
+	 * @param keyword
+	 * @return
+	 * @throws SQLException
+	 */
+	public LessonsLearnedList searchLessons(String keyword) throws SQLException {
+		LessonsLearnedList results = new LessonsLearnedList();
+
+		// Blank or only spaces is not searched
+		if (keyword == null || keyword.trim().isEmpty()) {
+			return results;
+		}
+		String word = keyword.trim().toLowerCase();
+
+		// Check each lesson's title, description, and category
+		for (LessonRecord lesson : getAllLessons().getLessons()) {
+			String title = lesson.getTitle().toLowerCase();
+			String description = lesson.getDescription().toLowerCase();
+			String category = lesson.getCategory().toLowerCase();
+
+			if (title.contains(word) || description.contains(word) || category.contains(word)) {
+				results.addLesson(lesson);
+			}
+		}
+		return results;
 	}
 
 	/*******
