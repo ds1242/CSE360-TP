@@ -7,7 +7,7 @@ import entityClasses.LessonRecord;
 import lessons.LessonsEvaluator;
 
 /*******
- * <p> Title: ModelLessonDetails Class. </p>
+ * <p> Title: ModelRoleViewer Class. </p>
  *
  * <p> Description: The Lesson Details Page Model.  This class holds the rules for viewing
  * (Story 3), updating (Story 4), and deleting (Story 5) one lesson.</p>

@@ -129,54 +129,59 @@ public class ControllerAddRemoveRoles {
 		// not show a role to add that the user already has!)
 		ViewAddRemoveRoles.addList.clear();
 		ViewAddRemoveRoles.addList.add("<Select a role>");
-		if (!ModelAddRemoveRoles.hasAdminRole())
-			ViewAddRemoveRoles.addList.add(Role.ADMIN.name());
-		if (!ModelAddRemoveRoles.hasContributorRole())
-			ViewAddRemoveRoles.addList.add(Role.CONTRIBUTOR.name());
-		if (!ModelAddRemoveRoles.hasRole2())
-			ViewAddRemoveRoles.addList.add(Role.ROLE2.name());
-
 		// Create the list of roles that could be removed for the currently selected user (e.g., Do
 		// not show a role to remove that the user does not have!)
 		ViewAddRemoveRoles.removeList.clear();
 		ViewAddRemoveRoles.removeList.add("<Select a role>");
-		if (ModelAddRemoveRoles.hasAdminRole())
-			ViewAddRemoveRoles.removeList.add(Role.ADMIN.name());
-		if (ModelAddRemoveRoles.hasContributorRole())
-			ViewAddRemoveRoles.removeList.add(Role.CONTRIBUTOR.name());
-		if (ModelAddRemoveRoles.hasRole2())
-			ViewAddRemoveRoles.removeList.add(Role.ROLE2.name());
 		
 		// Create the list or roles that the user currently has with proper use of a comma between
 		// items
 		boolean notTheFirst = false;
 		String theCurrentRoles = "";
-		
-		// Admin role - It can only be at the head of a list
-		if (ModelAddRemoveRoles.hasAdminRole()) {
-			theCurrentRoles += "Admin";
-			notTheFirst = true;
-		}
-		
-		// Roles 1 - It could be at the head of the list or later in the list
-		if (ModelAddRemoveRoles.hasContributorRole()) {
-			if (notTheFirst)
-				theCurrentRoles += ", Role1"; 
-			else {
-				theCurrentRoles += "Role1";
-				notTheFirst = true;
+		boolean[] currentRoles = ModelAddRemoveRoles.hasRoles();
+		for (Role role : Role.values()) {
+			if (currentRoles[role.getRoleIndex()]) {
+				ViewAddRemoveRoles.removeList.add(role.name());
+				
+				if (notTheFirst) {
+					theCurrentRoles += ", " + role.name();
+				} else {
+					theCurrentRoles += role.name();
+					notTheFirst = true;
+				}
+				
+			} else {
+				ViewAddRemoveRoles.addList.add(role.name());
 			}
 		}
-
-		// Roles 2 - It could be at the head of the list or later in the list
-		if (ModelAddRemoveRoles.hasRole2()) {
-			if (notTheFirst)
-				theCurrentRoles += ", Role2"; 
-			else {
-				theCurrentRoles += "Role2";
-				notTheFirst = true;
-			}
-		}
+		
+		
+		
+//		// Admin role - It can only be at the head of a list
+//		if (ModelAddRemoveRoles.hasAdminRole()) {
+//			theCurrentRoles += "Admin";
+//			notTheFirst = true;
+//		}
+//		
+//		// Roles 1 - It could be at the head of the list or later in the list
+//		if (ModelAddRemoveRoles.hasContributorRole()) {
+//			if (notTheFirst)
+//				theCurrentRoles += ", Role1"; 
+//			else {
+//				theCurrentRoles += "Role1";
+//				notTheFirst = true;
+//			}
+//		}
+//
+//		// Roles 2 - It could be at the head of the list or later in the list
+//		if (ModelAddRemoveRoles.hasCuratorRole()) {
+//			if (notTheFirst)
+//				theCurrentRoles += ", Role2"; 
+//			else {
+//				theCurrentRoles += "Role2";
+//				notTheFirst = true;
+//			}
+//		}
 
 		// Given the above actions, populate the related widgets with the new values
 		ViewAddRemoveRoles.label_CurrentRoles.setText("This user's current roles: " + 

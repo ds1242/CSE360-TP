@@ -141,7 +141,7 @@ public class ViewAdminListUsers {
         tablecol_Roles_Role2.setStyle("-fx-alignment: CENTER;");
         tablecol_Roles_Admin.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAdminRole() ? "✓" : ""));
         tablecol_Roles_Role1.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getContributorRole() ? "✓" : ""));
-        tablecol_Roles_Role2.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNewRole2() ? "✓" : ""));
+        tablecol_Roles_Role2.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCuratorRole() ? "✓" : ""));
         tablecol_Roles.getColumns().add(tablecol_Roles_Admin);
         tablecol_Roles.getColumns().add(tablecol_Roles_Role1);
         tablecol_Roles.getColumns().add(tablecol_Roles_Role2);

@@ -23,7 +23,7 @@ import lessons.LessonsEvaluator;
 
 
 /*******
- * <p> Title: ViewLessonDetails Class. </p>
+ * <p> Title: ViewRoleViewer Class. </p>
  *
  * <p> Description: The Java/FX-based Lesson Details page. A contributor reaches it by selecting
  * a lesson on the My Lessons page and pressing "View Lesson". It shows all of the lesson's core
@@ -160,7 +160,7 @@ public class ViewLessonDetails {
 	}
 
 	/**********
-	 * <p> Method: ViewLessonDetails() </p>
+	 * <p> Method: ViewRoleViewer() </p>
 	 *
 	 * <p> Description: This method initializes all the elements of the graphical user interface.
 	 * This method determines the location, size, font, color, and change and event handlers for

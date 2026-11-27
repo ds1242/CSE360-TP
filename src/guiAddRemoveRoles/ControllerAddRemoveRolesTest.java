@@ -2,6 +2,7 @@ package guiAddRemoveRoles;
 
 import database.Database;
 import entityClasses.User;
+import entityClasses.User.Role;
 import applicationMain.FoundationsMain;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -97,17 +98,23 @@ public class ControllerAddRemoveRolesTest {
 		originalDatabase = FoundationsMain.database;
 		FoundationsMain.database = db;
 		injectDb(ControllerAddRemoveRoles.class, db);
-
+		
 		// Coverage test users
+		boolean[] tempRoles = User.getBlankRolesArray();
+		tempRoles[Role.ADMIN.getRoleIndex()] = true;
 		db.register(new User("Bob", "Password1!", "Bob", "", "Last", "Bobby",
-				"bob@test.com", true, false, false, false));
+				"bob@test.com", tempRoles, false));
+		
+		tempRoles = User.getBlankRolesArray();
+		tempRoles[Role.CONTRIBUTOR.getRoleIndex()] = true;
 		db.register(new User("Alice", "Password1!", "Alice", "", "Last", "Alice",
-				"alice@test.com", false, true, false, false));
+				"alice@test.com", tempRoles, false));
+		
 		// Boundary Test users
 		db.register(new User("Jerry", "Password1!", "Jerry", "", "Last", "Jerry",
-				"Jerry@test.com", false, true, false, false));
+				"Jerry@test.com", tempRoles, false));
 		db.register(new User("Barry", "Password1!", "Barry", "", "Last", "Barry",
-				"Barry@test.com", false, true, false, false));
+				"Barry@test.com", tempRoles, false));
 	}
 
 	/**********

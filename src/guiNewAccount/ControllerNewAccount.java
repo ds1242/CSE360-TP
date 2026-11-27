@@ -6,6 +6,7 @@ import cse360.GRP.ADES.evaluator.PasswordEvaluator;
 import cse360.GRP.ADES.evaluator.UsernameEvaluator;
 import database.Database;
 import entityClasses.User;
+import entityClasses.User.Role;
 
 /*******
  * <p> Title: ControllerNewAccount Class. </p>
@@ -105,16 +106,17 @@ public class ControllerNewAccount {
 
 			// The passwords match so we will set up the role and the User object base on the
 			// information provided in the invitation
-			if (ViewNewAccount.theRole.compareTo("Admin") == 0) {
-				roleCode = 1;
-				user = new User(username, password, "", "", "", "", "", true, false, false, false);
-			} else if (ViewNewAccount.theRole.compareTo("Contributor") == 0) {
-				roleCode = 2;
-				user = new User(username, password, "", "", "", "", "", false, true, false, false);
-			} else if (ViewNewAccount.theRole.compareTo("Role2") == 0) {
-				roleCode = 3;
-				user = new User(username, password, "", "", "", "", "", false, false, true, false);
-			} else {
+			for (Role role : Role.values()) {
+				if (ViewNewAccount.theRole.compareTo(role.name()) == 0) {
+					roleCode = role.getRoleIndex();
+					boolean[] roles = new boolean[Role.values().length];
+					roles[role.getRoleIndex()] = true;
+					user = new User(username, password, "", "", "", "", "", roles, false);
+					break;
+				}
+			}
+			
+			if (user == null) {
 				System.out.println(
 						"**** Trying to create a New Account for a role that does not exist!");
 				System.exit(0);

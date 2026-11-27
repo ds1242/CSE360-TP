@@ -15,6 +15,7 @@ import database.Database;
 import entityClasses.LessonRecord;
 import entityClasses.LessonsLearnedList;
 import entityClasses.User;
+import entityClasses.User.Role;
 
 /**********
  * <p> Class: ModelContributorLessonsTest </p>
@@ -95,14 +96,18 @@ class ModelContributorLessonsTest {
 		originalDatabase = FoundationsMain.database;
 		FoundationsMain.database = db;
 		injectDb(ModelContributorLessons.class, db);
-
+		
+		boolean[] tempRoles = User.getBlankRolesArray();
+		tempRoles[Role.ADMIN.getRoleIndex()] = true;
 		// Test users
 		db.register(new User("Bob", "Password1!", "Bob", "", "Last", "Bobby",
-				"bob@test.com", true, false, false, false));
+				"bob@test.com", tempRoles, false));
+		tempRoles = User.getBlankRolesArray();
+		tempRoles[Role.CONTRIBUTOR.getRoleIndex()] = true;
 		db.register(new User("Alice", "Password1!", "Alice", "", "Last", "Alice",
-				"alice@test.com", false, true, false, false));
+				"alice@test.com", tempRoles, false));
 		db.register(new User("Jerry", "Password1!", "Jerry", "", "Last", "Jerry",
-				"jerry@test.com", false, true, false, false));
+				"jerry@test.com", tempRoles, false));
 
 		// Test lessons: Alice has 3, Bob has 2, Jerry has none
 		aliceLesson1 = db.createLesson("alice's lesson",  "description of lesson",   "category", 1, "Alice");

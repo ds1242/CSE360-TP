@@ -77,9 +77,9 @@ public class Database {
 	private String currentLastName;
 	private String currentPreferredFirstName;
 	private String currentEmailAddress;
-	private boolean currentAdminRole;
-	private boolean currentNewContributor;
-	private boolean currentNewRole2;
+	
+	private boolean[] currentRoles;
+	
 	private boolean currentOneTimePassword;
 	
 	private User currentUserDetails;
@@ -99,6 +99,11 @@ public class Database {
 	public Database() {
 		this.currentUserDetails = null;
 		this.userUpToDate = false;
+		
+		currentRoles = new boolean[Role.values().length];
+		for (int i = 0; i < currentRoles.length; i++) {
+			currentRoles[i] = false;
+		}
 	}
 
 	/*******
@@ -460,7 +465,7 @@ public class Database {
 				}
 				
 				insertUser += " oneTimePassword) ";
-				insertUser += "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				insertUser += "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(insertUser)) {
 			currentUsername = user.getUserName();
 			pstmt.setString(1, currentUsername);
@@ -483,17 +488,20 @@ public class Database {
 			currentEmailAddress = user.getEmailAddress();
 			pstmt.setString(7, currentEmailAddress);
 
-			currentAdminRole = user.getAdminRole();
-			pstmt.setBoolean(8, currentAdminRole);
+			currentRoles[Role.ADMIN.getRoleIndex()] = user.getAdminRole();
+			pstmt.setBoolean(8, currentRoles[Role.ADMIN.getRoleIndex()]);
 
-			currentNewContributor = user.getContributorRole();
-			pstmt.setBoolean(9, currentNewContributor);
+			currentRoles[Role.CONTRIBUTOR.getRoleIndex()] = user.getContributorRole();
+			pstmt.setBoolean(9, currentRoles[Role.CONTRIBUTOR.getRoleIndex()]);
 
-			currentNewRole2 = user.getNewRole2();
-			pstmt.setBoolean(10, currentNewRole2);
-
+			currentRoles[Role.CURATOR.getRoleIndex()] = user.getCuratorRole();
+			pstmt.setBoolean(10, currentRoles[Role.CURATOR.getRoleIndex()]);
+			
+			currentRoles[Role.VIEWER.getRoleIndex()] = user.getViewerRole();
+			pstmt.setBoolean(11, currentRoles[Role.VIEWER.getRoleIndex()]);
+			
 			currentOneTimePassword = user.getOneTimePassword();
-			pstmt.setBoolean(11, currentOneTimePassword);
+			pstmt.setBoolean(12, currentOneTimePassword);
 
 			pstmt.executeUpdate();
 		}
@@ -662,7 +670,7 @@ public class Database {
 	 *
 	 */
 	public boolean loginRole2(User user) {
-		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND " + Role.ROLE2.getDatabaseRoleString() + " = TRUE";
+		String query = "SELECT * FROM userDB WHERE userName = ? AND password = ? AND " + Role.CURATOR.getDatabaseRoleString() + " = TRUE";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setString(1, user.getUserName());
 			pstmt.setString(2, user.getPassword());
@@ -1319,10 +1327,12 @@ public class Database {
 			currentLastName = rs.getString(6);
 			currentPreferredFirstName = rs.getString(7);
 			currentEmailAddress = rs.getString(8);
-			currentAdminRole = rs.getBoolean(9);
-			currentNewContributor = rs.getBoolean(10);
-			currentNewRole2 = rs.getBoolean(11);
-			currentOneTimePassword = rs.getBoolean(12);
+			int columnIndex = 9;
+			for (int i = 0; i < currentRoles.length; i++) {
+				currentRoles[i] = rs.getBoolean(columnIndex);
+				columnIndex++;
+			}
+			currentOneTimePassword = rs.getBoolean(columnIndex);
 			return true;
 		} catch (SQLException e) {
 			return false;
@@ -1342,14 +1352,17 @@ public class Database {
 			String c_LastName = rs.getString(6);
 			String c_PreferredFirstName = rs.getString(7);
 			String c_EmailAddress = rs.getString(8);
-			boolean c_AdminRole = rs.getBoolean(9);
-			boolean c_ContributorRole = rs.getBoolean(10);
-			boolean c_NewRole2 = rs.getBoolean(11);
-			boolean c_OneTimePassword = rs.getBoolean(12);
+			int columnIndex = 9;
+			boolean[] roles = new boolean[currentRoles.length];
+			for (int i = 0; i < currentRoles.length; i++) {
+				roles[i] = rs.getBoolean(columnIndex);
+				columnIndex++;
+			}
+			boolean c_OneTimePassword = rs.getBoolean(columnIndex);
 			
 			return new User(c_Username, c_Password, c_FirstName, c_MiddleName, c_LastName, 
 					c_PreferredFirstName, c_EmailAddress,
-					c_AdminRole, c_ContributorRole, c_NewRole2, c_OneTimePassword);
+					roles, c_OneTimePassword);
 		} catch (SQLException e) {
 			Logger.getLogger().logWarning("SQL error interrupted current user account building...");
 			return null;
@@ -1375,69 +1388,18 @@ public class Database {
 	 * @return true if the update was successful, else false
 	 *
 	 */
-	public boolean updateUserRole(String username, Role role, String value) {
+	public boolean updateUserRole(String username, Role role, boolean value) {
 		String query = "UPDATE userDB SET ? = ? WHERE username = ?";
 		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 			pstmt.setString(1, role.getDatabaseRoleString());
-			pstmt.setString(2, value);
+			pstmt.setString(2, Boolean.toString(value).toUpperCase());
 			pstmt.setString(3, username);
 			pstmt.executeUpdate();
-			if (value.compareTo("true") == 0)
-				currentAdminRole = true;
-			else
-				currentAdminRole = false;
+			currentRoles[role.getRoleIndex()] = value;
 			return true;
 		} catch (SQLException e) {
 			return false;
 		}
-		/**
-		if (role.compareTo("Admin") == 0) {
-			String query = "UPDATE userDB SET ? = ? WHERE username = ?";
-			try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-				pstmt.setString(1, Role.ADMIN.getDatabaseRoleString());
-				pstmt.setString(1, value);
-				pstmt.setString(2, username);
-				pstmt.executeUpdate();
-				if (value.compareTo("true") == 0)
-					currentAdminRole = true;
-				else
-					currentAdminRole = false;
-				return true;
-			} catch (SQLException e) {
-				return false;
-			}
-		}
-		if (role.compareTo("Role1") == 0) {
-			String query = "UPDATE userDB SET contributorRole = ? WHERE username = ?";
-			try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-				pstmt.setString(1, value);
-				pstmt.setString(2, username);
-				pstmt.executeUpdate();
-				if (value.compareTo("true") == 0)
-					currentNewContributor = true;
-				else
-					currentNewContributor = false;
-				return true;
-			} catch (SQLException e) {
-				return false;
-			}
-		}
-		if (role.compareTo("Role2") == 0) {
-			String query = "UPDATE userDB SET newRole2 = ? WHERE username = ?";
-			try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-				pstmt.setString(1, value);
-				pstmt.setString(2, username);
-				pstmt.executeUpdate();
-				if (value.compareTo("true") == 0)
-					currentNewRole2 = true;
-				else
-					currentNewRole2 = false;
-				return true;
-			} catch (SQLException e) {
-				return false;
-			}
-		}
-		return false;*/
 	}
 
 	/*******
@@ -1564,8 +1526,13 @@ public class Database {
 	 * @return true if this user plays an Admin role, else false
 	 *
 	 */
+	
+	public boolean[] getCurrentRoles() {
+		return this.currentRoles;
+	}
+	
 	public boolean getCurrentAdminRole() {
-		return currentAdminRole;
+		return currentRoles[Role.ADMIN.getRoleIndex()];
 	};
 
 	/*******
@@ -1581,7 +1548,7 @@ public class Database {
 	 *
 	 */
 	public boolean getCurrentContributorRole() {
-		return currentNewContributor;
+		return currentRoles[Role.CONTRIBUTOR.getRoleIndex()];
 	};
 
 	/*******
@@ -1596,8 +1563,16 @@ public class Database {
 	 * @return true if this user plays a Reviewer role, else false
 	 *
 	 */
-	public boolean getCurrentNewRole2() {
-		return currentNewRole2;
+	public boolean getCurrentCuratorRole() {
+		return currentRoles[Role.CURATOR.getRoleIndex()];
+	};
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean getCurrentViewerRole() {
+		return currentRoles[Role.VIEWER.getRoleIndex()];
 	};
 
 	/*******
