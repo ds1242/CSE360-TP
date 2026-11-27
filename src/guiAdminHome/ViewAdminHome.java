@@ -6,6 +6,7 @@ import java.util.List;
 import cse360.GRP.ADES.evaluator.textLengthEvaluation.TextLengthChangeListener;
 import database.Database;
 import entityClasses.User;
+import entityClasses.User.Role;
 import guiUserUpdate.ViewUserUpdate;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
@@ -17,6 +18,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -88,7 +90,7 @@ public class ViewAdminHome {
 	protected static Label label_InvitationEmailAddress = new Label("Email Address");
 	protected static TextField text_InvitationEmailAddress = new TextField();
 	protected static ComboBox <String> combobox_SelectRole = new ComboBox <String>();
-	protected static String [] roles = {"Admin", "Contributor", "Role2"};
+	
 	protected static Button button_SendInvitation = new Button("Send Invitation");
 	protected static Alert alertEmailError = new Alert(AlertType.INFORMATION);
 	protected static Alert alertEmailSent = new Alert(AlertType.INFORMATION);
@@ -227,16 +229,16 @@ public class ViewAdminHome {
 		setupLabelUI(label_InvitationEmailAddress, "Arial", 16, width, Pos.BASELINE_LEFT,
 		20, 210);
 	
-		setupTextUI(text_InvitationEmailAddress, "Arial", 16, 360, Pos.BASELINE_LEFT,
+		setupTextUI(text_InvitationEmailAddress, "Arial", 16, 300, Pos.BASELINE_LEFT,
 		130, 205, true);
 		
 		text_InvitationEmailAddress.textProperty().addListener(new TextLengthChangeListener(text_InvitationEmailAddress));
 	
-		setupComboBoxUI(combobox_SelectRole, "Dialog", 16, 90, 500, 205);
+		setupComboBoxUI(combobox_SelectRole, "Dialog", 16, Region.USE_PREF_SIZE, 440, 205);
 	
 		List<String> list = new ArrayList<String>();	// Create a new list empty list of the
-		for (int i = 0; i < roles.length; i++) {		// roles this code currently supports
-			list.add(roles[i]);
+		for (Role role : Role.values()) {		// roles this code currently supports
+			list.add(role.name());
 		}
 		combobox_SelectRole.setItems(FXCollections.observableArrayList(list));
 		combobox_SelectRole.getSelectionModel().select(0);

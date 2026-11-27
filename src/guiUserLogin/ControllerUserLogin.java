@@ -100,9 +100,7 @@ public class ControllerUserLogin {
             theDatabase.getCurrentLastName(),
     		theDatabase.getCurrentPreferredFirstName(),
             theDatabase.getCurrentEmailAddress(),
-    		theDatabase.getCurrentAdminRole(),
-    		theDatabase.getCurrentContributorRole(),
-            theDatabase.getCurrentNewRole2(),
+    		theDatabase.getCurrentRoles(),
             theDatabase.getOneTimePassword()
         );
 
@@ -145,7 +143,7 @@ public class ControllerUserLogin {
 				if (loginResult) {
 					guiContributor.ViewContributorHome.displayContributorHome(theStage, user);
 				}
-			} else if (user.getNewRole2()) {
+			} else if (user.getCuratorRole()) {
 				loginResult = theDatabase.loginRole2(user);
 				if (loginResult) {
 					guiCurator.ViewCurator.displayCurator(theStage, user);

@@ -35,12 +35,16 @@ public class ModelAddRemoveRoles {
 		return theDatabase.getCurrentContributorRole();
 	}
 	
-	protected static boolean hasRole2() {
-		return theDatabase.getCurrentNewRole2();
+	protected static boolean hasCuratorRole() {
+		return theDatabase.getCurrentCuratorRole();
+	}
+	
+	protected static boolean[] hasRoles() {
+		return theDatabase.getCurrentRoles();
 	}
 	
 	protected static boolean hasUpdateUser(String username, Role role, boolean value) {
-		return theDatabase.updateUserRole(username, role, Boolean.toString(value));
+		return theDatabase.updateUserRole(username, role, value);
 	}
 
 }

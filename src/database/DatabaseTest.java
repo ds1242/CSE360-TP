@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import entityClasses.User;
+import entityClasses.User.Role;
 import entityClasses.LessonRecord;
 
 class DatabaseTest {
@@ -32,7 +33,9 @@ class DatabaseTest {
 	}
 
 	private User createUser(String username) {
-		return new User(username, "password123", "Test", "", "User", "Test", username + "@test.com", false, true, false,
+		boolean[] roles = User.getBlankRolesArray();
+		roles[Role.CONTRIBUTOR.getRoleIndex()] = true;
+		return new User(username, "password123", "Test", "", "User", "Test", username + "@test.com", roles,
 				false);
 	}
 

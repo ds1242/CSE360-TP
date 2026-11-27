@@ -33,7 +33,8 @@ public class User {
     	
     	ADMIN(0, "adminRole"),
     	CONTRIBUTOR(1, "contributorRole"),
-    	ROLE2(2, "newRole2");
+    	CURATOR(2, "curatorRole"),
+    	VIEWER(3, "viewerRole");
     	
     	private int roleIndex;
     	private String databaseRoleString;
@@ -83,35 +84,6 @@ public class User {
      */
     // Constructor to initialize a new User object with userName, password, and role.
     public User(String userName, String password, String fn, String mn, String ln, String pfn,
-    		String ea, boolean r1, boolean r2, boolean r3, boolean otp) {
-        this.userName = userName;
-        this.password = password;
-        this.firstName = fn;
-        this.middleName = mn;
-        this.lastName = ln;
-        this.preferredFirstName = pfn;
-        this.emailAddress = ea;
-        this.otp = otp;
-        
-        roles = new boolean[Role.values().length];
-        roles[Role.ADMIN.roleIndex] = r1;
-        roles[Role.CONTRIBUTOR.roleIndex] = r2;
-        roles[Role.ROLE2.roleIndex] = r3;
-    }
-    
-    /**
-     * 
-     * @param userName
-     * @param password
-     * @param fn
-     * @param mn
-     * @param ln
-     * @param pfn
-     * @param ea
-     * @param roleValues
-     * @param otp
-     */
-    public User(String userName, String password, String fn, String mn, String ln, String pfn,
     		String ea, boolean[] roleValues, boolean otp) {
         this.userName = userName;
         this.password = password;
@@ -123,6 +95,10 @@ public class User {
         this.otp = otp;
         
         roles = roleValues;
+    }
+    
+    public static boolean[] getBlankRolesArray() {
+    	return new boolean[Role.values().length];
     }
 
     /*****
@@ -160,8 +136,17 @@ public class User {
      *
      */
     // Sets the role2 user.
-    public void setRole2User(boolean role) {
-    	this.roles[Role.ROLE2.roleIndex] = role;
+    public void setCuratorUser(boolean role) {
+    	this.roles[Role.CURATOR.roleIndex] = role;
+    }
+    
+    
+    /**
+     * 
+     * @param role
+     */
+    public void setViewerUser(boolean role) {
+    	this.roles[Role.VIEWER.roleIndex] = role;
     }
 
     /*****
@@ -281,8 +266,15 @@ public class User {
 	 *
      */
     // Gets the current value of the role2 attribute.
-    public boolean getNewRole2() { return this.roles[Role.ROLE2.roleIndex]; }
-
+    public boolean getCuratorRole() { return this.roles[Role.CURATOR.roleIndex]; }
+    
+    
+    /**
+     * 
+     * @return
+     */
+    public boolean getViewerRole() { return this.roles[Role.VIEWER.roleIndex]; }
+    
     /*****
      * <p> Method: String getOneTimePassword() </p>
      *

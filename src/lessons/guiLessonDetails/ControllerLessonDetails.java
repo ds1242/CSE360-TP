@@ -10,7 +10,7 @@ import lessons.guiContributorLessons.ViewContributorLessons;
 import lessons.guiLessonExperience.ViewLessonExperience;
 
 /*******
- * <p> Title: ControllerLessonDetails Class. </p>
+ * <p> Title: ControllerRoleViewer Class. </p>
  *
  * <p> Description: The Java/FX-based Lesson Details page.  This class provides the controller
  * actions based on the user's use of the JavaFX GUI widgets defined by the View class, and it

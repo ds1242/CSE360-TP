@@ -6,6 +6,7 @@ import cse360.GRP.ADES.evaluator.PasswordEvaluator;
 import cse360.GRP.ADES.evaluator.UsernameEvaluator;
 import database.Database;
 import entityClasses.User;
+import entityClasses.User.Role;
 import javafx.stage.Stage;
 
 /*******
@@ -129,9 +130,10 @@ public class ControllerFirstAdmin {
 				ViewFirstAdmin.text_AdminPassword2.clear();
 				return;
 			}
-
+			boolean[] tempRoles = User.getBlankRolesArray();
+			tempRoles[Role.ADMIN.getRoleIndex()] = true;
         	// Create the passwords and proceed to the user home page
-        	User user = new User(adminUsername, adminPassword1, "", "", "", "", "", true, false, false, false);
+        	User user = new User(adminUsername, adminPassword1, "", "", "", "", "", tempRoles, false);
             try {
             	// Create a new User object with admin role and register in the database
             	theDatabase.register(user);
